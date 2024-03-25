@@ -1,0 +1,52 @@
+*{
+  margin: 0;
+  vertical-align: baseline;
+}
+*,
+*::before, *::after{
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+html{
+  scroll-behavior: smooth;
+}
+body{
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+
+}
+ul, ol{
+  list-style: none;
+}
+a{
+  display: block;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+p a{
+  display: inline;
+}
+img, video, figure, picture, iframe{
+  max-width: 100%;
+  display: block;
+}
+form, input, select, textarea, button, label{
+  font-family: inherit;
+  font-size: inherit;
+  display: block;
+  color: inherit;
+}
+
+:root{
+  --principal-color: #1B365D;
+  --secondary-color: #FCBF12;
+  --blaack: #000000;
+  --subtitle-color: 333333;
+  --rojo-c: #AC4A4A;
+  --grayy: #758CA3;
+  --white-color: #FFFFFF;
+}
