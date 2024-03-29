@@ -1,5 +1,6 @@
 *{
   margin: 0;
+  padding: 0;
   vertical-align: baseline;
 }
 *,
@@ -40,7 +41,6 @@ form, input, select, textarea, button, label{
   display: block;
   color: inherit;
 }
-
 :root{
   --principal-color: #1B365D;
   --secondary-color: #FCBF12;
@@ -49,4 +49,21 @@ form, input, select, textarea, button, label{
   --rojo-c: #AC4A4A;
   --grayy: #758CA3;
   --white-color: #FFFFFF;
+}
+@font-face {
+  font-family: 'cocosharp-regular';
+  src: url('/src/assets/fonts/cocosharp/Coco-Sharp-Regular-trial.ttf');
+}
+@font-face {
+  font-family: 'cocosharp-bold';
+  src: url('/src/assets/fonts/cocosharp/Coco-Sharp-Bold-trial.ttf');
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'cocosharp-light';
+  src: url('/src/assets/fonts/cocosharp/Coco-Sharp-Light-trial.ttf');
+  font-weight: 300;
+}
+* {
+  font-family: 'cocosharp-regular', sans-serif;
 }

@@ -1,11 +1,10 @@
 <script setup>
 
-
-import Pru from "@/components/pru.vue";
+import Header__docente from "@/components/header__docente.vue";
 </script>
 
 <template>
-  <pru></pru>
+  <router-view></router-view>
 </template>
 
 <style scoped>
