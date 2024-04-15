@@ -54,7 +54,7 @@ header {
 }
 
 .text1 p {
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
     font-size: 40px; 
     text-align: center; 
     font-weight: 900;
@@ -77,17 +77,18 @@ header {
 
 
 button {
-    background-color: #1B365D; /* Color de fondo del botón */
-    color: white; /* Color del texto del botón */
-    padding: 10px 20px; /* Espaciado interno del botón */
-    font-size: 48px; /* Tamaño del texto del botón */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    margin-top: 20px; /* Espacio entre el texto y el botón */
-    border-radius: 10px; /* Radio de esquina */
+    background-color: #1B365D;
+    color: white;
+    padding: 10px 20px;
+    font-size: 48px;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 10px;
 }
 
 button:hover {
-    background-color: #03F0F0; /* Cambia el color de fondo del botón al pasar el cursor sobre él */
+    background-color: #03F0F0; 
+    transition: 0.3s;
 }
 
 .text4 p{
