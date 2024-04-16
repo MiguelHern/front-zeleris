@@ -2,10 +2,13 @@
 
 import Header__docente from "@/components/header__docente.vue";
 import GeneEcoPer_docente from "@/components/geneEcoPer_docente.vue";
+import Home_teacher from "@/components/home_teacher.vue";
 </script>
 
 <template>
-  <gene-eco-per_docente></gene-eco-per_docente>
+  
+  <Home_teacher></Home_teacher>
+
 </template>
 
 <style scoped>
