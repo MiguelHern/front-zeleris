@@ -1,16 +1,19 @@
 <template>
     <div id="body">
-        <div id="trayHeader">Bandeja de Solicitudes</div>
+      <div id="trayHeader">Bandeja de Solicitudes</div>
+      <div class="scrollContainer">
         <div class="todayHeader">
-          <div id="todayReceived">
+          <div id="todayReceived" @click="toggleContent('today')">
             <div id="moment">Hoy</div>
             <div id="number">2</div>
             <button>
-              <i class="bi bi-chevron-double-up"></i>
+              <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.today }"></i>
             </button>   
           </div>
 
-          <div id="todayContent">
+          <div id="todayContent" v-show="showContent.today">
+            <!-- Contenido del DIA DE HOY -->
+
             <div id="userContent">
               <div id="iconUser"></div>    
               <div id="userName">
@@ -25,48 +28,149 @@
               </div>
             </div>
 
-
           </div>
         </div>
 
         <div class="yesterdayHeader">
-          <div id="yesterdayReceived">
+          <div id="yesterdayReceived" @click="toggleContent('yesterday')">
             <div id="moment">Ayer</div>
             <div id="number">1</div>
             <button>
-              <i class="bi bi-chevron-double-up"></i>
+              <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.yesterday }"></i>
             </button>          
           </div>
+
+          <div id="yesterdayContent" v-show="showContent.yesterday">
+            <!-- Contenido del DIA DE AYER -->
+
+            <div id="userContent">
+              <div id="iconUser"></div>    
+              <div id="userName">
+                  CANDY
+              </div>
+            </div>
+
+            <div id="userContent">
+              <div id="iconUser"></div>    
+              <div id="userName">
+                ALONDRA
+              </div>
+            </div>
+
+            <div id="userContent">
+              <div id="iconUser"></div>    
+              <div id="userName">
+                MIGUEL
+              </div>
+            </div>
+
+            <div id="userContent">
+              <div id="iconUser"></div>    
+              <div id="userName">
+                ALEX
+              </div>
+            </div>
+
+          </div>
+
         </div>
         <div class="lastweekHeader">
-          <div id="lastweekReceived">
+          <div id="lastweekReceived" @click="toggleContent('lastweek')">
             <div id="moment">La semana pasada</div>
             <div id="number">5</div>
             <button>
-              <i class="bi bi-chevron-double-up"></i>
-            </button>          </div>
+              <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.lastweek }"></i>
+            </button>          
+          </div>
+
+          <div id="lastweekContent" v-show="showContent.lastweek">
+            <!-- Contenido de la SEMANA PASADA-->
+              
+            <div id="userContent">
+              <div id="iconUser"></div>    
+              <div id="userName">
+                KEVIN
+              </div>
+            </div>
+
+          </div>
         </div>
+
         <div class="lastmonthHeader">
-          <div id="lastmonthReceived">
-            <div id="moment">El mes pasado</div>
-            <div id="number">2</div>
-            <button>
-              <i class="bi bi-chevron-double-up"></i>
-            </button>          </div>
+
+        <div id="lastmonthReceived" @click="toggleContent('lastmonth')">
+          <div id="moment">El mes pasado</div>
+          <div id="number">2</div>
+          <button>
+            <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.lastmonth }"></i>
+          </button>          
         </div>
+
+        <div id="lastmonthContent" v-show="showContent.lastmonth">
+        <!-- Contenido del MES PASADO -->
+
+        <div id="userContent">
+          <div id="iconUser"></div>    
+          <div id="userName">
+            EDGAR
+          </div>
+        </div>
+
+        <div id="userContent">
+          <div id="iconUser"></div>    
+          <div id="userName">
+            DEVANY
+          </div>
+        </div>
+
+        </div>
+      </div>       
+      
     </div>
+  </div>  
 </template>
 
 <script>
+/*export default {
+  name: 'requestTray_coordinacion',
+  props: {
+    msg: String
+  }
+}*/
+
 export default {
   name: 'requestTray_coordinacion',
   props: {
     msg: String
+  },
+  data() {
+    return {
+      showContent: {
+        today: true,
+        yesterday: true,
+        lastweek: true,
+        lastmonth: true
+      }
+    };
+  },
+  methods: {
+    toggleContent(section) {
+      this.showContent[section] = !this.showContent[section];
+    }
   }
 }
 </script>
 
 <style>
+.rotate {
+  transform: rotate(180deg);
+}
+
+.scrollContainer {
+  overflow-y: auto;
+  max-height: calc(100vh - 70px); /* Restamos el alto del trayHeader */
+}
+
 #body{
   display: flex;
   flex-direction:column;
@@ -126,13 +230,15 @@ export default {
 button{
   background-color: transparent;
   border-color: transparent;
+  padding-left: 5px;
+  padding-right: 5px;
   width: 30px;
   height: 35px;
-  text-align: right;
+  align-items: center;
   align-content: center;
 }
 
-#todayContent{
+#todayContent, #yesterdayContent, #lastweekContent, #lastmonthContent{
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 15px;
   color: black;
@@ -164,9 +270,6 @@ button{
 
 i[class="bi bi-chevron-double-up"], i[class="bi bi-chevron-double-down"] {
   display: flex;
-  margin: 5px;
   /*border: 2px solid yellow;*/
 }
-
-
 </style>
