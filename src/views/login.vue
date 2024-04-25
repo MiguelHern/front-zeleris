@@ -93,8 +93,6 @@
   padding: 1rem 3rem 1rem 1.5rem;
   border-radius: 5px;
   outline: none;
-  line-height: 2.1rem;
-
 }
 .form__label{
   position: absolute;
