@@ -18,8 +18,8 @@
                     <label for="email" class="form__label">Email</label>
                   </div>
                   <div class="form__group">
-                    <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">
-                    <label for="contraseña" class="form__label">Contraseña</label>
+                    <input type="text" class="form__input" name="password" required placeholder="Contraseña">
+                    <label for="password" class="form__label">Contraseña</label>
                     <i class="eye bi bi-eye"></i>
                   </div>
                 <a href="recover__password.vue" class="form__recover">Recuperar contraseña</a>

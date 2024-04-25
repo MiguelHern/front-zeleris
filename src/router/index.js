@@ -27,6 +27,11 @@ const router = createRouter({
         },
       ]
     },
+    {
+      path: '/HomeTeacher',
+      name: 'HomeTeacher',
+      component: () => import('../components/home_teacher.vue')
+    },
   ]
 })
 
