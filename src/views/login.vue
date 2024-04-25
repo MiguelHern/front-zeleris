@@ -32,6 +32,7 @@
 
 <style scoped>
 .img__container{
+  pointer-events: none;
   position: absolute;
   height: 100px;
   width: 100px;
@@ -44,9 +45,10 @@
   right: 20px;
 }
 .form__recover{
+
   text-align: right;
   transition: all 200ms ease-in-out;
-  margin-bottom: 0.5rem;
+  margin: 1rem 0;
   text-decoration: underline;
 }
 .form__recover:hover{
@@ -57,7 +59,7 @@
     height: 100vh;
 }
 .content{
-  height: calc(100% - 80px);
+  height: 100%
 }
 .layout{
   width: 450px;
@@ -66,7 +68,7 @@
 
   position: relative;
   border-radius: 1rem;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 .layout__title{
   font-weight: 700;
@@ -77,10 +79,11 @@
 .form__group{
   position: relative;
   margin-bottom: 2.5rem;
+
 }
 .form__input
 {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
   border: none;
   border-bottom: 1px solid var(--grayy);
   position: relative;
@@ -88,7 +91,7 @@
   display: block;
   font-size: 1rem;
   padding: 1rem 3rem 1rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: 5px;
   outline: none;
   line-height: 2.1rem;
 
@@ -122,12 +125,12 @@
   padding: 1rem 3rem;
   font-size: 1.3rem;
   background-color: var(--grayy);
-  color: var(--principal-color);
+  color: var(--white-color);
   border-radius: 1rem;
-  transition: all 300ms linear;
+  transition: all 200ms linear;
 }
 .form__button:hover{
-  background-color: var(--secondary-color);
+  background-color: var(--principal-color);
 }
 .form__button:active{
   background-color: var(--grayy);
