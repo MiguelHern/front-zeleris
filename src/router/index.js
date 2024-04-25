@@ -14,6 +14,19 @@ const router = createRouter({
       name: 'RecoverPassword',
       component: () => import('../views/recover__password.vue')
     },
+    {
+      path: '/Panel',
+      name: 'Panel',
+      redirect:'/HomeCordinacion',
+      component: () => import('../views/Layout/layout_panel.vue'),
+      children:[
+        {
+          path: '/HomeCordinacion',
+          name: 'HomeCordinacion',
+          component:()=>import('../views/cordinacion/home_cordinacion.vue')
+        },
+      ]
+    },
   ]
 })
 
