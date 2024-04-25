@@ -31,7 +31,7 @@
           <td class="text-lg-center align-content-center fw-bold text-body-secondary">
             <i class="bi bi-file-earmark-check-fill"></i>
           </td>
-          <td class="align-content-center hoverTabla" role="button">Epson Dzec Cock</td>
+          <td class="align-content-center hoverTabla" role="button"></td>
           <td class="text-center">3</td>
           <td class="text-center">13/12/2023</td>
           <td class="text-center">Aceptado</td>
