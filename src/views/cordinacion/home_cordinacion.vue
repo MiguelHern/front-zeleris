@@ -1,5 +1,9 @@
-<script setup>
-
+<script>
+export default{
+  mounted() {
+    console.log(localStorage.token);
+  },
+}
 </script>
 
 <template>

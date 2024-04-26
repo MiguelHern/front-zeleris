@@ -1,5 +1,41 @@
 <script>
+import AuthFetch from "../scripts/AuthFetch";
 
+export default {
+  // Otros component options aquí
+  data() {
+    return {
+      email: '',
+      password: ''
+    };
+  },
+
+mounted() {
+  console.log(import.meta.env.VITE_APP_API_URL);
+},
+
+  methods: {
+    async iniciarSesion() {
+    const auth = new AuthFetch();
+
+      try {
+        // Llama al método login de AuthService
+        const respuesta = await auth.login(this.email, this.password);
+        console.log('Respuesta del servidor:', respuesta.data.token);
+        localStorage.token = respuesta.data.token;
+
+        if (respuesta.success) {
+          this.$router.push('/Panel')
+        }
+        
+        // Haz algo con la respuesta, por ejemplo, redirige a otra página
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+        // Maneja el error de alguna manera, por ejemplo, muestra un mensaje al usuario
+      }
+    }
+  }
+}
 </script>
 
 <template>
@@ -12,19 +48,19 @@
           <div class="layout__header">
             <h1 class="layout__title">Ingresar a Zeleris</h1>
           </div>
-              <form action="" class="login__form">
-                  <div class="form__group">
-                    <input type="email" class="form__input" name="email" required placeholder="Email">
-                    <label for="email" class="form__label">Email</label>
-                  </div>
-                  <div class="form__group">
-                    <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">
-                    <label for="contraseña" class="form__label">Contraseña</label>
-                    <i class="eye bi bi-eye"></i>
-                  </div>
-                <a href="recover__password.vue" class="form__recover">Recuperar contraseña</a>
-                <input type="submit" value="Continuar" class="form__button">
-              </form>
+          <form @submit.prevent="iniciarSesion" class="login__form">
+            <div class="form__group">
+              <input v-model="email" type="email" class="form__input" name="email" required placeholder="Email">
+              <label for="email" class="form__label">Email</label>
+            </div>
+            <div class="form__group">
+              <input v-model="password" type="password" class="form__input" name="contraseña" required placeholder="Contraseña">
+              <label for="contraseña" class="form__label">Contraseña</label>
+              <i class="eye bi bi-eye"></i>
+            </div>
+            <a href="recover__password.vue" class="form__recover">Recuperar contraseña</a>
+            <button type="submit" class="form__button">Continuar</button>
+          </form>
         </div>
     </div>
   </div>
