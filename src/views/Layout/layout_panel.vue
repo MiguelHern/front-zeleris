@@ -61,9 +61,7 @@ watchEffect(() => {
       </nav>
       <div class="col p-0">
         <Header></Header>
-        <main class="row w-100 m-0 p-0 " style="height: calc(100% - 58px)">
           <router-view/>
-        </main>
       </div>
     </div>
   </div>

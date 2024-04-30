@@ -10,36 +10,53 @@
     <div class="content d-flex flex-column align-items-center justify-content-center">
       <div class="layout">
         <div class="layout__header">
-          <h1 class="layout__title">Ingresar tu correo para recuperar tu contraseña</h1>
+          <h1 class="layout__title">Ingresar a Zeleris</h1>
         </div>
         <form action="" class="login__form">
           <div class="form__group">
             <input type="email" class="form__input" name="email" required placeholder="Email">
             <label for="email" class="form__label">Email</label>
           </div>
-          <input type="submit" value="Enviar" class="form__button">
+          <div class="form__group">
+            <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">
+            <label for="contraseña" class="form__label">Contraseña</label>
+            <i class="eye bi bi-eye"></i>
+          </div>
+          <div class="container__recover">
+          <a href="recover__password.vue" class="form__recover">Recuperar contraseña</a>
+          </div>
+          <input type="submit" value="Continuar" class="form__button">
         </form>
-        <a href="/" class="cancelar">Cancelar</a>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.cancelar{
-  text-align: center;
-  transition: all 200ms ease-in-out;
-  margin-top: 1rem;
-  text-decoration: underline;
-}
-.cancelar:hover{
-  color: #FCBF12;
-}
 .img__container{
   pointer-events: none;
   position: absolute;
   height: 100px;
   width: 100px;
+}
+.eye{
+  font-size: 1.2rem;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.form__recover{
+  display: inline-block;
+  transition: all 200ms ease-in-out;
+  text-decoration: underline;
+}
+.container__recover{
+  text-align: right;
+  margin-bottom: 10px;
+}
+.form__recover:hover{
+  color: #FCBF12;
 }
 .background{
   width: 100%;
@@ -58,9 +75,10 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 .layout__title{
+  font-weight: 700;
   font-size: 1.8rem;
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
 }
 .form__group{
   position: relative;

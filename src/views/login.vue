@@ -1,5 +1,41 @@
 <script>
+import AuthFetch from "../scripts/AuthFetch";
 
+export default {
+  // Otros component options aquí
+  data() {
+    return {
+      email: '',
+      password: ''
+    };
+  },
+
+mounted() {
+  console.log(import.meta.env.VITE_APP_API_URL);
+},
+
+  methods: {
+    async iniciarSesion() {
+    const auth = new AuthFetch();
+
+      try {
+        // Llama al método login de AuthService
+        const respuesta = await auth.login(this.email, this.password);
+        console.log('Respuesta del servidor:', respuesta.data.token);
+        localStorage.token = respuesta.data.token;
+
+        if (respuesta.success) {
+          this.$router.push('/Panel')
+        }
+        
+        // Haz algo con la respuesta, por ejemplo, redirige a otra página
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+        // Maneja el error de alguna manera, por ejemplo, muestra un mensaje al usuario
+      }
+    }
+  }
+}
 </script>
 
 <template>
@@ -12,19 +48,19 @@
           <div class="layout__header">
             <h1 class="layout__title">Ingresar a Zeleris</h1>
           </div>
-              <form action="" class="login__form">
-                  <div class="form__group">
-                    <input type="email" class="form__input" name="email" required placeholder="Email">
-                    <label for="email" class="form__label">Email</label>
-                  </div>
-                  <div class="form__group">
-                    <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">
-                    <label for="contraseña" class="form__label">Contraseña</label>
-                    <i class="eye bi bi-eye"></i>
-                  </div>
-                <a href="recover__password.vue" class="form__recover">Recuperar contraseña</a>
-                <input type="submit" value="Continuar" class="form__button">
-              </form>
+          <form @submit.prevent="iniciarSesion" class="login__form">
+            <div class="form__group">
+              <input v-model="email" type="email" class="form__input" name="email" required placeholder="Email">
+              <label for="email" class="form__label">Email</label>
+            </div>
+            <div class="form__group">
+              <input v-model="password" type="password" class="form__input" name="contraseña" required placeholder="Contraseña">
+              <label for="contraseña" class="form__label">Contraseña</label>
+              <i class="eye bi bi-eye"></i>
+            </div>
+            <a href="recover__password.vue" class="form__recover">Recuperar contraseña</a>
+            <button type="submit" class="form__button">Continuar</button>
+          </form>
         </div>
     </div>
   </div>
@@ -32,6 +68,7 @@
 
 <style scoped>
 .img__container{
+  pointer-events: none;
   position: absolute;
   height: 100px;
   width: 100px;
@@ -44,9 +81,10 @@
   right: 20px;
 }
 .form__recover{
+
   text-align: right;
   transition: all 200ms ease-in-out;
-  margin-bottom: 0.5rem;
+  margin: 1rem 0;
   text-decoration: underline;
 }
 .form__recover:hover{
@@ -57,7 +95,7 @@
     height: 100vh;
 }
 .content{
-  height: calc(100% - 80px);
+  height: 100%
 }
 .layout{
   width: 450px;
@@ -66,7 +104,7 @@
 
   position: relative;
   border-radius: 1rem;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 .layout__title{
   font-weight: 700;
@@ -77,10 +115,11 @@
 .form__group{
   position: relative;
   margin-bottom: 2.5rem;
+
 }
 .form__input
 {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
   border: none;
   border-bottom: 1px solid var(--grayy);
   position: relative;
@@ -88,10 +127,8 @@
   display: block;
   font-size: 1rem;
   padding: 1rem 3rem 1rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: 5px;
   outline: none;
-  line-height: 2.1rem;
-
 }
 .form__label{
   position: absolute;
@@ -122,12 +159,12 @@
   padding: 1rem 3rem;
   font-size: 1.3rem;
   background-color: var(--grayy);
-  color: var(--principal-color);
+  color: var(--white-color);
   border-radius: 1rem;
-  transition: all 300ms linear;
+  transition: all 200ms linear;
 }
 .form__button:hover{
-  background-color: var(--secondary-color);
+  background-color: var(--principal-color);
 }
 .form__button:active{
   background-color: var(--grayy);
