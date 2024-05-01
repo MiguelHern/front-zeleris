@@ -1,5 +1,6 @@
 <script setup>
 
+<<<<<<< HEAD
 import Header__docente from "@/views/Layout/header.vue";
 import GeneEcoPer_docente from "@/components/geneEcoPer_docente.vue";
 import Sidebar_docente from "@/views/Layout/sidebar_docente.vue";
@@ -14,6 +15,15 @@ import View_of_a_teacher from "@/views/view_of_a_teacher.vue";
 
 <template>
 <router-view></router-view>
+=======
+import Header__docente from "@/components/header__docente.vue";
+import geneEcoPerComponent from "@/components/geneEcoPer_docente.vue";
+</script>
+
+<template>
+  <router-view></router-view>
+  <geneEcoPer_docente></geneEcoPer_docente>
+>>>>>>> d56b26a974151a4c57d02663d55fc49432d73ad7
 </template>
 
 <style scoped>
