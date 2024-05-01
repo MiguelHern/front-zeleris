@@ -72,7 +72,6 @@ plus.addEventListener("click", ()=>{
 .applicantDetails, .fillingArea, .submissionArea{
   display: flex;
   top: 3rem;
-  width: calc(100%-30px);
   margin-left: 15px;
   margin-right: 15px;
   padding: 5px;
@@ -269,7 +268,6 @@ body{
   display: flex;
   flex-direction:column;
   min-width: calc(100% - 50px);
-  min-height: 100vh;
   background-color: white;
 }
 </style>

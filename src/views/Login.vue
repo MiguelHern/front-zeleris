@@ -58,7 +58,7 @@ mounted() {
               <label for="contraseña" class="form__label">Contraseña</label>
               <i class="eye bi bi-eye"></i>
             </div>
-            <a href="recover__password.vue" class="form__recover">Recuperar contraseña</a>
+            <a href="ForgotPassword.vue" class="form__recover">Recuperar contraseña</a>
             <button type="submit" class="form__button">Continuar</button>
           </form>
         </div>

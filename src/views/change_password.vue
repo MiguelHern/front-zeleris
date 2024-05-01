@@ -23,7 +23,7 @@
             <i class="eye bi bi-eye"></i>
           </div>
           <div class="container__recover">
-          <a href="recover__password.vue" class="form__recover">Recuperar contraseña</a>
+          <a href="ForgotPassword.vue" class="form__recover">Recuperar contraseña</a>
           </div>
           <input type="submit" value="Continuar" class="form__button">
         </form>

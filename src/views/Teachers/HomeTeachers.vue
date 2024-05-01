@@ -16,7 +16,7 @@ export default{
       </div>
       <div class="header__right d-flex align-items-baseline">
         <h2 class="header__user fs-5 fw-bold">Permisos económicos disponibles: <span>2</span></h2>
-        <button class="btn btn-primary d-inline-block" style="margin-left: 30px" @click="">Generar nuevo permiso</button>
+        <a href="HomeTeachers/GenerarPermiso" class="btn btn-primary d-inline-block" style="margin-left: 30px" @click="">Generar nuevo permiso</a>
       </div>
     </header>
     <div class="layout__table">
@@ -35,11 +35,10 @@ export default{
           <td class="text-lg-center align-content-center fw-bold text-body-secondary">
             <i class="bi bi-file-earmark-check-fill"></i>
           </td>
-          <td class="align-content-center hoverTabla" role="button"></td>
+          <td class="align-content-center hoverTabla" role="button">Kevin Chan</td>
           <td class="text-center">3</td>
           <td class="text-center">13/12/2023</td>
           <td class="text-center">Aceptado</td>
-
         </tr>
         </tbody>
       </table>

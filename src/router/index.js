@@ -6,25 +6,31 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'IniciarSesion',
-      component: () => import('../views/login.vue')
+      name: 'Login',
+      component: () => import('../views/Login.vue')
     },
     {
-      path: '/recover__password.vue',
-      name: 'RecoverPassword',
-      component: () => import('../views/recover__password.vue')
+      path: '/ForgotPassword',
+      name: 'ForgotPassword',
+      component: () => import('../views/ForgotPassword.vue')
     },
     {
       path: '/Panel',
       name: 'Panel',
-      redirect:'/HomeCordinacion',
-      component: () => import('../views/Layout/layout_panel.vue'),
+      redirect:'/Panel',
+      component: () => import('../views/Layout/LayoutPanel.vue'),
       children:[
         {
-          path: '/HomeCordinacion',
-          name: 'HomeCordinacion',
-          component:()=>import('../views/cordinacion/home_cordinacion.vue')
+          path: '/HomeTeachers',
+          name: 'HomeTeachers',
+          component:()=>import('@/views/Teachers/HomeTeachers.vue')
         },
+        {
+          path: '/HomeTeachers/GenerarPermiso',
+          name: 'HomeTeachers/GenerarPermiso',
+          component:()=>import('@/views/Teachers/GenerarPermiso.vue')
+        },
+
       ]
     },
   ]
