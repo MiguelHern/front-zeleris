@@ -21,15 +21,22 @@ const router = createRouter({
       component: () => import('../views/Layout/LayoutPanel.vue'),
       children:[
         {
-          path: '/HomeTeachers',
-          name: 'HomeTeachers',
-          component:()=>import('@/views/Teachers/HomeTeachers.vue')
+          path: '/TeachersHome',
+          name: 'TeachersHome',
+          component:()=>import('@/views/Teachers/TeachersHome.vue')
         },
         {
-          path: '/HomeTeachers/GenerarPermiso',
-          name: 'HomeTeachers/GenerarPermiso',
+          path: '/TeachersHome/GenerarPermiso',
+          name: 'TeachersHome/GenerarPermiso',
           component:()=>import('@/views/Teachers/GenerarPermiso.vue')
         },
+        {
+          path: '/AdminHome',
+          name: 'AdminHome',
+          component:()=>import('@/views/CordinacionAdministrativa/AdminHome.vue')
+        },
+
+
 
       ]
     },

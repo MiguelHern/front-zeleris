@@ -117,7 +117,7 @@
 
 <style>
 .nav {
-  width: 340px;
+  width: 100%;
 }
 .nav__header{
   width: 100%;
@@ -140,7 +140,7 @@
   width: 100%;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 2px 5px 3px rgba(0, 0, 0, 0.1);
+
   margin: 3px 0;
 }
 .nav__link--sub-item{
@@ -155,7 +155,8 @@
 .list {
   padding: 0 10px;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 150px);
+  
 }
 .list__item {
   padding: 5px;
@@ -164,12 +165,12 @@
   width: 100%;
   text-align: center;
   overflow: hidden;
-  box-shadow: 2px 5px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--bs-box-shadow-sm);
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 .list__item:hover{
-  transform: translateY(-2px);
-  box-shadow: 2px 8px 3px rgba(0, 0, 0, 0.3);
+  transform: translateY(-0.5px);
+  box-shadow: var(--bs-box-shadow);
 
 }
 .list__item--click {
@@ -215,50 +216,50 @@
 .show-submenu {
   height: auto;
 }
-
+@media screen and (max-width: 1240px) {
+  .list {
+    max-height: calc(100vh - 180px); /* Ajustar a un porcentaje de la altura de la pantalla según sea necesario */
+  }
+}
 </style>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  // Seleccionar todos los botones de menú
-  var toggleButtons = document.querySelectorAll(".list__item--click");
+<script setup>
+import { ref, onMounted } from 'vue';
 
-  // Iterar sobre cada botón de menú
-  toggleButtons.forEach(function(button) {
-    // Obtener el menú desplegable asociado a este botón
-    var menuList = button.querySelector(".list__show");
-    // Obtener la flecha asociada a este botón
-    var arrowIcon = button.querySelector(".list__arrow");
+const toggleButtons = ref([]);
+const toggleSubmenus = ref([]);
 
-    // Escuchar el evento de clic en el botón
-    button.addEventListener("click", function(event) {
-      // Detener la propagación del evento para evitar que se cierre el menú principal al hacer clic en los submenús
-      event.stopPropagation();
-      // Alternar la clase para mostrar/ocultar el menú desplegable
-      menuList.classList.toggle("show-menu");
-      // Alternar la clase para girar la flecha
-      arrowIcon.classList.toggle("rotate-arrow");
-    });
+const toggleMenu = (button, listClass, arrowClass) => {
+  const menuList = button.querySelector(listClass);
+  const arrowIcon = button.querySelector(arrowClass);
+
+  menuList.classList.toggle("show-menu");
+  arrowIcon.classList.toggle("rotate-arrow");
+};
+
+const initializeButtons = (buttons, eventHandler) => {
+  buttons.forEach((button) => {
+    button.addEventListener("click", eventHandler);
   });
+};
 
-  // Seleccionar todos los botones de submenú
-  var toggleSubmenus = document.querySelectorAll("[id^='toggleSubmenu']");
-
-  // Iterar sobre cada botón de submenú
-  toggleSubmenus.forEach(function(submenuButton) {
-    // Obtener el submenú desplegable asociado a este botón
-    var submenuList = submenuButton.nextElementSibling;
-
-    // Ocultar el submenú inicialmente
+const initializeSubmenus = () => {
+  toggleSubmenus.value.forEach((submenuButton) => {
+    const submenuList = submenuButton.nextElementSibling;
     submenuList.classList.remove("show-submenu");
-
-    // Escuchar el evento de clic en el botón de submenú
-    submenuButton.addEventListener("click", function(event) {
-      // Detener la propagación del evento para evitar que se cierre el menú principal
-      event.stopPropagation();
-      // Alternar la clase para mostrar/ocultar el submenú desplegable
+    submenuButton.addEventListener("click", () => {
       submenuList.classList.toggle("show-submenu");
     });
   });
+};
+
+onMounted(() => {
+  toggleButtons.value = document.querySelectorAll(".list__item--click");
+  toggleSubmenus.value = document.querySelectorAll("[id^='toggleSubmenu']");
+  initializeButtons(toggleButtons.value, (event) => {
+    event.stopPropagation();
+    toggleMenu(event.currentTarget, ".list__show", ".list__arrow");
+  });
+  initializeSubmenus();
 });
 </script>

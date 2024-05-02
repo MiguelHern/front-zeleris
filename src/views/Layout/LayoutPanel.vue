@@ -36,7 +36,7 @@ watchEffect(() => {
 
 <template>
   <div class="container-fluid">
-    <div class="row vh-100 ">
+    <div class="row vh-100 flex-nowrap">
       <nav class="col-1 d-flex flex-column justify-content-between layout__aside" style="padding: 80px 0 0 0 ;">
         <ul class="menu__list">
           <li class="botonNavegacion menu__option" @click="irHomeCordinacion" :class="{ active: botonActivo === 'HomeCordinacion' }">
