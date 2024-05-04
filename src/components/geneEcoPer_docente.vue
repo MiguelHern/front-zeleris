@@ -1,13 +1,13 @@
 <template>
   <body>
-  <div class="applicantDetails">
-    <p> Solicitar Permiso Económico</p>
+  <div class="applicant_Details">
+    <p id="p_ad"> Solicitar Permiso Económico</p>
     <div class="teacherDetails">
       <h1>
         <i class="bi bi-person-square"></i>
       </h1>
       <div id="nameMail">
-        <label>Julio A Gutiérrez Gonzáles</label><br>
+        <label>Julio A Gutiérrez Gonzáles</label>
         <label>JulioGutierrez@uacam.mx</label>
       </div>
       <div class="numberDays">Cantidad de dias a solicitar:
@@ -25,14 +25,14 @@
     </div>
   </div>
 
-  <div class="fillingArea">
+  <div class="filling_Area">
     <div id="selectedDays"> Fecha del permiso:
       <input id="datePermit" type="date"></input>
       <input id="datePermit" type="date"></input>
       <input id="datePermit" type="date"></input>
     </div>
     <div id="reasons"> Motivo de la solicitud:</div>
-    <div id="textBox">
+    <div id="text_Box">
       <textarea class="reasonsTexts" placeholder=" Coloca el motivo de la solicitud" ></textarea>
     </div>
   </div>
@@ -69,35 +69,42 @@ plus.addEventListener("click", ()=>{
 </script>
 
 <style scoped>
-.applicantDetails, .fillingArea, .submissionArea{
+.applicant_Details, .filling_Area, .submissionArea{
   display: flex;
   top: 3rem;
   width: calc(100%-30px);
-  margin-left: 15px;
+  
   margin-right: 15px;
   padding: 5px;
 }
 
-.applicantDetails{
+.applicant_Details{
   flex-direction:column;
-  min-height: 150px;
+  min-height: 25%;
+  margin-left: 15px;
   background-color: white;
+  margin-bottom: 10px;
 }
 
-p{
+p[id="p_ad"]{
   background-color: #C8C8C8;
-  min-height: 43px;
+  min-height: 50px;
   width: 100%;
   border-radius: 6px;
-  padding-left: 15px;
+  padding-left: 20px;
   align-content: center;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 700;
+  /*font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
   font-size: 18px;
-  margin: 0;
 }
 
 h1{
-  margin-top: 8px;
+  align-content: center;
+  text-align: center;
+  height: 50px;
+  width: 50px;
+  margin-left: 10px
 }
 
 .applicant, .teacherDetails{
@@ -107,17 +114,22 @@ h1{
   /*border: 1px solid black;*/
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 14px;
-  margin-top: 10px;
+
 }
 
 .teacherDetails{
-  min-height: 40px;
+  max-height: 35%;
+  margin-top: -5px;
   /*border: 1px solid black;*/
 }
 
 .applicant{
   background-color: #EDEDED;
-  min-height: 38px;
+  /*border: 1px solid black;*/
+  max-height: 45px;
+  margin-top: 7px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 #category{
@@ -141,14 +153,19 @@ h1{
 }
 
 .numberDays{
-  margin-right: 80px;
-  margin-left: 20px;
+  margin-right: 20px;
+  margin-left: 10px;
   border-radius: 6px;
   background-color: #EDEDED;
   /*border: 1px solid black;*/
   min-width: 22%;
   text-align: center;
   align-content: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: hidden;
 }
 
 .numberDays span{
@@ -176,6 +193,10 @@ h1{
   min-width: 23%;
   text-align: center;
   align-content: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #todaysDate{
@@ -191,6 +212,7 @@ h1{
 #selectedDays{
   display: flex;
   padding: 15px;
+  
   padding-bottom: 5px;
   padding-right: 35px;
   justify-content: right;
@@ -200,31 +222,43 @@ h1{
   margin-left: 20px;
   border-radius: 6px;
   border: 1px solid black;
+  padding: 5px;
 }
 
-.fillingArea{
+.filling_Area{
   display: flex;
   flex-direction:column;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 700;
   font-size: 14px;
-  height: 60%;
+  height: 45%;
   background-color: #EDEDED;
   padding-left: 15px;
+  margin-top: 15px;
+  margin-left: 20px;
+  margin-right: -10px;
+  border-radius: 5px;
 }
 
-#textBox{
+#text_Box{
   display: flex;
   flex-direction: column;
   padding-left: 20px;
   padding-right: 35px;
   /*background-color: green;*/
-  height: 250px;
+  height: 170px;
 }
 
 .reasonsTexts{
   margin-top: 10px;
-  min-height: 200px;
+  min-height: 130px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+div[id="reasons"]{
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .submissionArea{
@@ -232,37 +266,41 @@ h1{
   align-items: center;
   justify-content: center;
   margin-top: 3px;
+  margin-left: 45px;
   height: 10%;
   background-color: white;
 
 }
 
 .signButton, .cancelButton{
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 1px;
   height: 40px;
   width: 250px;
-  border: 1px solid black;
-  border-radius: 6px;
-  font-size: 17px;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, .3);
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  transition: .3s ease-in;
+  border: none;
 }
 .signButton{
-  background-color: #FCBF12;
+  background-color: #fae3a0;
   color:black;
   margin-right: 30px;
 }
 .signButton:hover {
-  box-shadow: inset 0 0 4px , 0 0 4px #e0aa13;
-  text-shadow: 1px 1px 15px #e0aa13;
+  background-color: #FCBF12;
+  text-shadow: 1px 1px 5px #e2aa11;
 }
 .cancelButton{
-  background-color: #1B365D;
+  background-color: #758CA3;
   color:white;
 }
 .cancelButton:hover {
-  box-shadow: inset 0 0 4px , 0 0 4px black;
-  text-shadow: 1px 1px 10px black;
+  background-color: #1B365D;
+  text-shadow: 1px 1px 5px #0f1e33;
 }
 
 body{

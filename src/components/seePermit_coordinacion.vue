@@ -3,7 +3,7 @@
         <div class="details">
             <p> Detalles del Permiso Económico</p>
             <div class="applicantDetails">
-                <h1>
+                <h1 id="perfil_Icon">
                     <i class="bi bi-person-square"></i>
                 </h1>
                 <div id="nameMail">
@@ -21,7 +21,7 @@
             </div>
             <div id="reasons"> Motivo de la solicitud:</div>
               <div id="textBox">
-              <textarea class="reasonsTexts" placeholder=" Coloca el motivo de la solicitud" ></textarea>
+              <textarea class="reasonsText" placeholder="Coloca el motivo de la solicitud" ></textarea>
             </div>
         </div>
 
@@ -75,26 +75,28 @@ p{
   width: calc(100%-30px);
   margin-left: 15px;
   margin-right: 15px;
-  padding-top: 10px;
-  padding-bottom: 5px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
 .applicantDetails{
-  max-height: 50px;
+  min-height: 40px;
   /*border: 2px solid green;*/
   display: flex;
   width: 100%;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 15px;
+  margin-bottom: 2px;
   /*margin-top: 0px;*/
 }
 
-h1{
-  margin-left: 10px;
-  padding-top: 1px;
-
+h1[id="perfil_Icon"]{
+  /*border: 2px solid green;*/
+  margin-top: 3px;
+  margin-left: 15px;
+  align-content: center;
 }
 
 #nameMail{
@@ -110,11 +112,15 @@ h1{
   /*background-color: #f5b642;*/
   background-color: #EDEDED;
   border-radius: 6px;
-  min-width: 24%;
+  min-width: 28%;
   /*min-width RECUERDA MODIFICAR CUANDO HAGAS LA BANDEJA*/ 
-  margin-right: 10px;
+  margin-right: 15px;
   text-align: center;
   align-content: center;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .fillingArea{
@@ -170,12 +176,14 @@ h1{
   margin-bottom: 25px;
   /*background-color: green;*/
   background-color: #EDEDED;
-  max-height: 150px;
+  height: 250px;
 }
 
-.reasonsTexts{
+.reasonsText{
   margin-top: 5px;
   min-height: 110px;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .submissionArea{
@@ -209,32 +217,36 @@ h1{
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 1px;
-  height: 35px;
-  min-width: 19%;
-  border: 1px solid black;
-  border-radius: 6px;
+  height: 37px;
+  width: 150px;
+  border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, .3);
+  /*box-shadow: 3px 3px 6px rgba(0, 0, 0, .3);*/
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  transition: .3s ease-in;
 }
 
 .declineButton{
-  background-color: #e00606;
-  color:white;
+  background-color: #fae3a0;
+  color:black;
   margin-right: 30px;
+  border: none;
 }
-.declineButton:hover {
-  box-shadow: inset 0 0 4px , 0 0 4px rgb(170, 5, 5);
-  text-shadow: 1px 1px 15px white;
+.declineButton:hover{
+  background-color: #FCBF12;
+  text-shadow: 1px 1px 5px #e2aa11;
+  border: none;
 }
 
 .acceptButton{
-  background-color: #5bb904;
+  background-color: #758CA3;
   color:white;
+  border: none;
 }
 .acceptButton:hover {
-  box-shadow: inset 0 0 4px , 0 0 4px #3b9403;
-  text-shadow: 1px 1px 10px white;
+  background-color: #1B365D;
+  text-shadow: 1px 1px 5px #0f1e33;
+  border: none;
 }
 </style>

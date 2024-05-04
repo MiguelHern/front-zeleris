@@ -3,13 +3,16 @@ import SeePermit_coordinacion from "@/components/seePermit_coordinacion.vue";
 import Header__docente from "@/components/header__docente.vue";
 import GeneEcoPer_docente from "@/components/geneEcoPer_docente.vue";
 import RequestTray_coordinacion from "@/components/requestTray_coordinacion.vue";
-/*<gene-eco-per_docente></gene-eco-per_docente>*/ 
+import TeachingInformation_docente from "@/components/teachingInformation_docente.vue";
+
 </script>
 
 <template>
   <div>
-    <RequestTray_coordinacion/>
-    <SeePermit_coordinacion/>
+    <!--<RequestTray_coordinacion/>-->
+    <gene-eco-per_docente></gene-eco-per_docente>
+    <!--<SeePermit_coordinacion/>-->
+    <!--<TeachingInformation_docente/>-->
   </div>
 </template>
 
