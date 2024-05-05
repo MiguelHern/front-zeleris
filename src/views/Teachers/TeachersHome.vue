@@ -16,7 +16,7 @@ export default{
       </div>
       <div class="header__right d-flex align-items-baseline">
         <h2 class="header__user fs-5 fw-bold">Permisos económicos disponibles: <span>2</span></h2>
-        <a href="HomeTeachers/GenerarPermiso" class="btn btn-primary d-inline-block" style="margin-left: 30px" @click="">Generar nuevo permiso</a>
+        <a href="TeachersHome/GenerarPermiso" class="btn btn__new  d-inline-block" style="margin-left: 30px" >Generar nuevo permiso</a>
       </div>
     </header>
     <div class="layout__table">
@@ -47,5 +47,11 @@ export default{
 </template>
 
 <style scoped>
-
+.btn__new{
+  background-color: var(--grayy);
+  color: var(--white-color);
+}
+.btn__new:hover{
+  background-color: var(--principal-color);
+}
 </style>

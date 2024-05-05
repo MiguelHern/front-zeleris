@@ -5,7 +5,7 @@
 <template>
 <header>
   <div class="container__img">
-  <img src="/src/assets/img/Zeleris.jpg">
+  <img src="/src/assets/img/Zeleris.jpg" class="logo">
   </div>
   <h1 class="header__company">Zeleris</h1>
   <h1 class="header__tipo">Docentes</h1>
@@ -17,7 +17,10 @@ header{
   width: 100%;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--grayy);
+}
+.logo{
+  pointer-events: none;
 }
 .container__img{
   width: 50px;

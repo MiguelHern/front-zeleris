@@ -103,8 +103,8 @@ mounted() {
   padding: 3rem;
 
   position: relative;
-  border-radius: 1rem;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 .layout__title{
   font-weight: 700;
@@ -127,7 +127,7 @@ mounted() {
   display: block;
   font-size: 1rem;
   padding: 1rem 3rem 1rem 1.5rem;
-  border-radius: 5px;
+  border-radius: 6px;
   outline: none;
 }
 .form__label{
@@ -160,7 +160,7 @@ mounted() {
   font-size: 1.3rem;
   background-color: var(--grayy);
   color: var(--white-color);
-  border-radius: 1rem;
+  border-radius: 6px;
   transition: all 200ms linear;
 }
 .form__button:hover{

@@ -1,5 +1,5 @@
 <template>
-  <body>
+  <div class="layout">
   <div class="applicantDetails">
     <p> Solicitar Permiso Económico</p>
     <div class="teacherDetails">
@@ -41,7 +41,7 @@
     <input class="signButton" type="submit" name="Boton1" value="Firmar"></input>
     <input class="cancelButton" type="submit" name="Boton2" value="Crear"></input>
   </div>
-  </body>
+  </div>
 </template>
 
 <script>
@@ -69,12 +69,14 @@ plus.addEventListener("click", ()=>{
 </script>
 
 <style scoped>
+.layout{
+  padding: 0 20px;
+}
 .applicantDetails, .fillingArea, .submissionArea{
   display: flex;
   top: 3rem;
-  margin-left: 15px;
   margin-right: 15px;
-  padding: 5px;
+  padding: 5px 0;
 }
 
 .applicantDetails{
@@ -189,9 +191,7 @@ h1{
 
 #selectedDays{
   display: flex;
-  padding: 15px;
   padding-bottom: 5px;
-  padding-right: 35px;
   justify-content: right;
 }
 
@@ -202,6 +202,7 @@ h1{
 }
 
 .fillingArea{
+  padding: 15px;
   display: flex;
   flex-direction:column;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -209,21 +210,23 @@ h1{
   font-size: 14px;
   height: 60%;
   background-color: #EDEDED;
-  padding-left: 15px;
+  border-radius: 6px;
 }
 
 #textBox{
   display: flex;
   flex-direction: column;
-  padding-left: 20px;
-  padding-right: 35px;
   /*background-color: green;*/
   height: 250px;
 }
 
 .reasonsTexts{
+  padding: 15px;
   margin-top: 10px;
   min-height: 200px;
+  border-radius: 6px;
+  outline: none;
+  resize: none;
 }
 
 .submissionArea{

@@ -35,7 +35,11 @@ const router = createRouter({
           name: 'AdminHome',
           component:()=>import('@/views/CordinacionAdministrativa/AdminHome.vue')
         },
-
+        {
+          path: '/Policies',
+          name: 'Policies',
+          component:()=>import('@/views/Layout/Policies.vue')
+        },
 
 
       ]
