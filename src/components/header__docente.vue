@@ -8,7 +8,7 @@
   <img src="/src/assets/img/Zeleris.jpg">
   </div>
   <h1 class="header__company">Zeleris</h1>
-  <h1 class="header__tipo">Docentes</h1>
+  <h1 class="header__tipo">Coordinación de Ingeniería en Sistemas Computacionales</h1>
 </header>
 </template>
 

@@ -9,10 +9,12 @@ import Recover__password from "@/views/ForgotPassword.vue";
 import Menu_cordinacion_administrativa from "@/components/menu_cordinacion_administrativa.vue";
 import Home_cordinacion_administrativa from "@/views/home_cordinacion_administrativa.vue";
 
+import view_teachers_administration from "./views/CordinacionAdministrativa/view_teachers_administration.vue";
 </script>
 
 <template>
-<router-view></router-view>
+<Header__docente></Header__docente>
+<view_teachers_administration></view_teachers_administration>
 </template>
 
 <style scoped>
