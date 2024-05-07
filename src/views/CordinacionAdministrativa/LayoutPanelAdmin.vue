@@ -8,14 +8,14 @@ const botonActivo = ref(null)
 onMounted(()=>{
   obtenerBotonActivo();
 })
-const irHomeTeachers = () => {
-  router.push('/TeachersHome')
+const irHomeCordinacion = () => {
+  router.push('/AdminHome')
 }
 const irPoliticas = () => {
-  router.push('/Teacher/Policies')
+  router.push('/Admin/Policies')
 }
 const irHistorial = () => {
-  router.push('/Teacher/History')
+  router.push('/Admin/History')
 }
 
 const verBotonActivo = (button) =>{
@@ -51,7 +51,7 @@ watchEffect(() => {
     <div class="row vh-100 flex-nowrap">
       <nav class="col-1 d-flex flex-column justify-content-between layout__aside" style="padding: 80px 0 0 0 ;">
         <ul class="menu__list">
-          <li class="text-center botonNavegacion menu__option" @click="irHomeTeachers" :class="{ active: botonActivo === 'TeachersHome' }">
+          <li class="text-center botonNavegacion menu__option" @click="irHomeCordinacion" :class="{ active: botonActivo === 'TeachersHome' }">
             <i class="menu__icon bi bi-person-circle"></i>
             <span class="menu__overlay">Inicio</span>
           </li>

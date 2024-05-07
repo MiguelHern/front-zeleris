@@ -25,8 +25,8 @@ const router = createRouter({
       component: () => import('../views/EnterCode.vue')
     },
     {
-      path: '/Panel',
-      name: 'Panel',
+      path: '/PanelTeacher',
+      name: 'PanelTeacher',
       redirect:'/Panel',
       component: () => import('../views/Layout/LayoutPanel.vue'),
       children:[
@@ -56,7 +56,41 @@ const router = createRouter({
           name: 'Teacher/History',
           component:()=>import('@/views/Teachers/HistoryPermit.vue')
         },
-          //Rutas Coordinación administrativa
+        //Rutas coordinación
+        {
+          path: '/CordinationHome/',
+          name: 'CordinationHome',
+          component:()=>import('@/views/Cordinacion/CordinationHome.vue')
+        },
+
+      ]
+    },
+    {
+      path: '/PanelCordination',
+      name: 'PanelCordination',
+      redirect:'/PanelCordination',
+      component: () => import('../views/Cordinacion/LayoutPanelCordination.vue'),
+      children:[
+        //Rutas coordinación
+        {
+          path: '/CordinationHome',
+          name: 'CordinationHome',
+          component:()=>import('@/views/Cordinacion/CordinationHome.vue')
+        },
+        {
+          path: '/Cordination/Polices',
+          name: 'Cordination/Polices',
+          component:()=>import('@/views/Cordinacion/Policies.vue')
+        },
+      ]
+    },
+    {
+      path: '/PanelAdmin',
+      name: 'PanelAdmin',
+      redirect:'/PanelAdmin',
+      component: () => import('../views/CordinacionAdministrativa/LayoutPanelAdmin.vue'),
+      children:[
+        //Rutas Coordinación administrativa
         {
           path: '/AdminHome',
           name: 'AdminHome',
@@ -72,14 +106,6 @@ const router = createRouter({
           name: 'Admin/History',
           component:()=>import('@/views/CordinacionAdministrativa/TeachersHistory.vue')
         },
-
-          //Rutas coordinación
-        {
-          path: '/CordinationHome/',
-          name: 'CordinationHome',
-          component:()=>import('@/views/Cordinacion/CordinationHome.vue')
-        },
-
       ]
     },
   ]

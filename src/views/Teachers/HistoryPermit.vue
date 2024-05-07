@@ -5,7 +5,7 @@
 <template>
   <div class="layout">
     <header class="header__cordinacion p-4 mb-5">
-      <h1 class="text-center">Historial de permísos</h1>
+      <h1 class="text-center">Historial de permisos</h1>
     </header>
     <div class="layout__table">
       <table class="table shadow-sm">
