@@ -58,7 +58,7 @@ mounted() {
               <label for="contraseña" class="form__label">Contraseña</label>
               <i class="eye bi bi-eye"></i>
             </div>
-            <a href="ForgotPassword.vue" class="form__recover">Recuperar contraseña</a>
+            <a href="ForgotPassword" class="form__recover">Recuperar contraseña</a>
             <button type="submit" class="form__button">Continuar</button>
           </form>
         </div>
@@ -104,7 +104,7 @@ mounted() {
 
   position: relative;
   border-radius: 6px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--bs-box-shadow);
 }
 .layout__title{
   font-weight: 700;

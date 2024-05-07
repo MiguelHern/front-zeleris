@@ -14,16 +14,13 @@
         </div>
         <form action="" class="login__form">
           <div class="form__group">
-            <input type="email" class="form__input" name="email" required placeholder="Email">
-            <label for="email" class="form__label">Email</label>
-          </div>
-          <div class="form__group">
             <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">
             <label for="contraseña" class="form__label">Contraseña</label>
             <i class="eye bi bi-eye"></i>
           </div>
-          <div class="container__recover">
-          <a href="ForgotPassword.vue" class="form__recover">Recuperar contraseña</a>
+          <div class="form__group">
+            <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">
+            <label for="contraseña" class="form__label">Confirmar contraseña</label>
           </div>
           <input type="submit" value="Continuar" class="form__button">
         </form>
@@ -72,7 +69,7 @@
 
   position: relative;
   border-radius: 1rem;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--bs-box-shadow);
 }
 .layout__title{
   font-weight: 700;
@@ -94,9 +91,8 @@
   display: block;
   font-size: 1rem;
   padding: 1rem 3rem 1rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: 6px;
   outline: none;
-  line-height: 2.1rem;
 
 }
 .form__label{

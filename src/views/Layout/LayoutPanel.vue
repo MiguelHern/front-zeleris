@@ -14,6 +14,9 @@ const irHomeCordinacion = () => {
 const irPoliticas = () => {
   router.push('/Teacher/Policies')
 }
+const irHistorial = () => {
+  router.push('/Teacher/History')
+}
 
 const verBotonActivo = (button) =>{
   botonActivo.value = button;
@@ -35,6 +38,9 @@ watchEffect(() => {
     case "PoliciesTeacher":
       verBotonActivo("PoliciesTeacher");
       break;
+    case "History":
+      verBotonActivo("History");
+      break;
   }
 });
 
@@ -49,7 +55,7 @@ watchEffect(() => {
             <i class="menu__icon bi bi-person-circle"></i>
             <span class="menu__overlay">Inicio</span>
           </li>
-          <li class="text-center botonNavegacion menu__option" @click="" :class="{ active: botonActivo === '' }">
+          <li class="text-center botonNavegacion menu__option" @click="irHistorial" :class="{ active: botonActivo === 'History' }">
             <i class="menu__icon bi bi-folder2"></i>
             <span class="menu__overlay">Permisos</span>
           </li>

@@ -15,6 +15,16 @@ const router = createRouter({
       component: () => import('../views/ForgotPassword.vue')
     },
     {
+      path: '/ChangePassword',
+      name: 'ChangePassword',
+      component: () => import('../views/ChangePassword.vue')
+    },
+    {
+      path: '/EnterCode',
+      name: 'EnterCode',
+      component: () => import('../views/EnterCode.vue')
+    },
+    {
       path: '/Panel',
       name: 'Panel',
       redirect:'/Panel',
@@ -41,7 +51,12 @@ const router = createRouter({
           name: 'Teacher/Policies',
           component:()=>import('@/views/Teachers/PoliciesTeacher.vue')
         },
-          //Rutas Administrador
+        {
+          path: '/Teacher/History',
+          name: 'Teacher/History',
+          component:()=>import('@/views/Teachers/HistoryPermit.vue')
+        },
+          //Rutas Coordinación administrativa
         {
           path: '/AdminHome',
           name: 'AdminHome',
@@ -52,7 +67,18 @@ const router = createRouter({
           name: 'Admin/Policies',
           component:()=>import('@/views/CordinacionAdministrativa/Policies.vue')
         },
+        {
+          path: '/Admin/History',
+          name: 'Admin/History',
+          component:()=>import('@/views/CordinacionAdministrativa/TeachersHistory.vue')
+        },
 
+          //Rutas coordinación
+        {
+          path: '/CordinationHome/',
+          name: 'CordinationHome',
+          component:()=>import('@/views/Cordinacion/CordinationHome.vue')
+        },
 
       ]
     },

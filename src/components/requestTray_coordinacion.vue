@@ -175,7 +175,6 @@ export default {
   display: flex;
   flex-direction:column;
   min-width: 275px;
-  min-height: 100vh;
   /*border: 3px solid blue;*/
   background-color:#EDEDED;
 }
