@@ -49,24 +49,100 @@
         </div>
 
         <div class="managementArea">
-          <input class="deleteButton" type="submit" name="Boton1" value="Eliminar docente"></input>
-          <input class="updateButton" type="submit" name="Boton2" value="Actualizar docente"></input>
+          <input class="deleteButton" type="submit" name="Boton1" value="Eliminar"  @click="openPopup"></input>
+          <input class="updateButton" type="submit" name="Boton2" value="Actualizar"></input>
         </div>
         
+      <!-- Popup -->
+      <div class="overlay" v-show="showPopup">
+        <div class="popup_One">
+          <p id="popUp_P">¿Está seguro de “Eliminar” al docente?</p>
+          <div id="popUp_AreaBtn">
+            <button class="popUpMADBottonYes" @click="confirmAction(true)">Sí</button>
+            <button class="popUpMADBottonNo" @click="confirmAction(false)">No</button>
+          </div>
+        </div>
+      </div>
+
     </div>
 </template>
 
 
 <script>
+/*export default {
+  name: 'teachingInformation_docente',
+  props: {
+    msg: String
+  }
+}*/
+
 export default {
   name: 'teachingInformation_docente',
   props: {
     msg: String
+  },
+  data() {
+    return {
+      showPopup: false
+    };
+  },
+  methods: {
+    openPopup() {
+      this.showPopup = true;
+    },
+    closePopup() {
+      this.showPopup = false;
+    },
+    confirmAction(confirmed) {
+      if (confirmed) {
+        // Aquí puedes ejecutar la acción de eliminar
+        alert('Elemento eliminado!');
+      } else {
+        // El usuario canceló
+        alert('Eliminación cancelada');
+      }
+      this.closePopup();
+    }
   }
 }
 </script>
 
 <style>
+.overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(128, 128, 128, 0.5); /* Gris transparente */
+}
+.popup_One{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 30%; /* Ancho del popup */
+  min-height: 25%; /* Alto del popup */
+  background-color: white; /* Fondo blanco */
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 6px;
+}
+#popUp_P{
+  padding-left: 13px;
+  padding-right: 13px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 17px;
+  text-align: center;
+}
+#popUp_AreaBtn{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 #cuerpo{
   display: flex;
   flex-direction:column;
@@ -272,12 +348,12 @@ label[id="labelrB"]{
 }
 
 
-.deleteButton, .updateButton{
+.deleteButton, .updateButton, .popUpMADBottonYes, .popUpMADBottonNo{
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 1px;
   height: 37px;
-  width: 180px;
+  width: 160px;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
@@ -310,7 +386,13 @@ label[id="labelrB"]{
   margin-left: 50px;
   margin-right: 30px;
 }
-.deleteButton:hover {
+.popUpMADBottonYes{
+  background-color: #fae3a0;
+  color:black;
+  width: 100px;
+  margin-right: 30px;
+}
+.deleteButton:hover, .popUpMADBottonYes:hover{
   background-color: #FCBF12;
   text-shadow: 1px 1px 5px #e2aa11;
 }
@@ -319,7 +401,12 @@ label[id="labelrB"]{
   background-color: #758CA3;
   color:white;
 }
-.updateButton:hover {
+.popUpMADBottonNo{
+  background-color: #758CA3;
+  color:white;
+  width: 100px;
+}
+.updateButton:hover, .popUpMADBottonNo{
   background-color: #1B365D;
   text-shadow: 1px 1px 5px #0f1e33;
 }
