@@ -1,17 +1,34 @@
 <script setup>
-
-import Header__docente from "@/views/Layout/header.vue";
+import SeePermit_coordinacion from "@/components/seePermit_coordinacion.vue";
+import Header__docente from "@/components/header__docente.vue";
 import GeneEcoPer_docente from "@/components/geneEcoPer_docente.vue";
-import Enter_code from "@/views/EnterCode.vue";
-import Change_password from "@/views/ChangePassword.vue";
-import Recover__password from "@/views/ForgotPassword.vue";
-import Menu_cordinacion_administrativa from "@/components/menu_cordinacion_administrativa.vue";
+import RequestTray_coordinacion from "@/components/requestTray_coordinacion.vue";
+import TeachingInformation_docente from "@/components/teachingInformation_docente.vue";
+
+
 </script>
 
 <template>
-<router-view></router-view>
+  <div>
+    <!--<RequestTray_coordinacion/>-->
+    <!--<gene-eco-per_docente></gene-eco-per_docente>-->
+    <!--<SeePermit_coordinacion/>-->
+    <TeachingInformation_docente/>
+    
+  </div>
 </template>
 
 <style scoped>
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
 
+  main{
+    flex: 1 1 0;
+    padding: 2rem;
+    
+  }
+}
 </style>

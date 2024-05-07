@@ -131,13 +131,6 @@
 </template>
 
 <script>
-/*export default {
-  name: 'requestTray_coordinacion',
-  props: {
-    msg: String
-  }
-}*/
-
 export default {
   name: 'requestTray_coordinacion',
   props: {
@@ -162,10 +155,6 @@ export default {
 </script>
 
 <style>
-.rotate {
-  transform: rotate(180deg);
-}
-
 .scrollContainer {
   overflow-y: auto;
   max-height: calc(100vh - 70px); /* Restamos el alto del trayHeader */
@@ -184,7 +173,7 @@ export default {
   background-color: #1B365D;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 650;
-  font-size: 14px;
+  font-size: 15px;
   color: white;
   padding-left: 10px;
   padding-right: 10px;
@@ -200,7 +189,7 @@ export default {
   background-color: #C8C8C8;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   color: black;
   padding-left: 15px;
   padding-right: 10px;
@@ -223,7 +212,6 @@ export default {
   align-content: center;
   /*border: 3px solid blueviolet;*/
   width: 25px;
-  
 }
 
 button{
@@ -258,17 +246,13 @@ button{
 #userName{
   text-align: left;
   align-content: center;
+  padding-left: 3px;
 }
 
 #iconUser{
   background-color: #FCBF12;
-  width: 30px;
+  width: 34px;
   margin: 5px;
   border-radius: 6px;
-}
-
-i[class="bi bi-chevron-double-up"], i[class="bi bi-chevron-double-down"] {
-  display: flex;
-  /*border: 2px solid yellow;*/
 }
 </style>

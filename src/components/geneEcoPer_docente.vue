@@ -1,18 +1,18 @@
 <template>
-  <div class="layout">
-  <div class="applicantDetails">
-    <p> Solicitar Permiso Económico</p>
+  <body>
+  <div class="applicant_Details">
+    <p id="p_ad"> Solicitar Permiso Económico</p>
     <div class="teacherDetails">
       <h1>
         <i class="bi bi-person-square"></i>
       </h1>
       <div id="nameMail">
-        <label>Julio A Gutiérrez Gonzáles</label><br>
+        <label>Julio A Gutiérrez Gonzáles</label>
         <label>JulioGutierrez@uacam.mx</label>
       </div>
       <div class="numberDays">Cantidad de dias a solicitar:
         <span class="minus">-</span>
-        <span class="num">3</span>
+        <span class="num">1</span>
         <span class="plus">+</span>
 
       </div>
@@ -25,80 +25,195 @@
     </div>
   </div>
 
-  <div class="fillingArea">
-    <div id="selectedDays"> Fecha del permiso:
-      <input id="datePermit" type="date"></input>
-      <input id="datePermit" type="date"></input>
-      <input id="datePermit" type="date"></input>
+  <div class="filling_Area">
+    <div id="selectedDay"> 
+      <div id="sel_Day">Fecha del permiso:</div>
+      <div id="selectedDays">
+        <input id="datePermit" type="date"></input>
+
+      </div>
     </div>
     <div id="reasons"> Motivo de la solicitud:</div>
-    <div id="textBox">
+    <div id="text_Box">
       <textarea class="reasonsTexts" placeholder=" Coloca el motivo de la solicitud" ></textarea>
     </div>
   </div>
 
   <div class="submissionArea">
     <input class="signButton" type="submit" name="Boton1" value="Firmar"></input>
-    <input class="cancelButton" type="submit" name="Boton2" value="Crear"></input>
+    <input class="cancelButton" type="submit" name="Boton2" value="Crear" @click="openPopup"></input>
   </div>
-  </div>
+
+  <!-- Popup -->
+  <div class="overlay" v-show="showPopup">
+        <div class="popup_Two">
+          <p id="popUp_Display">
+            <SeePermit_coordinacion/>
+          </p>
+          <div id="popUp_AreaBtn">
+            <button class="popUpMADBottonEditDoc" @click="confirmAction(true)">Editar documento</button>
+            <button class="popUpMADBottonConfirm" @click="confirmAction(false)">Confirmar</button>
+          </div>
+        </div>
+      </div>
+  </body>
 </template>
 
 <script>
+import SeePermit_coordinacion from "@/components/seePermit_coordinacion.vue";
 export default {
   name: 'geneEcoPer_docente',
-  props: {
+   props: {
     msg: String
+  },
+  mounted() {
+    const plusButton = document.querySelector('.plus');
+    const minusButton = document.querySelector('.minus');
+    const numberElement = document.querySelector('.num');
+
+    let number = parseInt(numberElement.textContent);
+
+    plusButton.addEventListener('click', () => {
+      if (number < 6) { 
+        number++;
+        numberElement.textContent = number;
+        updateDatePermitInputs(number);
+      }
+    });
+
+    minusButton.addEventListener('click', () => {
+      if (number > 1) {
+        number--;
+        numberElement.textContent = number;
+        updateDatePermitInputs(number);
+      }
+    });
+
+    function updateDatePermitInputs(number) {
+      const datePermitContainer = document.getElementById('selectedDays');
+      // Eliminar todos los inputs existentes
+      datePermitContainer.innerHTML = '';
+      // Crear nuevos inputs según el número
+      for (let i = 0; i < number; i++) {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'date');
+        input.setAttribute('id', 'datePermit');
+        input.style.borderRadius = '6px';
+        input.style.border = '1px solid black';
+        input.style.padding = '5px';
+        input.style.height = '30px';
+        input.style.marginRight = '5px';
+        input.style.textAlign = 'center';
+        datePermitContainer.appendChild(input);
+      }
+    }
+  },
+  data() {
+    return {
+      showPopup: false
+    };
+  },
+  methods: {
+    openPopup() {
+      this.showPopup = true;
+    },
+    closePopup() {
+      this.showPopup = false;
+    },
+    confirmAction(confirmed) {
+      if (confirmed) {
+        // Aquí puedes ejecutar la acción de eliminar
+        alert('Elemento eliminado!');
+      } else {
+        // El usuario canceló
+        alert('Eliminación cancelada');
+      }
+      this.closePopup();
+    }
+  },
+  components: {
+    SeePermit_coordinacion // Importante agregar el componente aquí
   }
 }
-
-/* SCRIPT DEL INCRMENTO (NO FUNCIONA)
-const plus= document.querySelector(".plus"),
-minus= document.querySelector(".minus"),
-num= document.querySelector(".num");
-
-let a=1;
-
-plus.addEventListener("click", ()=>{
-  a++;
-  a= (a<10)? "0"+ a: a;
-  num.innerText =a;
-  console.log(a);
-});*/
 
 </script>
 
 <style scoped>
-.layout{
-  padding: 0 20px;
+.overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(128, 128, 128, 0.5); /* Gris transparente */
 }
-.applicantDetails, .fillingArea, .submissionArea{
+.popup_Two{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 550px; /* Ancho del popup */
+  min-height: 95%; /* Alto del popup */
+  background-color: white; /* Fondo blanco */
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 7px;
+}
+#popUp_Display{
+  display: flex;
+  padding-left: 13px;
+  padding-right: 13px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%; 
+  height: 80vh;
+  justify-content: center;
+  background-color: #C8C8C8;
+}
+#popUp_AreaBtn{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%; 
+  /*background-color: aqua;*/
+}
+
+.applicant_Details, .filling_Area, .submissionArea{
   display: flex;
   top: 3rem;
+  width: calc(100%-30px);
+  
   margin-right: 15px;
-  padding: 5px 0;
+  padding: 5px;
 }
 
-.applicantDetails{
+.applicant_Details{
   flex-direction:column;
-  min-height: 150px;
+  min-height: 25%;
+  margin-left: 15px;
   background-color: white;
+  margin-bottom: 10px;
 }
 
-p{
+p[id="p_ad"]{
   background-color: #C8C8C8;
-  min-height: 43px;
+  min-height: 50px;
   width: 100%;
   border-radius: 6px;
-  padding-left: 15px;
+  padding-left: 20px;
   align-content: center;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 700;
+  /*font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
   font-size: 18px;
-  margin: 0;
 }
 
 h1{
-  margin-top: 8px;
+  align-content: center;
+  text-align: center;
+  height: 50px;
+  width: 50px;
+  margin-left: 10px
 }
 
 .applicant, .teacherDetails{
@@ -108,17 +223,22 @@ h1{
   /*border: 1px solid black;*/
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 14px;
-  margin-top: 10px;
+
 }
 
 .teacherDetails{
-  min-height: 40px;
+  max-height: 35%;
+  margin-top: -5px;
   /*border: 1px solid black;*/
 }
 
 .applicant{
   background-color: #EDEDED;
-  min-height: 38px;
+  /*border: 1px solid black;*/
+  max-height: 45px;
+  margin-top: 7px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 #category{
@@ -142,14 +262,19 @@ h1{
 }
 
 .numberDays{
-  margin-right: 80px;
-  margin-left: 20px;
+  margin-right: 20px;
+  margin-left: 10px;
   border-radius: 6px;
   background-color: #EDEDED;
   /*border: 1px solid black;*/
   min-width: 22%;
   text-align: center;
   align-content: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: hidden;
 }
 
 .numberDays span{
@@ -177,6 +302,10 @@ h1{
   min-width: 23%;
   text-align: center;
   align-content: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #todaysDate{
@@ -189,44 +318,77 @@ h1{
   align-content: center;
 }
 
+#selectedDays, #selectedDay{
+  padding: 10px;
+  padding-bottom: 5px;
+  padding-top: 3px;
+}
 #selectedDays{
   display: flex;
-  padding-bottom: 5px;
+  flex-direction: row;
+  max-width: 80%;
+  justify-content: right;
+  align-items: center;
+  /*border: 1px solid black;*/
+}
+#sel_Day{
+  display: flex;
+  width: 130px;
+  /*border: 1px solid yellow;*/
+  align-items: center;
+  text-align: center;
+}
+#selectedDay{
+  display: flex;
+  /*border: 1px solid blue;*/
+  padding-right: 20px;
+  margin-top: 10px;
+  padding-top: 8px;
   justify-content: right;
 }
 
 #datePermit{
-  margin-left: 20px;
   border-radius: 6px;
   border: 1px solid black;
+  padding: 5px;
+  height: 30px;
+  text-align: center;
 }
 
-.fillingArea{
-  padding: 15px;
+.filling_Area{
   display: flex;
   flex-direction:column;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 700;
   font-size: 14px;
-  height: 60%;
+  height: 45%;
   background-color: #EDEDED;
-  border-radius: 6px;
+  padding-left: 15px;
+  margin-top: 15px;
+  margin-left: 20px;
+  margin-right: -10px;
+  border-radius: 5px;
 }
 
-#textBox{
+#text_Box{
   display: flex;
   flex-direction: column;
+  padding-left: 20px;
+  padding-right: 35px;
   /*background-color: green;*/
-  height: 250px;
+  height: 170px;
 }
 
 .reasonsTexts{
-  padding: 15px;
   margin-top: 10px;
-  min-height: 200px;
-  border-radius: 6px;
-  outline: none;
-  resize: none;
+  min-height: 130px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+div[id="reasons"]{
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .submissionArea{
@@ -234,43 +396,67 @@ h1{
   align-items: center;
   justify-content: center;
   margin-top: 3px;
+  margin-left: 45px;
   height: 10%;
   background-color: white;
 
 }
 
-.signButton, .cancelButton{
-  height: 40px;
-  width: 250px;
-  border: 1px solid black;
-  border-radius: 6px;
-  font-size: 17px;
+.signButton, .cancelButton, .popUpMADBottonEditDoc, .popUpMADBottonConfirm{
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 1px;
   cursor: pointer;
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, .3);
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  transition: .3s ease-in;
+  border: none;
 }
 .signButton{
-  background-color: #FCBF12;
+  background-color: #fae3a0;
   color:black;
   margin-right: 30px;
+  font-size: 16px;
+  border-radius: 5px;
+  height: 40px;
+  width: 250px;
 }
-.signButton:hover {
-  box-shadow: inset 0 0 4px , 0 0 4px #e0aa13;
-  text-shadow: 1px 1px 15px #e0aa13;
+.popUpMADBottonEditDoc{
+  background-color: #fae3a0;
+  font-size: 15px;
+  color:black;
+  width: 180px;
+  border-radius: 15px;
+  margin-right: 40px;
+}
+.signButton:hover, .popUpMADBottonEditDoc:hover{
+  background-color: #FCBF12;
+  text-shadow: 1px 1px 5px #e2aa11;
 }
 .cancelButton{
-  background-color: #1B365D;
+  background-color: #758CA3;
   color:white;
+  font-size: 16px;
+  border-radius: 5px;
+  height: 40px;
+  width: 250px;
 }
-.cancelButton:hover {
-  box-shadow: inset 0 0 4px , 0 0 4px black;
-  text-shadow: 1px 1px 10px black;
+.popUpMADBottonConfirm{
+  background-color: #758CA3;
+  font-size: 15px;
+  color:white;
+  border-radius: 15px;
+  width: 180px;
+}
+.cancelButton:hover, .popUpMADBottonConfirm:hover {
+  background-color: #1B365D;
+  text-shadow: 1px 1px 5px #0f1e33;
 }
 
 body{
   display: flex;
   flex-direction:column;
   min-width: calc(100% - 50px);
+  min-height: 100vh;
   background-color: white;
 }
 </style>
