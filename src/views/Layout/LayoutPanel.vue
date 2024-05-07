@@ -12,7 +12,7 @@ const irHomeCordinacion = () => {
   router.push('/TeachersHome')
 }
 const irPoliticas = () => {
-  router.push('/Policies')
+  router.push('/Teacher/Policies')
 }
 
 const verBotonActivo = (button) =>{
@@ -32,8 +32,8 @@ watchEffect(() => {
     case "TeachersHome":
       verBotonActivo("TeachersHome");
       break;
-    case "Policies":
-      verBotonActivo("Policies");
+    case "PoliciesTeacher":
+      verBotonActivo("PoliciesTeacher");
       break;
   }
 });
@@ -53,7 +53,7 @@ watchEffect(() => {
             <i class="menu__icon bi bi-folder2"></i>
             <span class="menu__overlay">Permisos</span>
           </li>
-          <li class="text-center botonNavegacion menu__option" @click="irPoliticas" :class="{ active: botonActivo === 'Policies' }">
+          <li class="text-center botonNavegacion menu__option" @click="irPoliticas" :class="{ active: botonActivo === 'PoliciesTeacher' }">
             <i class="menu__icon bi bi-journal-x"></i>
             <span class="menu__overlay">Políticas</span>
           </li>

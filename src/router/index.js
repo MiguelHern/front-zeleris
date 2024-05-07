@@ -20,6 +20,7 @@ const router = createRouter({
       redirect:'/Panel',
       component: () => import('../views/Layout/LayoutPanel.vue'),
       children:[
+          //Rutas Teacher
         {
           path: '/TeachersHome',
           name: 'TeachersHome',
@@ -31,14 +32,25 @@ const router = createRouter({
           component:()=>import('@/views/Teachers/GenerarPermiso.vue')
         },
         {
+          path: '/TeachersHome/Settings',
+          name: 'TeachersHome/Settings',
+          component:()=>import('@/views/Teachers/SettingsTeacher.vue')
+        },
+        {
+          path: '/Teacher/Policies',
+          name: 'Teacher/Policies',
+          component:()=>import('@/views/Teachers/PoliciesTeacher.vue')
+        },
+          //Rutas Administrador
+        {
           path: '/AdminHome',
           name: 'AdminHome',
           component:()=>import('@/views/CordinacionAdministrativa/AdminHome.vue')
         },
         {
-          path: '/Policies',
-          name: 'Policies',
-          component:()=>import('@/views/Layout/Policies.vue')
+          path: '/Admin/Policies',
+          name: 'Admin/Policies',
+          component:()=>import('@/views/CordinacionAdministrativa/Policies.vue')
         },
 
 

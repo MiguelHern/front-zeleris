@@ -10,9 +10,12 @@ export default{
   <div class="layout">
     <header class="header__cordinacion d-flex justify-content-between p-4 mb-5">
       <div class="header__left">
-        <h1 class="header__user fs-4 fw-bold">
-          Kevin Chan Guzman
-        </h1>
+        <a href="TeachersHome/Settings" class="header__settings">
+          <h1 class="header__user fs-4 fw-bold">
+            Kevin Chan Guzman
+          </h1>
+          <i class="bi bi-gear-fill"></i>
+        </a>
       </div>
       <div class="header__right d-flex align-items-baseline">
         <h2 class="header__user fs-5 fw-bold">Permisos económicos disponibles: <span>2</span></h2>
@@ -54,4 +57,13 @@ export default{
 .btn__new:hover{
   background-color: var(--principal-color);
 }
+.header__settings{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.header__settings:hover{
+  color: var(--principal-color);
+}
+
 </style>

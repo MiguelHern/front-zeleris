@@ -49,6 +49,8 @@ form, input, select, textarea, button, label{
   --rojo-c: #AC4A4A;
   --grayy: #758CA3;
   --white-color: #FFFFFF;
+  --cancel-red: #E63946; /* Rojo para cancelar */
+
 }
 * {
   font-family:sans-serif;
