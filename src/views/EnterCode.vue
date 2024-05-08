@@ -76,8 +76,8 @@ const handleKeyUp = (index, event) => {
   row-gap: 1rem;
 
   position: relative;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  box-shadow: var(--bs-box-shadow);
 }
 .header__text{
   margin-bottom: 2rem;
@@ -127,12 +127,13 @@ input_field input::-webkit-outer-spin-button{
   padding: 5px 30px;
   background: #B3A87A;
 }
+
 form button.active{
   background: var(--principal-color);
   pointer-events: auto;
 }
 form button:hover{
-  transform: scale(1.04);
+  box-shadow: var(--bs-box-shadow);
 }
 
 .content{

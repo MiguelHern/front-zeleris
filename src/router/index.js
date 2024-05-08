@@ -15,11 +15,22 @@ const router = createRouter({
       component: () => import('../views/ForgotPassword.vue')
     },
     {
-      path: '/Panel',
-      name: 'Panel',
+      path: '/ChangePassword',
+      name: 'ChangePassword',
+      component: () => import('../views/ChangePassword.vue')
+    },
+    {
+      path: '/EnterCode',
+      name: 'EnterCode',
+      component: () => import('../views/EnterCode.vue')
+    },
+    {
+      path: '/PanelTeacher',
+      name: 'PanelTeacher',
       redirect:'/Panel',
       component: () => import('../views/Layout/LayoutPanel.vue'),
       children:[
+          //Rutas Teacher
         {
           path: '/TeachersHome',
           name: 'TeachersHome',
@@ -31,17 +42,70 @@ const router = createRouter({
           component:()=>import('@/views/Teachers/GenerarPermiso.vue')
         },
         {
+          path: '/TeachersHome/Settings',
+          name: 'TeachersHome/Settings',
+          component:()=>import('@/views/Teachers/SettingsTeacher.vue')
+        },
+        {
+          path: '/Teacher/Policies',
+          name: 'Teacher/Policies',
+          component:()=>import('@/views/Teachers/PoliciesTeacher.vue')
+        },
+        {
+          path: '/Teacher/History',
+          name: 'Teacher/History',
+          component:()=>import('@/views/Teachers/HistoryPermit.vue')
+        },
+        //Rutas coordinación
+        {
+          path: '/CordinationHome/',
+          name: 'CordinationHome',
+          component:()=>import('@/views/Cordinacion/CordinationHome.vue')
+        },
+
+      ]
+    },
+    {
+      path: '/PanelCordination',
+      name: 'PanelCordination',
+      redirect:'/PanelCordination',
+      component: () => import('../views/Cordinacion/LayoutPanelCordination.vue'),
+      children:[
+        //Rutas coordinación
+        {
+          path: '/CordinationHome',
+          name: 'CordinationHome',
+          component:()=>import('@/views/Cordinacion/CordinationHome.vue')
+        },
+        {
+          path: '/Cordination/Polices',
+          name: 'Cordination/Polices',
+          component:()=>import('@/views/Cordinacion/Policies.vue')
+        },
+      ]
+    },
+    {
+      path: '/PanelAdmin',
+      name: 'PanelAdmin',
+      redirect:'/PanelAdmin',
+      component: () => import('../views/CordinacionAdministrativa/LayoutPanelAdmin.vue'),
+      children:[
+        //Rutas Coordinación administrativa
+        {
           path: '/AdminHome',
           name: 'AdminHome',
           component:()=>import('@/views/CordinacionAdministrativa/AdminHome.vue')
         },
         {
-          path: '/Policies',
-          name: 'Policies',
-          component:()=>import('@/views/Layout/Policies.vue')
+          path: '/Admin/Policies',
+          name: 'Admin/Policies',
+          component:()=>import('@/views/CordinacionAdministrativa/Policies.vue')
         },
-
-
+        {
+          path: '/Admin/History',
+          name: 'Admin/History',
+          component:()=>import('@/views/CordinacionAdministrativa/TeachersHistory.vue')
+        },
       ]
     },
   ]

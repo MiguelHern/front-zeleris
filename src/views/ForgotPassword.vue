@@ -54,8 +54,8 @@
   padding: 3rem;
 
   position: relative;
-  border-radius: 1rem;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  box-shadow: var(--bs-box-shadow);
 }
 .layout__title{
   font-size: 1.8rem;

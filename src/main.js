@@ -9,6 +9,7 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '/src/assets/main.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 const app = createApp(App)
