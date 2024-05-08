@@ -22,10 +22,14 @@ mounted() {
         // Llama al método login de AuthService
         const respuesta = await auth.login(this.email, this.password);
         console.log('Respuesta del servidor:', respuesta.data.token);
+        console.log('Respuesta del servidor:', respuesta.data);
         localStorage.token = respuesta.data.token;
-
+        localStorage.rol = respuesta.data.rol;
+        localStorage.username = respuesta.data.usearname;
+        localStorage.expiredTime = respuesta.data.expiredTime;       
+        
         if (respuesta.success) {
-          this.$router.push('/Panel')
+          this.$router.push('/TeachersHome')
         }
         
         // Haz algo con la respuesta, por ejemplo, redirige a otra página
