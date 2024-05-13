@@ -106,6 +106,11 @@ const router = createRouter({
           name: 'Admin/History',
           component:()=>import('@/views/CordinacionAdministrativa/TeachersHistory.vue')
         },
+        {
+          path: '/Admin/History/Docentes',
+          name: 'Admin/History/Docentes',
+          component:()=>import('@/views/CordinacionAdministrativa/DocentesPermisos.vue')
+        },
       ]
     },
   ]

@@ -154,7 +154,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .scrollContainer {
   overflow-y: auto;
   max-height: calc(100vh - 70px); /* Restamos el alto del trayHeader */

@@ -1,5 +1,29 @@
 <script setup>
+import TableHistory from "@/components/Teacher/TableHistory.vue";
+import { ref, onMounted } from 'vue';
 
+const history = ref({});
+const noHistory = ref(false);
+
+onMounted(async () => {
+    try {
+        const response = await fetch('https://service-teacher-zeleris.onrender.com/Documents/history', {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.token
+            },
+        });
+        const data = await response.json();
+        if (data && data.success === false && data.message === "No leave history found for the specified employee") {
+            console.log("No hay documentos pendientes en este momento.");
+            noHistory.value = true;
+            console.log(('No jalo'))
+        }
+        history.value = data.data;
+        console.log(data)
+    } catch (error) {
+        console.error('Error al obtener la información del empleado:', error);
+    }
+});
 </script>
 
 <template>
@@ -8,28 +32,7 @@
       <h1 class="text-center">Historial de permisos</h1>
     </header>
     <div class="layout__table">
-      <table class="table shadow-sm">
-        <thead>
-        <tr>
-          <th scope="col" class="col-auto"></th>
-          <th scope="col" class="col-5">Nombre</th>
-          <th scope="col" class="col-2 text-center">Días solicitados</th>
-          <th scope="col" class="col-2 text-center">Fechas</th>
-          <th scope="col" class="col-2 text-center">Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="align-content-center">
-          <td class="text-lg-center align-content-center fw-bold text-body-secondary">
-            <i class="bi bi-file-earmark-check-fill"></i>
-          </td>
-          <td class="align-content-center hoverTabla">Kevin Chan</td>
-          <td class="text-center align-content-center">3</td>
-          <td class="text-center align-content-center"><span>13/12/2023</span><span> | 14/12/2023</span> <span> | 13/12/2023</span></td>
-          <td class="text-center align-content-center">Aceptado</td>
-        </tr>
-        </tbody>
-      </table>
+        <table-history></table-history>
     </div>
   </div>
 </template>

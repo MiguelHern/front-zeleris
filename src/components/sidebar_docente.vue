@@ -34,7 +34,7 @@
   </aside>
 </template>
 
-<style>
+<style scoped>
 .menu__option-logout{
   display: flex;
   justify-content: center;

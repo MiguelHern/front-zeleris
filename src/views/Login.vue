@@ -25,7 +25,7 @@ mounted() {
         localStorage.token = respuesta.data.token;
 
         if (respuesta.success) {
-          this.$router.push('/Panel')
+          this.$router.push('/TeachersHome')
         }
         
         // Haz algo con la respuesta, por ejemplo, redirige a otra página
@@ -56,9 +56,10 @@ mounted() {
             <div class="form__group">
               <input v-model="password" type="password" class="form__input" name="contraseña" required placeholder="Contraseña">
               <label for="contraseña" class="form__label">Contraseña</label>
-              <i class="eye bi bi-eye"></i>
             </div>
-            <a href="ForgotPassword" class="form__recover">Recuperar contraseña</a>
+              <div class="recover text-end m-0 p-0">
+            <a href="ForgotPassword" class="form__recover d-inline-block mb-2 mt-0">Recuperar contraseña</a>
+              </div>
             <button type="submit" class="form__button">Continuar</button>
           </form>
         </div>

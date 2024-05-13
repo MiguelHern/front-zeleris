@@ -115,7 +115,7 @@
   </nav>
 </template>
 
-<style>
+<style scoped>
 .nav {
   width: 100%;
 }

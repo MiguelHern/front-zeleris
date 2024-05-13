@@ -64,11 +64,11 @@ watchEffect(() => {
             <span class="menu__overlay">Políticas</span>
           </li>
         </ul>
-        <div class="botonSingOff">
+        <a class="botonSingOff" href="/">
           <svg class="signOff__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14.9995 13.9995L18.9995 9.9995M18.9995 9.9995L14.9995 5.99951M18.9995 9.9995H6.99946M10.9995 18.9995H4.20024C3.08014 18.9995 2.52009 18.9995 2.09226 18.7815C1.71594 18.5898 1.40998 18.2838 1.21823 17.9075C1.00024 17.4797 1.00024 16.9196 1.00024 15.7995V4.19951C1.00024 3.07941 1.00024 2.51935 1.21823 2.09153C1.40998 1.71521 1.71594 1.40925 2.09226 1.2175C2.52009 0.999512 3.08014 0.999512 4.20024 0.999512H10.9995" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-        </div>
+        </a>
       </nav>
       <div class="col p-0">
         <Header></Header>

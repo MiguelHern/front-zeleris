@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #cuerpo{
   display: flex;
   flex-direction:column;
