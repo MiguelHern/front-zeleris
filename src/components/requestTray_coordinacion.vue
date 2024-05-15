@@ -2,17 +2,17 @@
     <div id="body">
       <div id="trayHeader">Bandeja de Solicitudes</div>
       <div class="scrollContainer">
-        <div class="todayHeader">
-          <div id="todayReceived" @click="toggleContent('today')">
-            <div id="moment">Hoy</div>
+        <div class="pendienteHeader">
+          <div id="pendienteReceived" @click="toggleContent('pendiente')">
+            <div id="moment">Pendientes</div>
             <div id="number">2</div>
             <button>
-              <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.today }"></i>
+              <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.pendiente }"></i>
             </button>   
           </div>
 
-          <div id="todayContent" v-show="showContent.today">
-            <!-- Contenido del DIA DE HOY -->
+          <div id="pendienteContent" v-show="showContent.pendiente">
+            <!-- CONTENIDO PENDIENTE -->
 
             <div id="userContent">
               <div id="iconUser"></div>    
@@ -31,17 +31,17 @@
           </div>
         </div>
 
-        <div class="yesterdayHeader">
-          <div id="yesterdayReceived" @click="toggleContent('yesterday')">
-            <div id="moment">Ayer</div>
+        <div class="oldHeader">
+          <div id="oldReceived" @click="toggleContent('old')">
+            <div id="moment">Antiguos</div>
             <div id="number">1</div>
             <button>
-              <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.yesterday }"></i>
+              <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.old }"></i>
             </button>          
           </div>
 
-          <div id="yesterdayContent" v-show="showContent.yesterday">
-            <!-- Contenido del DIA DE AYER -->
+          <div id="oldContent" v-show="showContent.old">
+            <!-- CONTENIDO ANTIGUO -->
 
             <div id="userContent">
               <div id="iconUser"></div>    
@@ -74,58 +74,6 @@
           </div>
 
         </div>
-        <div class="lastweekHeader">
-          <div id="lastweekReceived" @click="toggleContent('lastweek')">
-            <div id="moment">La semana pasada</div>
-            <div id="number">5</div>
-            <button>
-              <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.lastweek }"></i>
-            </button>          
-          </div>
-
-          <div id="lastweekContent" v-show="showContent.lastweek">
-            <!-- Contenido de la SEMANA PASADA-->
-              
-            <div id="userContent">
-              <div id="iconUser"></div>    
-              <div id="userName">
-                KEVIN
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="lastmonthHeader">
-
-        <div id="lastmonthReceived" @click="toggleContent('lastmonth')">
-          <div id="moment">El mes pasado</div>
-          <div id="number">2</div>
-          <button>
-            <i class="bi bi-chevron-double-down" :class="{ 'rotate': showContent.lastmonth }"></i>
-          </button>          
-        </div>
-
-        <div id="lastmonthContent" v-show="showContent.lastmonth">
-        <!-- Contenido del MES PASADO -->
-
-        <div id="userContent">
-          <div id="iconUser"></div>    
-          <div id="userName">
-            EDGAR
-          </div>
-        </div>
-
-        <div id="userContent">
-          <div id="iconUser"></div>    
-          <div id="userName">
-            DEVANY
-          </div>
-        </div>
-
-        </div>
-      </div>       
-      
     </div>
   </div>  
 </template>
@@ -139,10 +87,8 @@ export default {
   data() {
     return {
       showContent: {
-        today: true,
-        yesterday: true,
-        lastweek: true,
-        lastmonth: true
+        pendiente: true,
+        old: true
       }
     };
   },
@@ -163,7 +109,8 @@ export default {
 #body{
   display: flex;
   flex-direction:column;
-  min-width: 275px;
+  max-width: 280px;
+  height: 100%;
   /*border: 3px solid blue;*/
   background-color:#EDEDED;
 }
@@ -183,7 +130,7 @@ export default {
   align-content: center;
 }
 
-#todayReceived, #yesterdayReceived, #lastweekReceived, #lastmonthReceived{
+#pendienteReceived, #oldReceived{
   display: flex;
   height: 35px;
   background-color: #C8C8C8;
@@ -225,7 +172,7 @@ button{
   align-content: center;
 }
 
-#todayContent, #yesterdayContent, #lastweekContent, #lastmonthContent{
+#pendienteContent, #oldContent{
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 15px;
   color: black;

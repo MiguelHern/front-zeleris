@@ -253,16 +253,18 @@ h1 {
 
 #sel_Day {
     display: flex;
-    width: 130px;
+    width: 135px;
     /*border: 1px solid yellow;*/
     align-items: center;
     text-align: center;
+    padding-right: 5px;
 }
 
 #selectedDay {
     display: flex;
     /*border: 1px solid blue;*/
     justify-content: right;
+    margin-bottom: 15px;
 }
 
 #datePermit {
@@ -320,7 +322,7 @@ h1 {
 }
 
 
-.cancelButton {
+.cancelButton{
     background-color: #758CA3;
     color: white;
     font-size: 16px;

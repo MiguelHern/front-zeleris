@@ -50,6 +50,7 @@ export default {
   flex-direction:column;
   width: 100%;
   /*border: 3px solid red;*/
+  padding-right: 5px;
 }
 
 p{
@@ -69,15 +70,14 @@ p{
   flex-direction:column;
   min-height: 140px;
   /*background-color: lightgreen;*/
+  /*border: 2px solid green;*/
   background-color:white;
   display: flex;
-  width: calc(100%-30px);
-  margin-left: 15px;
-  margin-right: 15px;
+  width: 100%;
   padding-top: 8px;
   padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 10px;
+  padding-right: 2px;
 }
 
 .applicantDetails{
@@ -134,8 +134,8 @@ h1[id="perfil_Icon"]{
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   width: calc(100%-30px);
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
   padding-top: 18px;
   padding-bottom: 18px;
   padding-right: 13px;
@@ -194,16 +194,16 @@ h1[id="perfil_Icon"]{
   height: 10%;
   /*background-color: blue;*/
   background-color: #EDEDED;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .remainingDays{
   text-align: center;
   align-content: center;
   background-color: #EDEDED;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
   padding-top: 10px;
   padding-left: 80px;
   padding-right: 80px;
