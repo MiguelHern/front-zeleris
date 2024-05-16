@@ -31,9 +31,11 @@
               this.$router.push('/TeachersHome')
             }
 
+
             // Haz algo con la respuesta, por ejemplo, redirige a otra página
           } catch (error) {
             console.error('Error en la solicitud:', error);
+              console.log('El token es nulo o indefinido.');
             // Maneja el error de alguna manera, por ejemplo, muestra un mensaje al usuario
           }
         }

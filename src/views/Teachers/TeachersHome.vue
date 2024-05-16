@@ -24,11 +24,12 @@
 import { ref, onMounted } from 'vue';
 import PendingPermissions from "@/components/Teacher/PendingPermissions.vue";
 
+const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 const employee = ref({});
 
 onMounted(async () => {
     try {
-        const response = await fetch('https://service-teacher-zeleris.onrender.com/Employees/id', {
+        const response = await fetch(`${API_BASE_URL}/Employees/id`, {
             headers: {
                 Authorization: 'Bearer ' + localStorage.token
             },
@@ -40,6 +41,7 @@ onMounted(async () => {
     }
 });
 </script>
+
 
 
 <style scoped>

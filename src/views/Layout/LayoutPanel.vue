@@ -85,10 +85,7 @@ watchEffect(() => {
 .botonNavegacion.active{
   cursor: default;
 }
-.active {
-    fill: black;
-    background-color: black;
-}
+
 
 .botonNavegacion.active:hover svg path {
   fill: #758CA3;
