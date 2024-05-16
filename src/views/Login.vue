@@ -1,46 +1,45 @@
-<script>
-import AuthFetch from "../scripts/AuthFetch";
+    <script>
+    import AuthFetch from "../scripts/AuthFetch";
+    export default {
+      // Otros component options aquí
+      data() {
+        return {
+          email: '',
+          password: ''
+        };
+      },
 
-export default {
-  // Otros component options aquí
-  data() {
-    return {
-      email: '',
-      password: ''
-    };
-  },
+    mounted() {
+      console.log(import.meta.env.VITE_APP_API_URL);
+    },
 
-mounted() {
-  console.log(import.meta.env.VITE_APP_API_URL);
-},
+      methods: {
+        async iniciarSesion() {
+        const auth = new AuthFetch();
 
-  methods: {
-    async iniciarSesion() {
-    const auth = new AuthFetch();
+          try {
+            // Llama al método login de AuthService
+            const respuesta = await auth.login(this.email, this.password);
+            console.log('Respuesta del servidor:', respuesta.data.token);
+            console.log('Respuesta del servidor:', respuesta.data);
+            localStorage.token = respuesta.data.token;
+            localStorage.rol = respuesta.data.rol;
+            localStorage.username = respuesta.data.usearname;
+            localStorage.expiredTime = respuesta.data.expiredTime;
 
-      try {
-        // Llama al método login de AuthService
-        const respuesta = await auth.login(this.email, this.password);
-        console.log('Respuesta del servidor:', respuesta.data.token);
-        console.log('Respuesta del servidor:', respuesta.data);
-        localStorage.token = respuesta.data.token;
-        localStorage.rol = respuesta.data.rol;
-        localStorage.username = respuesta.data.usearname;
-        localStorage.expiredTime = respuesta.data.expiredTime;       
-        
-        if (respuesta.success) {
-          this.$router.push('/TeachersHome')
+            if (respuesta.success) {
+              this.$router.push('/TeachersHome')
+            }
+
+            // Haz algo con la respuesta, por ejemplo, redirige a otra página
+          } catch (error) {
+            console.error('Error en la solicitud:', error);
+            // Maneja el error de alguna manera, por ejemplo, muestra un mensaje al usuario
+          }
         }
-        
-        // Haz algo con la respuesta, por ejemplo, redirige a otra página
-      } catch (error) {
-        console.error('Error en la solicitud:', error);
-        // Maneja el error de alguna manera, por ejemplo, muestra un mensaje al usuario
       }
     }
-  }
-}
-</script>
+    </script>
 
 <template>
   <div class="background">

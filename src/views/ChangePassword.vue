@@ -1,6 +1,39 @@
-<script>
+<script setup>
+import { ref } from 'vue';
 
+const API_BASE_URL = 'https://service-teacher-zeleris.onrender.com';
+const email = ref('');
+const newPassword = ref('');
+const showSuccessMessage = ref(false);
+const showFailMessage = ref(false);
+
+const handleChangePassword = async () => {
+    try {
+        const url = `${API_BASE_URL}/Accounts/password/change`;
+        const data = {
+            email: email.value,
+            newPassword: newPassword.value
+        };
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            showSuccessMessage.value = true;
+            showFailMessage.value = false;
+        } else {
+            showFailMessage.value = true;
+        }
+    } catch (error) {
+        console.error('Error al enviar la solicitud:', error);
+    }
+};
 </script>
+
 
 <template>
   <div class="background">
@@ -16,7 +49,6 @@
           <div class="form__group">
             <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">
             <label for="contraseña" class="form__label">Contraseña</label>
-            <i class="eye bi bi-eye"></i>
           </div>
           <div class="form__group">
             <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">

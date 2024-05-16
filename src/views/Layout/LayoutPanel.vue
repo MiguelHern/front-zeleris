@@ -82,13 +82,12 @@ watchEffect(() => {
 .col-1{
   width: 70px;
 }
-.botonNavegacion:hover svg path {
-  fill: #0d6efd;
-  transition: .2s;
-}
 .botonNavegacion.active{
   cursor: default;
-  color: var(--principal-color);
+}
+.active {
+    fill: black;
+    background-color: black;
 }
 
 .botonNavegacion.active:hover svg path {
@@ -101,8 +100,6 @@ watchEffect(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.botonSingOff:hover{
 }
 .botonSingOff svg path{
   stroke: var(--grayy);

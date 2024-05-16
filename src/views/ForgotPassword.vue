@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
-const API_BASE_URL = 'https://service-teacher-zeleris.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 const email = ref('');
 const showSuccessMessage = ref(false);
 const showFailMessage = ref(false);
@@ -18,12 +18,20 @@ const handleSubmit = async () => {
             showFailMessage.value = false;
         } else {
             showFailMessage.value = true;
+            showSuccessMessage.value = false;
         }
     } catch (error) {
         console.error('Error al enviar la solicitud:', error);
     }
 };
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        handleSubmit();
+    }
+});
 </script>
+
 
 <template>
     <div class="background">
