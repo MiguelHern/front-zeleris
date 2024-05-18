@@ -36,6 +36,7 @@ onMounted(async () => {
 
 <template>
     <div v-show="!loading && noPendingDocuments" class="text-center display-1">
+
         <i class="bi bi-file-earmark-excel-fill "></i>
         <h1>No hay documentos pendientes</h1>
     </div>

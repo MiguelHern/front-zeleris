@@ -3,10 +3,13 @@ import { onMounted, ref } from 'vue';
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 const loading = ref(true);
-const noPendingDocuments = ref(false);
+const noHistory = ref(false);
 const permissions = ref([]);
 
-
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.toLocaleDateString('es-ES')}`;
+};
 onMounted(async () => {
     try {
         const response = await fetch(`${API_BASE_URL}/Documents/history`, {
@@ -17,9 +20,9 @@ onMounted(async () => {
         const data = await response.json();
         permissions.value = data.data;
         console.log(data)
-        if (data && data.success === false && data.message === "No History") {
+        if (data && data.success === false && data.message === "No leave history found for the specified employee.") {
             console.log("No hay historial de documentos pendientes en este momento.");
-            noPendingDocuments.value = true;
+            noHistory.value = true;
         }
     } catch (error) {
         console.error('Error al obtener los documentos pendientes:', error);
@@ -30,30 +33,45 @@ onMounted(async () => {
 </script>
 
 <template>
-    <table class="table shadow-sm">
+    <div v-show="!loading && noHistory" class="text-center display-1">
+        <i class="bi bi-file-earmark-excel-fill "></i>
+        <h1>Historial de permisos vacío</h1>
+    </div>
+    <table class="table shadow-sm" v-show="!loading && !noHistory">
         <thead>
         <tr>
             <th scope="col" class="col-auto"></th>
-            <th scope="col" class="col-5">Nombre</th>
-            <th scope="col" class="col-2 text-center">Días solicitados</th>
+            <th scope="col" class="col-5">Motivo</th>
+            <th scope="col" class="col-2 text-center">Día solicitado</th>
             <th scope="col" class="col-2 text-center">Fechas</th>
             <th scope="col" class="col-2 text-center">Status</th>
         </tr>
         </thead>
         <tbody>
-        <tr class="align-content-center">
+        <tr v-for="permission in permissions" :key="permission.id" class="align-content-center">
             <td class="text-lg-center align-content-center fw-bold text-body-secondary">
                 <i class="bi bi-file-earmark-check-fill"></i>
             </td>
-            <td class="align-content-center hoverTabla"></td>
-            <td class="text-center align-content-center"></td>
-            <td class="text-center align-content-center"><span></span><span></span> <span></span></td>
-            <td class="text-center align-content-center"></td>
+            <td class="align-content-center hoverTabla" style="max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{permission.reason}}
+            </td>
+            <td class="text-center align-content-center">{{formatDate(permission.createdDate)}}</td>
+            <td class="text-center align-content-center">
+                FALTA ARRAY DE FECHAS
+            </td>
+            <td :class="{'pending': permission.status === 'Pendiente', 'approved': permission.status === 'aprobado'}" class="text-center align-content-center">{{permission.status}}</td>
         </tr>
         </tbody>
     </table>
 </template>
 
 <style scoped>
+.pending {
+    color: var(--bs-danger);
+}
+
+.approved {
+    color: green;
+}
 
 </style>

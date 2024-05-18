@@ -1,10 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
+import { useRouter } from 'vue-router';
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 const email = ref('');
 const showSuccessMessage = ref(false);
 const showFailMessage = ref(false);
+const router = useRouter();
 
 const handleSubmit = async () => {
     try {
@@ -16,6 +18,8 @@ const handleSubmit = async () => {
         if (response.ok) {
             showSuccessMessage.value = true;
             showFailMessage.value = false;
+            router.push('/EnterCode');
+            sessionStorage.setItem('email', email.value);
         } else {
             showFailMessage.value = true;
             showSuccessMessage.value = false;
@@ -56,7 +60,6 @@ document.addEventListener('keydown', (event) => {
                     </div>
                     <input type="submit" value="Enviar" class="form__button">
                 </form>
-                <a href="/EnterCode" class="cancelar">Insertar código</a>
                 <a href="/" class="cancelar">Cancelar</a>
             </div>
         </div>
