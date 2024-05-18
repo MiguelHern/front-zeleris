@@ -24,24 +24,25 @@
                     <div id="todaysDate">Fecha: {{ today }}</div>
                 </div>
             </div>
-            <img :src=url alt="">
-            <img :src=url alt="">
             <div class="filling_Area">
                 <div id="selectedDay">
                     <div id="sel_Day">Fechas del permiso:</div>
                     <div id="selectedDays">
-                        <input v-for="(date, index) in selectedDates" :key="index" type="date"
-                               v-model="selectedDates[index]"
-                               class="form-control"/>
+                        <input
+                            v-for="(date, index) in selectedDates" :key="index" type="date"
+                            v-model="selectedDates[index]"
+                            class="form-control"/>
                     </div>
                 </div>
                 <div id="reasons">Motivo de la solicitud:</div>
                 <div id="text_Box">
-                         <textarea v-model="reason" class="reasonsTexts form-control"
-                                   placeholder="Coloca el motivo de la solicitud"></textarea>
+                         <textarea
+                             v-model="reason"
+                             class="reasonsTexts form-control"
+                             placeholder="Coloca el motivo de la solicitud">
+                         </textarea>
                 </div>
             </div>
-
             <div class="submissionArea">
                 <div class="custom-file-input btn btn-primary">
                     <input
@@ -107,46 +108,24 @@ const handleFileChange = (event) => {
         };
     }
 };
-
-const base64ToImage = (base64String) => {
-    const byteCharacters = atob(base64String);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Cambia 'image/jpeg' según el tipo de imagen
-    const imageUrl = URL.createObjectURL(blob);
-    return imageUrl;
-};
-
-const url = ref("")
-
 const enviarSolicitud = async () => {
     try {
         console.log(signatureImageBase64)
-        url.value = base64ToImage(signatureImageBase64)
-        console.log(url.value)
-
-        console.log(url)
-
         if (!signatureImageBase64 || signatureImageBase64.trim() === '') {
             console.log('La imagen no se ha convertido correctamente a base64 o está vacía.');
             return;
         }
-
         const response = await axios.post(`${API_BASE_URL}/Documents`, {
             createdDate: today,
             quantityDays: number.value,
             reason: reason.value,
             dates: selectedDates.value.filter(date => date !== ''),
-            signatureImageBase64: url.value
+            signatureImageBase64: signatureImageBase64
         }, {
             headers: {
                 Authorization: 'Bearer ' + localStorage.token
             }
         });
-
         console.log(response.data);
     } catch (error) {
         console.error('Error al enviar la solicitud:', error);

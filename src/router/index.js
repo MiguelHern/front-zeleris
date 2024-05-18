@@ -25,7 +25,10 @@ const router = createRouter({
     {
       path: '/EnterCode',
       name: 'EnterCode',
-      component: () => import('../views/EnterCode.vue')
+      component: () => import('../views/EnterCode.vue'),
+      meta: {
+        requiresVerification: true // Indicador de que esta ruta requiere verificación
+      }
     },
     {
       path: '/PanelTeacher',

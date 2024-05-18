@@ -1,38 +1,42 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+import {useRouter} from "vue-router";
 
-const API_BASE_URL = 'https://service-teacher-zeleris.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
+
 const email = ref('');
 const newPassword = ref('');
 const showSuccessMessage = ref(false);
 const showFailMessage = ref(false);
+const router = useRouter();
 
-const handleChangePassword = async () => {
+onMounted(() => {
+    email.value = sessionStorage.getItem('email');
+});
+
+const ChangePassword = async () => {
     try {
-        const url = `${API_BASE_URL}/Accounts/password/change`;
-        const data = {
+        const response = await axios.patch(`${API_BASE_URL}/Accounts/password/change`, {
             email: email.value,
-            newPassword: newPassword.value
-        };
-        const response = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            newPassword: newPassword.value,
         });
-
-        if (response.ok) {
+        if (response.status === 200) {
             showSuccessMessage.value = true;
             showFailMessage.value = false;
+            sessionStorage.setItem('email', email.value);
+            router.push('/');
         } else {
             showFailMessage.value = true;
+            showSuccessMessage.value = false;
         }
+        console.log(response.data);
     } catch (error) {
         console.error('Error al enviar la solicitud:', error);
     }
 };
 </script>
+
 
 
 <template>
@@ -43,15 +47,21 @@ const handleChangePassword = async () => {
     <div class="content d-flex flex-column align-items-center justify-content-center">
       <div class="layout">
         <div class="layout__header">
+            <div v-if="showSuccessMessage">
+                <p class="alert alert-success text-center">Contraseña cambiada.</p>
+            </div>
+            <div v-if="showFailMessage">
+                <p class="alert alert-danger text-center">eu</p>
+            </div>
           <h1 class="layout__title">Ingresar a Zeleris</h1>
         </div>
-        <form action="" class="login__form">
+        <form @submit.prevent="ChangePassword" class="login__form">
           <div class="form__group">
-            <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">
+            <input v-model="newPassword" type="password" class="form__input" name="contraseña " required placeholder="Contraseña">
             <label for="contraseña" class="form__label">Contraseña</label>
           </div>
           <div class="form__group">
-            <input type="text" class="form__input" name="contraseña " required placeholder="Contraseña">
+            <input type="password" class="form__input" name="contraseña " required placeholder="Contraseña">
             <label for="contraseña" class="form__label">Confirmar contraseña</label>
           </div>
           <input type="submit" value="Continuar" class="form__button">

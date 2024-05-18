@@ -16,7 +16,7 @@ const irPoliticas = () => {
   router.push('/Cordination/Polices')
 }
 const irHistorial = () => {
-  router.push('/Teacher/History')
+  router.push('//History')
 }
 
 const verBotonActivo = (button) => {

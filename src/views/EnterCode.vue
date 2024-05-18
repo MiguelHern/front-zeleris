@@ -1,64 +1,108 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const inputs = ref([]);
 const isButtonActive = ref(false);
+const codeInputs = ref(['', '', '', '', '', '']);
 
 onMounted(() => {
-  inputs.value = document.querySelectorAll("input");
-  inputs.value[0].focus();
+    inputs.value = document.querySelectorAll("input");
+    inputs.value[0].focus();
 });
 
 const handleKeyUp = (index, event) => {
-  const currentInput = inputs.value[index],
-      nextInput = inputs.value[index + 1],
-      prevInput = inputs.value[index - 1];
+    const currentInput = inputs.value[index];
+    const nextInput = inputs.value[index + 1];
+    const prevInput = inputs.value[index - 1];
 
-  if (currentInput.value.length > 1) {
-    currentInput.value = "";
-  }
-  if (nextInput && nextInput.hasAttribute("disabled") && currentInput.value !== "") {
-    nextInput.removeAttribute("disabled");
-    nextInput.focus();
-  }
-  if (event.key === "Backspace") {
-    if (index > 0) {
-      currentInput.value = "";
-      currentInput.setAttribute("disabled", true);
-      prevInput.focus();
+    // Limit input value to one character
+    currentInput.value = currentInput.value.slice(0, 1);
+
+    // Append entered character to codeInputs array
+    codeInputs.value[index] = currentInput.value;
+
+    // Focus the next input if not empty and enabled
+    if (nextInput && currentInput.value !== "") {
+        nextInput.removeAttribute("disabled");
+        nextInput.focus();
     }
-  }
-  isButtonActive.value = !inputs.value[5].disabled && inputs.value[5].value !== "";
+
+    // Handle backspace functionality
+    if (event.key === "Backspace") {
+        if (index > 0) {
+            currentInput.value = "";
+            prevInput.focus();
+        }
+    }
+
+    // Update button state based on codeInputs array
+    isButtonActive.value = codeInputs.value.every(input => input !== '');
 };
+
+
+// Computed property para obtener el código completo
+const code = computed(() => codeInputs.value.join(''));
+/* API */
+const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
+const showSuccessMessage = ref(false);
+const showFailMessage = ref(false);
+const router = useRouter();
+
+const handleSubmit = async () => {
+    try {
+        const url = `${API_BASE_URL}/Accounts/validate/code/${code.value}`;
+        const response = await fetch(url, {
+            method: 'POST',
+        });
+        const data = await response.json();
+        if (data.success === true) {
+            showSuccessMessage.value = true;
+            showFailMessage.value = false;
+            router.push('/ChangePassword');
+        } else {
+            showFailMessage.value = true;
+            showSuccessMessage.value = false;
+            console.error('Error en la respuesta del servidor:', data.message || response.statusText);
+            }
+        } catch (error) {
+            console.error('Error al enviar la solicitud:', error.message);
+            showFailMessage.value = true;
+            showSuccessMessage.value = false;
+        }
+};
+
 </script>
+
+
 <template>
-  <div class="background">
-    <div class="img__container">
-      <img class="img__zeleris" src="/src/assets/img/Zeleris.jpg" alt="">
+    <div class="background">
+        <div class="img__container">
+            <img class="img__zeleris" src="/src/assets/img/Zeleris.jpg" alt="">
+        </div>
+        <div class="content d-flex flex-column align-items-center justify-content-center">
+            <div class="container">
+                <div class="layout__header">
+                    <div v-if="showFailMessage">
+                        <p class="alert alert-danger text-center w-100">No hay coincidencias</p>
+                    </div>
+                    <h1 class="header__text">Ingresa el código que fue enviado a tu correo</h1>
+                </div>
+                <form @submit.prevent="handleSubmit">
+                    <div class="input_field">
+                        <input v-for="(input, index) in 6" :key="index" type="text" v-model="codeInputs[index]" @keyup="handleKeyUp(index, $event)" :disabled="index !== 0" maxlength="1">
+                    </div>
+                    <button class="button__recover" :class="{ active: isButtonActive }" :disabled="!isButtonActive">Recuperar contraseña</button>
+                </form>
+                <button class="button__rsend">Reenviar código</button>
+                <a href="/" class="cancelar">Cancelar</a>
+            </div>
+        </div>
     </div>
-    <div class="content d-flex flex-column align-items-center justify-content-center">
-      <div class="container">
-        <header>
-          <h1 class="header__text">Ingresa el código que fué enviado a tu correo</h1>
-        </header>
-        <form action="#">
-          <div class="input_field">
-            <input ref="inputs" v-for="(input, index) in 6" :key="index" type="number" @keyup="handleKeyUp(index, $event)" :disabled="index !== 0">
-          </div>
-          <button class="button__recover" :class="{ active: isButtonActive }">Recuperar contraseña</button>
-        </form>
-        <button class="button__rsend">Reenviar código</button>
-        <a href="/" class="cancelar">Cancelar</a>
-      </div>
-    </div>
-  </div>
 </template>
+
+
 <style scoped>
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 .img__container{
   pointer-events: none;
   position: absolute;
@@ -102,7 +146,7 @@ form .input_field{
   outline: none;
   text-align: center;
   font-size: 1.125rem;
-  border: 3px solid var(--secondary-color);
+  border: 1px solid var(--secondary-color);
 }
 .input_field input::-webkit-inner-spin-button,
 input_field input::-webkit-outer-spin-button{
