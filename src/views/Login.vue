@@ -100,14 +100,6 @@ export default {
   width: 100px;
 }
 
-.eye {
-  font-size: 1.2rem;
-  cursor: pointer;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
 .form__recover {
 
   text-align: right;

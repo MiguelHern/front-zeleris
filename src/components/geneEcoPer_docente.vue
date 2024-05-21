@@ -1,5 +1,11 @@
 <template>
     <div class="layout">
+        <div v-if="loading" class="loading-overlay">
+            <div class="spinner"></div>
+        </div>
+        <div v-if="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+        </div>
         <form @submit.prevent="enviarSolicitud">
             <div class="applicant_Details">
                 <p id="p_ad">Solicitar Permiso Económico</p>
@@ -7,16 +13,16 @@
                     <h1>
                         <i class="bi bi-person-square"></i>
                     </h1>
-                    <div id="nameMail">
-                        <label>Julio A Gutiérrez Gonzáles</label>
-                        <label>JulioGutierrez@uacam.mx</label>
+                    <div id="nameMail" class="d-flex flex-column justify-content-center">
+                        <div><span>{{ employee.name }}</span>{{ employee.lastName }}</div>
+                        <span>{{ employee.email }}</span>
                     </div>
                     <div class="numberDays">Cantidad de días a solicitar:
                         <span class="minus" @click="decreaseNumber">-</span>
                         <span class="num">{{ number }}</span>
                         <span class="plus" @click="increaseNumber">+</span>
                     </div>
-                    <div id="availablePermissions">Permisos disponibles: 3</div>
+                    <div id="availablePermissions">Permisos disponibles: <span>{{ employee.quantityPermissions }}</span></div>
                 </div>
                 <div class="applicant">
                     <div id="category">Docente</div>
@@ -31,46 +37,75 @@
                         <input
                             v-for="(date, index) in selectedDates" :key="index" type="date"
                             v-model="selectedDates[index]"
-                            class="form-control"/>
+                            class="form-control"
+                            required
+                        />
                     </div>
                 </div>
                 <div id="reasons">Motivo de la solicitud:</div>
-                <div id="text_Box">
-                         <textarea
-                             v-model="reason"
-                             class="reasonsTexts form-control"
-                             placeholder="Coloca el motivo de la solicitud">
-                         </textarea>
+                <div id="text_Box" class="d-flex gap-1">
+                    <textarea
+                        v-model="reason"
+                        class="reasonsTexts form-control"
+                        placeholder="Coloca el motivo de la solicitud"
+                        required
+                    ></textarea>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="w-50">
+                            <input
+                                type="file"
+                                id="file"
+                                name="file"
+                                class="form-control"
+                                accept="image/*"
+                                @change="handleFileChange"
+                                :disabled="isCheckboxChecked"
+                                :required="!isCheckboxChecked"
+                                data-browse="Seleccionar archivo"
+                            />
+                        </div>
+                        <input
+                            id="firmacheck"
+                            type="checkbox"
+                            class="form-check-input"
+                            v-model="isCheckboxChecked"
+                            @change="handleCheckboxChange"
+                        >
+                        <label for="firmacheck" class="">Ya tengo firma</label>
+                    </div>
                 </div>
             </div>
             <div class="submissionArea">
-                <div class="custom-file-input btn btn-primary">
-                    <input
-                        type="file"
-                        id="file"
-                        name="file"
-                        class="inp"
-                        accept="image/*"
-                        @change="handleFileChange"
-                    >
-                    <label for="file" class="" role="button">Seleccionar archivo</label>
-                </div>
-                <button type="submit" class="btn btn-submit">Crear</button>
+                <button type="submit" class="btn btn-submit form__submit">Crear</button>
             </div>
         </form>
+    </div>
+    <div v-if="showModal" class="modal">
+        <div class="modal-content">
+            <p class="fs-5">Solicitud de permiso enviada</p>
+            <a class="form__button p-1" href="/TeachersHome">Aceptar</a>
+        </div>
     </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
+import { useEmployee } from "@/composables/DataEmployee.js";
+
+const { employee } = useEmployee();
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 
+const loading = ref(false);
 const number = ref(1);
 const selectedDates = ref(['']);
 const today = new Date().toISOString().slice(0, 10);
 const reason = ref('');
+const isCheckboxChecked = ref(false);
+const errorMessage = ref('');
+const showModal = ref(false);
+
 let signatureImageBase64 = '';
 
 onMounted(() => {
@@ -108,12 +143,19 @@ const handleFileChange = (event) => {
         };
     }
 };
+
+const handleCheckboxChange = () => {
+    if (isCheckboxChecked.value) {
+        signatureImageBase64 = null;
+    }
+};
+
 const enviarSolicitud = async () => {
+    loading.value = true;
+    errorMessage.value = '';
     try {
-        console.log(signatureImageBase64)
-        if (!signatureImageBase64 || signatureImageBase64.trim() === '') {
-            console.log('La imagen no se ha convertido correctamente a base64 o está vacía.');
-            return;
+        if (isCheckboxChecked.value) {
+            signatureImageBase64 = null;
         }
         const response = await axios.post(`${API_BASE_URL}/Documents`, {
             createdDate: today,
@@ -127,22 +169,29 @@ const enviarSolicitud = async () => {
             }
         });
         console.log(response.data);
+        if (response.data.success) {
+            showModal.value = true;
+        } else {
+            throw new Error(response.data.message);
+        }
     } catch (error) {
         console.error('Error al enviar la solicitud:', error);
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = error.message;
+        }
+    } finally {
+        loading.value = false;
     }
 };
-
 </script>
 
 
-
 <style scoped>
+
 .layout {
     padding: 1rem;
-}
-
-.inp{
-    display: none;
 }
 .applicant_Details, .filling_Area, .submissionArea {
     display: flex;
@@ -202,7 +251,10 @@ h1 {
     width: 25%;
     align-content: center
 }
-
+.form__submit{
+    background-color: var(--principal-color);
+    color: white;
+}
 #nameMail {
     /*border: 1px solid black;*/
     padding-left: 15px;
@@ -254,10 +306,7 @@ h1 {
     min-width: 23%;
     text-align: center;
     align-content: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 5px 10px;
 }
 
 #todaysDate {
@@ -324,8 +373,6 @@ h1 {
     border-radius: 5px;
     resize: none;
 }
-
-
 .submissionArea {
     display: flex;
     align-items: center;
@@ -336,35 +383,75 @@ h1 {
     background-color: white;
 
 }
-
-.cancelButton{
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 1px;
-    cursor: pointer;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    transition: .3s ease-in;
-    border: none;
-}
-
-
-.cancelButton {
-    background-color: #758CA3;
-    color: white;
-    font-size: 16px;
-    border-radius: 5px;
-    height: 40px;
-    width: 250px;
-}
-
-.cancelButton:hover {
-    background-color: #1B365D;
-    text-shadow: 1px 1px 5px #0f1e33;
-}
-
 body {
     display: flex;
     flex-direction: column;
     background-color: white;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+    width: 25%;
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+}
+.modal-content p {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+.modal-content a {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--grayy)!important;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
+}
+.modal-content a:hover{
+    background-color: var(--principal-color)!important; ;
+}
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #ffffff;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

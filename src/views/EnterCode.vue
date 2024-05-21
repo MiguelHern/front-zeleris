@@ -41,7 +41,7 @@ const handleKeyUp = (index, event) => {
 };
 
 
-// Computed property para obtener el código completo
+const loading = ref(false);
 const code = computed(() => codeInputs.value.join(''));
 /* API */
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
@@ -50,6 +50,7 @@ const showFailMessage = ref(false);
 const router = useRouter();
 
 const handleSubmit = async () => {
+    loading.value = true;
     try {
         const url = `${API_BASE_URL}/Accounts/validate/code/${code.value}`;
         const response = await fetch(url, {
@@ -70,6 +71,9 @@ const handleSubmit = async () => {
             showFailMessage.value = true;
             showSuccessMessage.value = false;
         }
+    finally {
+        loading.value = false;
+    }
 };
 
 </script>
@@ -77,6 +81,9 @@ const handleSubmit = async () => {
 
 <template>
     <div class="background">
+        <div v-if="loading" class="loading-overlay">
+            <div class="spinner"></div>
+        </div>
         <div class="img__container">
             <img class="img__zeleris" src="/src/assets/img/Zeleris.jpg" alt="">
         </div>
@@ -94,7 +101,6 @@ const handleSubmit = async () => {
                     </div>
                     <button class="button__recover" :class="{ active: isButtonActive }" :disabled="!isButtonActive">Recuperar contraseña</button>
                 </form>
-                <button class="button__rsend">Reenviar código</button>
                 <a href="/" class="cancelar">Cancelar</a>
             </div>
         </div>
@@ -191,5 +197,36 @@ form button:hover{
 }
 .cancelar:hover{
   color: var(--secondary-color);
+}
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #ffffff;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

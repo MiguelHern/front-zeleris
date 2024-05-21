@@ -21,25 +21,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { useEmployee } from '@/composables/DataEmployee.js';
 import PendingPermissions from "@/components/Teacher/PendingPermissions.vue";
-
-const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
-const employee = ref({});
-
-onMounted(async () => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/Employees/id`, {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.token
-            },
-        });
-        const data = await response.json();
-        employee.value = data.data;
-    } catch (error) {
-        console.error('Error al obtener la información del empleado:', error);
-    }
-});
+const { employee } = useEmployee();
 </script>
 
 
