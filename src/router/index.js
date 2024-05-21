@@ -1,9 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-function existToken() {
-  return !!localStorage.token;
-}
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -124,8 +120,13 @@ const router = createRouter({
 
 // Middleware de navegación para verificar la existencia del token antes de cada navegación
 router.beforeEach((to, from, next) => {
-  if (to.path !== '/' && !existToken()) {
-    // Si el usuario intenta acceder a una ruta diferente a / y no hay un token en el almacenamiento local, redirige al inicio de sesión
+  const isAuthenticated = !!localStorage.getItem('token');
+  
+  if (to.path === '/ForgotPassword' && from.path !== '/') {
+    // Solo permitir acceso a ForgotPassword si viene desde Login
+    next('/');
+  } else if (!isAuthenticated && to.path !== '/' && to.path !== '/ForgotPassword' && to.path !== '/ChangePassword' && to.path !== '/EnterCode') {
+    // Redirige al login si no está autenticado y la ruta no es una de las permitidas sin autenticación
     next('/');
   } else {
     next(); // Continúa con la navegación

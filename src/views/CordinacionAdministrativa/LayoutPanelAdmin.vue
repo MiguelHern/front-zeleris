@@ -36,7 +36,13 @@ const cerrarSesion = async () => {
     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulación de espera de 1 segundo
 
     // Limpiar localStorage o cualquier otro estado de autenticación
-    localStorage.clear();
+    localStorage.removeItem('token');
+
+    if (!localStorage.getItem('token')) {
+      console.log('Token eliminado correctamente.');
+    } else {
+      console.error('Error al eliminar el token.');
+    }
 
     // Redirigir al login y usar replace para evitar volver a la página anterior
     router.replace('/');

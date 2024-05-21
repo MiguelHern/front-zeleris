@@ -28,19 +28,20 @@ export default {
         localStorage.username = respuesta.data.usearname;
         localStorage.expiredTime = respuesta.data.expiredTime;
 
-        if (respuesta.success) {
-          if (localStorage.rol === 'Docente') {
-            this.$router.push('/TeachersHome');
-          } else if (localStorage.rol === 'Coordinador') {
-            this.$router.push('/CordinationHome');
-          } else if (localStorage.rol === 'Admin') {
-            this.$router.push('/AdminHome');
-          } else if (localStorage.rol === 'Director') {
-            this.$router.push('/DirectortHome');
-          } else {
-            this.$router.push('/');
-          }
-        }
+if (respuesta.success) {
+  if (localStorage.rol === 'Docente') {
+    this.$router.replace('/TeachersHome');
+  } else if (localStorage.rol === 'Coordinador') {
+    this.$router.replace('/CordinationHome');
+  } else if (localStorage.rol === 'Admin') {
+    this.$router.replace('/AdminHome');
+  } else if (localStorage.rol === 'Director') {
+    this.$router.replace('/DirectortHome');
+  } else {
+    this.$router.replace('/');
+  }
+}
+
       } catch (error) {
         console.error('Error en la solicitud:', error);
         this.error = 'Usuario o contraseña incorrectos';
