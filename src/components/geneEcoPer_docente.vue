@@ -32,6 +32,16 @@
             </div>
             <div class="filling_Area">
                 <div id="selectedDay">
+                    <div class="motivo-container">
+                        <div id="motivo">Motivo especial:</div>
+                        <select v-model="selectedReason" class="form-control" @change="updateReason">
+                            <option id="Fallecimiento" value="Fallecimiento">Fallecimiento</option>
+                            <option id="Parto" value="Parto">Parto</option>
+                            <option id="Matrimonio" value="Matrimonio">Matrimonio</option>
+                            <option id="Cumpleaños" value="Cumpleaños">Cumpleaños</option>
+                            <option id="Otro" value="">Otro</option>
+                        </select>
+                    </div>
                     <div id="sel_Day">Fechas del permiso:</div>
                     <div id="selectedDays">
                         <input
@@ -48,6 +58,7 @@
                         v-model="reason"
                         class="reasonsTexts form-control"
                         placeholder="Coloca el motivo de la solicitud"
+                        :readonly="isReadonly"
                         required
                     ></textarea>
                     <div class="d-flex align-items-center gap-2">
@@ -88,6 +99,7 @@
     </div>
 </template>
 
+
 <script setup>
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
@@ -102,11 +114,21 @@ const number = ref(1);
 const selectedDates = ref(['']);
 const today = new Date().toISOString().slice(0, 10);
 const reason = ref('');
+const selectedReason = ref('');
 const isCheckboxChecked = ref(false);
 const errorMessage = ref('');
 const showModal = ref(false);
+const isReadonly = ref(false);
 
 let signatureImageBase64 = '';
+
+const Reasons = {
+    Fallecimiento: "Fallecimiento",
+    Parto: "Parto",
+    Matrimonio: "Matrimonio",
+    Cumpleaños: "Cumpleaños",
+    Otro: ""
+};
 
 onMounted(() => {
     updateDatePermitInputs(number.value);
@@ -148,6 +170,11 @@ const handleCheckboxChange = () => {
     if (isCheckboxChecked.value) {
         signatureImageBase64 = null;
     }
+};
+
+const updateReason = () => {
+    reason.value = Reasons[selectedReason.value] || '';
+    isReadonly.value = selectedReason.value !== '';
 };
 
 const enviarSolicitud = async () => {
@@ -325,7 +352,18 @@ h1 {
     max-width: 80%;
     justify-content: right;
     align-items: center;
+    gap: 10px;
     /*border: 1px solid black;*/
+}
+
+.motivo-container {
+    display: flex;
+    align-items: center;
+}
+
+#motivo {
+    margin-right: 10px; 
+    font-weight: 700;
 }
 
 #sel_Day {
