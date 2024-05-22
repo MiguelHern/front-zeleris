@@ -1,7 +1,7 @@
 <template>
     <div class="container-profile">
         <div class="carta">
-            <h1>Bienvenido Kevin Chan</h1>
+            <h1>Bienvenido {{ nombreCompleto }}</h1>
             <div class="perfil">
                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="">
             </div>
@@ -9,30 +9,30 @@
             <form class="formulario">
                 <div class="columna">
                     <div class="inputs">
-                        <input type="text" id="nombre" placeholder=" " value="Heribé Felipe Uribe Santiago" readonly>
+                        <input type="text" id="nombre" placeholder=" " :value="nombreCompleto" readonly>
                         <label for="nombre">Nombre completo</label>
                     </div>
                     <div class="inputs">
-                        <input type="email" id="email" placeholder=" " value="heribeuribe@uacam.mx" readonly>
+                        <input type="email" id="email" placeholder=" " :value="correoElecP" readonly>
                         <label for="email">Correo Electrónico</label>
                     </div>
                     <div class="inputs">
-                        <input type="tel" id="telefono" placeholder=" " value="981 123 4567" readonly>
-                        <label for="telefono">Teléfono</label>
+                        <input type="text" id="matricula" placeholder=" " :value="matriculaP" readonly>
+                        <label for="matricula">Matricula</label>
                     </div>
                 </div>
                 <div class="columna">
                     <div class="inputs">
-                        <input type="text" id="happydate" placeholder=" " value="12/09/1986" readonly>
+                        <input type="text" id="happydate" placeholder=" " :value="fechaNacimientoP" readonly>
                         <label for="ciudad">Fecha de nacimiento</label>
                     </div>
                     <div class="inputs">
-                        <input type="text" id="firma" placeholder=" " value="File" readonly>
-                        <label for="pais">Firma digital</label>
+                        <input type="text" id="permisos" placeholder=" " :value="cantPermisosP" readonly>
+                        <label for="permisos">Cantidad de permisos económicos restantes</label>
                     </div>
                     <div class="inputs">
-                        <input type="text" id="permisos" placeholder=" " value="1" readonly>
-                        <label for="permisos">Cantidad de permisos económicos restantes</label>
+                        <img :src="fileDigitalP" alt="Firma digital" v-if="fileDigitalP" style="max-width: 200px; max-height: 110px; padding-top: 30px; margin-top: -25px;">
+                        <label for="pais" style="margin-left: -15px; font-size: 12px; color: #1B365D;">Firma digital</label>
                     </div>
                 </div>
                 <div class="botones">
@@ -46,12 +46,14 @@
             </form>
         </div>
         <!-- Popup Modal -->
-        <div v-if="showModal" class="modal" @click.self="closeModal">
+        <div v-if="showModal" class="modalSEFir" @click.self="closeModal">
             <form @submit.prevent="editarFirma">
-                <div class="modal-content">
+                <div class="modalSEFir-content">
                     <span class="close" @click="closeModal">&times;</span>
                     <img :src="imagePreview" alt="Vista previa de la firma digital" />
-                    <button type="submit">Guardar</button>
+                    <div class="d-flex flex-column justify-content-center">
+                        <button id="modalSEFir-botton" type="submit">Guardar</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -60,17 +62,33 @@
 
 <script>
 import EditFirmaDigital from "@/scripts/EditFirmaDigital";
+import PerfilEmployees from "@/scripts/PerfilEmployees";
 
 export default {
     data() {
         return {
             signatureBase64: '',
             showModal: false,
-            imagePreview: null
+            imagePreview: null,
+            nombreCompleto: '',
+            matriculaP: '',
+            fechaNacimientoP: '',
+            fileDigitalP: '',
+            cantPermisosP: '',
+            perEm: new PerfilEmployees()
         };
     },
-    mounted() {
+    async mounted() {
         console.log(import.meta.env.VITE_APP_API_URL);
+
+        const userData= await this.perEm.perEmployees();
+        this.nombreCompleto= userData.data.name;
+        this.matriculaP= userData.data.matricula;
+        this.correoElecP= userData.data.email;
+        this.fechaNacimientoP = userData.data.birthDate;
+        this.cantPermisosP= userData.data.quantityPermissions;
+        //this.fileDigitalP= userData.data.signature;
+        this.fileDigitalP= `data:image/png;base64,${userData.data.signature}`;
     },
     methods: {
         async editarFirma() {
@@ -93,7 +111,7 @@ export default {
                 // Maneja el error de alguna manera, por ejemplo, muestra un mensaje al usuario
             }
         },
-
+        
         triggerFileInput() {
             this.$refs.fileInput.click();
         },
@@ -118,6 +136,8 @@ export default {
 </script>
 
 <style scoped>
+
+
 i[id="editFirmaIcon"],
 i[id="changePassIcon"] {
     padding-left: 6px;
@@ -128,10 +148,10 @@ input[id="frontFInput"] {
 }
 
 /* Modal Styles */
-.modal {
+.modalSEFir {
     display: flex;
     position: fixed;
-    z-index: 1;
+    z-index: 4;
     left: 0;
     top: 0;
     width: 100%;
@@ -141,15 +161,17 @@ input[id="frontFInput"] {
     background-color: rgba(0, 0, 0, 0.4);
     justify-content: center;
     align-items: center;
+    
 }
 
-.modal-content {
+.modalSEFir-content {
     background-color: #fefefe;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
     max-width: 500px;
     position: relative;
+    margin-left: 11%;
 }
 
 .close {
@@ -259,8 +281,22 @@ input[id="frontFInput"] {
     /* Ajustar el ancho de los botones */
 }
 
+button[id="modalSEFir-botton"]{
+    display: flex;
+    text-align: center;
+    align-self: center;
+    padding: 10px 50px 10px 50px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1B365D;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
 .botones button,
-.botones label[id="fileInput"] {
+.botones label[id="fileInput"]{
     padding: 10px 10px;
     margin: -10px 10px;
     border: none;
@@ -272,7 +308,8 @@ input[id="frontFInput"] {
 }
 
 .botones button:hover,
-.botones label[id="fileInput"]:hover {
+.botones label[id="fileInput"]:hover,
+button[id="modalSEFir-botton"]:hover {
     background-color: #385979;
 }
 
