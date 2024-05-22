@@ -36,15 +36,141 @@
                     </div>
                 </div>
                 <div class="botones">
-                    <button>Cambiar contraseña</button>
-                    <button>Editar firma digital</button>
+                    <button>Cambiar contraseña <i id="changePassIcon" class="bi bi-lock-fill"></i> </button>
+                    <label for="file" id="fileInput" role="button" @click="triggerFileInput">Editar firma digital
+                        <input type="file" id="frontFInput" accept="image/*" @change="handleFileInputChange"
+                            ref="fileInput"></input>
+                        <i id="editFirmaIcon" class="bi bi-file-earmark-text-fill"></i>
+                    </label>
+                </div>
+            </form>
+        </div>
+        <!-- Popup Modal -->
+        <div v-if="showModal" class="modal" @click.self="closeModal">
+            <form @submit.prevent="editarFirma">
+                <div class="modal-content">
+                    <span class="close" @click="closeModal">&times;</span>
+                    <img :src="imagePreview" alt="Vista previa de la firma digital" />
+                    <button type="submit">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
 </template>
 
+<script>
+import EditFirmaDigital from "@/scripts/EditFirmaDigital";
+
+export default {
+    data() {
+        return {
+            signatureBase64: '',
+            showModal: false,
+            imagePreview: null
+        };
+    },
+    mounted() {
+        console.log(import.meta.env.VITE_APP_API_URL);
+    },
+    methods: {
+        async editarFirma() {
+            const editF = new EditFirmaDigital();
+            const token = localStorage.getItem('token'); // Obtén el token del almacenamiento local
+
+            if (!token) {
+                console.error('No token found');
+                return;
+            }
+
+            try {
+                const respuesta = await editF.editarFirma(this.signatureBase64, token);
+                console.log('Respuesta del servidor:', respuesta.signatureBase64);
+
+                // Haz algo con la respuesta, por ejemplo, redirige a otra página o cierra el modal
+                this.closeModal();
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                // Maneja el error de alguna manera, por ejemplo, muestra un mensaje al usuario
+            }
+        },
+
+        triggerFileInput() {
+            this.$refs.fileInput.click();
+        },
+        handleFileInputChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.signatureBase64 = e.target.result.split(',')[1]; // Guarda la imagen en base64 sin el encabezado de data URL
+                    this.imagePreview = e.target.result;
+                    this.showModal = true;
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+        closeModal() {
+            this.showModal = false;
+            this.imagePreview = null;
+        }
+    }
+}
+</script>
+
 <style scoped>
+i[id="editFirmaIcon"],
+i[id="changePassIcon"] {
+    padding-left: 6px;
+}
+
+input[id="frontFInput"] {
+    display: none;
+}
+
+/* Modal Styles */
+.modal {
+    display: flex;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal img {
+    width: 100%;
+    height: auto;
+}
+
 .container-profile {
     display: flex;
     justify-content: center;
@@ -57,6 +183,7 @@
     position: relative;
     width: 60%;
     padding: 20px;
+    margin-top: -50px;
     border: 2px solid #fff;
     border-radius: 10px;
     background-color: #f9f9f9;
@@ -81,7 +208,8 @@
 }
 
 .formulario .columna {
-    flex: 0 1 calc(50% - 10px); /* Ajustar el ancho de la columna */
+    flex: 0 1 calc(50% - 10px);
+    /* Ajustar el ancho de la columna */
     margin-bottom: 20px;
 }
 
@@ -92,9 +220,10 @@
 }
 
 .formulario .inputs input {
-    width: calc(100% - 24px); /* Ajustar el ancho del input */
-    padding: 20px;
-    margin-bottom: 10px;
+    width: calc(100% - 24px);
+    /* Ajustar el ancho del input */
+    padding: 15px;
+    margin-bottom: 20px;
     border: 1px solid #1B365D;
     border-radius: 10px;
 }
@@ -115,8 +244,8 @@
     transition: all 0.3s ease;
 }
 
-.formulario .inputs input:focus + label,
-.formulario .inputs input:not(:placeholder-shown) + label {
+.formulario .inputs input:focus+label,
+.formulario .inputs input:not(:placeholder-shown)+label {
     top: -15px;
     left: 0;
     font-size: 12px;
@@ -126,12 +255,14 @@
 .botones {
     display: flex;
     justify-content: center;
-    flex: 0 1 100%; /* Ajustar el ancho de los botones */
+    flex: 0 1 100%;
+    /* Ajustar el ancho de los botones */
 }
 
-.botones button {
-    padding: 10px 20px;
-    margin: 0 10px;
+.botones button,
+.botones label[id="fileInput"] {
+    padding: 10px 10px;
+    margin: -10px 10px;
     border: none;
     border-radius: 5px;
     background-color: #1B365D;
@@ -140,7 +271,8 @@
     transition: background-color 0.3s ease;
 }
 
-.botones button:hover {
+.botones button:hover,
+.botones label[id="fileInput"]:hover {
     background-color: #385979;
 }
 
@@ -150,7 +282,8 @@
     height: 100px;
     border-radius: 50%;
     overflow: hidden;
-    margin: 0 auto 20px; /* Centro y espacio debajo */
+    margin: 0 auto 20px;
+    /* Centro y espacio debajo */
 }
 
 .perfil img {
