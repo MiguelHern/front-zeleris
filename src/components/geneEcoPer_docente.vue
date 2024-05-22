@@ -91,7 +91,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
-import { useEmployee } from "@/composables/DataEmployee.js";
+import { useEmployee } from "@/api/teacherService.js";
 
 const { employee } = useEmployee();
 

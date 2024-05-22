@@ -97,7 +97,7 @@ const handleSubmit = async () => {
                 </div>
                 <form @submit.prevent="handleSubmit">
                     <div class="input_field">
-                        <input v-for="(input, index) in 6" :key="index" type="text" v-model="codeInputs[index]" @keyup="handleKeyUp(index, $event)" :disabled="index !== 0" maxlength="1">
+                        <input class="form-control" v-for="(input, index) in 6" :key="index" type="text" v-model="codeInputs[index]" @keyup="handleKeyUp(index, $event)" :disabled="index !== 0" maxlength="1">
                     </div>
                     <button class="button__recover" :class="{ active: isButtonActive }" :disabled="!isButtonActive">Recuperar contraseña</button>
                 </form>
@@ -152,7 +152,7 @@ form .input_field{
   outline: none;
   text-align: center;
   font-size: 1.125rem;
-  border: 1px solid var(--secondary-color);
+
 }
 .input_field input::-webkit-inner-spin-button,
 input_field input::-webkit-outer-spin-button{

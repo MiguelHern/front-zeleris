@@ -1,36 +1,12 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { usePendingDocuments } from '@/api/teacherService.js';
 
-const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
-const loading = ref(true);
-const noPendingDocuments = ref(false);
-const permissions = ref([]);
+const { loading, noPendingDocuments, permissions } = usePendingDocuments();
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.toLocaleDateString('es-ES')}`;
 };
-
-onMounted(async () => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/Documents/pending`, {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.token
-            },
-        });
-        const data = await response.json();
-        permissions.value = data.data;
-        console.log(data)
-        if (data && data.success === false && data.message === "No Pending Document") {
-            console.log("No hay documentos pendientes en este momento.");
-            noPendingDocuments.value = true;
-        }
-    } catch (error) {
-        console.error('Error al obtener los documentos pendientes:', error);
-    } finally {
-        loading.value = false;
-    }
-});
 </script>
 
 

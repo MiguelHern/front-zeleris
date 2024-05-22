@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { useEmployee } from '@/composables/DataEmployee.js';
+import { useEmployee } from "@/api/teacherService.js";
 import PendingPermissions from "@/components/Teacher/PendingPermissions.vue";
 const { employee } = useEmployee();
 </script>
