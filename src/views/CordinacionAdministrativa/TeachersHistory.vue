@@ -64,18 +64,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="employee in employees" :key="employee.id">
-            <td><span>{{employee.name}}</span> <span>{{employee.lastName}}</span></td>
+        <tr v-for="employee in employees" :key="employee.id">
+            <td><span>{{employee.name}}</span><span>{{employee.lastName}}</span></td>
             <td>{{employee.matricula}}</td>
-            <td></td>
-            <td></td>
+            <td>{{employee.email}}</td>
+            <td>{{employee.dependency}}</td>
             <td>{{employee.rol}}</td>
             <td>
-              <i  class="bi bi-pencil-square"></i>
-              <i class="bi bi-trash3"></i>
-              <i class="bi bi-person-gear"></i>
+                <i class="bi bi-pencil-square"></i>
+                <i class="bi bi-trash3" @click="deleteEmployee(employee.id)"></i>
+                <i class="bi bi-person-gear"></i>
             </td>
-          </tr>
+        </tr>
         </tbody>
       </table>
         <div v-if="showModalNew" class="modal">
@@ -83,52 +83,44 @@
                 <div class="close__modal">
                     <span class="close" @click="toggleModalNew">&#x2716;</span>
                 </div>
-                <h3 class="text-center">Agregar política</h3>
-                <form>
+                <h3 class="text-center">Agregar docente</h3>
+                <form @submit.prevent="handleSubmit">
                     <div class="mb-3">
                         <label for="name" class="form-label">Nombre:</label>
-                        <input id="name" type="text" class="form-control" placeholder="Nombre" required>
+                        <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="lastName" class="form-label">Apellido:</label>
-                        <input id="lastName" type="text" class="form-control" placeholder="Apellido" required>
+                        <input v-model="lastName" id="lastName" type="text" class="form-control" placeholder="Apellido" required>
                     </div>
                     <div class="mb-3">
                         <label for="rol" class="form-label">Rol:</label>
-                        <select id="rol" class="form-control">
+                        <select v-model="rol" id="rol" class="form-control">
                             <option value="option1">Docente</option>
                             <option value="option2">Coordinador</option>
                             <option value="option3">Admin</option>
                         </select>
                     </div>
-
-
                     <div class="mb-3">
                         <label for="quantityPermissions" class="form-label">Cantidad de Permisos:</label>
-                        <input id="quantityPermissions" type="number" class="form-control" placeholder="Cantidad de Permisos" required>
+                        <input v-model="quantityPermissions" id="quantityPermissions" type="number" class="form-control" placeholder="Cantidad de Permisos" required>
                     </div>
-
                     <div class="mb-3">
-                        <label for="matricula" class="form-label">Matrícula:</label>
-                        <input id="matricula" type="number" class="form-control" placeholder="Matrícula" required>
+                        <label for="matricula" class="form-label">Número de empleado:</label>
+                        <input v-model="matricula" id="matricula" type="number" class="form-control" placeholder="Matrícula" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="dependencyId" class="form-label">ID de Dependencia:</label>
-                        <input id="dependencyId" type="number" class="form-control" placeholder="ID de Dependencia" required>
+                        <input v-model="dependencyId" id="dependencyId" type="number" class="form-control" placeholder="ID de Dependencia" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo Electrónico:</label>
-                        <input id="email" type="email" class="form-control" placeholder="Correo Electrónico" required>
+                        <input v-model="email" id="email" type="email" class="form-control" placeholder="Correo Electrónico" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="password" class="form-label">Contraseña:</label>
-                        <input id="password" type="password" class="form-control" placeholder="Contraseña" required>
+                        <input v-model="password" id="password" type="password" class="form-control" placeholder="Contraseña" required>
                     </div>
-
                     <button type="submit" class="btn btn-primary">Enviar</button>
                 </form>
             </div>
@@ -144,6 +136,7 @@
 import {ref, watchEffect} from 'vue';
 import { useEmployee } from '@/api/adminService.js';
 import { useModal } from '@/scripts/utils.js';
+import { deleteEmployee } from '@/api/adminService.js';
 
 const { employees } = useEmployee();
 const loading = ref(true);
@@ -153,8 +146,8 @@ watchEffect(() => {
         loading.value = false;
     }
 });
-const  { showModal: showModalEdit, toggleModal: toggleModalEdit } = useModal();
 const { showModal: showModalNew, toggleModal: toggleModalNew } = useModal();
+
 </script>
 
 <style scoped>

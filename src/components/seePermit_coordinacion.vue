@@ -26,8 +26,8 @@
         </div>
 
         <div class="submissionArea">
-          <input class="declineButton" type="submit" name="Boton1" value="Rechazar"></input>
-          <input class="acceptButton" type="submit" name="Boton2" value="Aceptar"></input>
+          <input class="declineButton" type="submit" name="Boton1" value="Rechazar">
+          <input class="acceptButton" type="submit" name="Boton2" value="Aceptar">
         </div>
         <div class="remainingDays">
           Le quedan 8 días, como permiso económico en el año

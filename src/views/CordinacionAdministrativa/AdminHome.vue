@@ -1,22 +1,33 @@
-<script setup>
-
-import Menu_cordinacion_administrativa from "@/components/menu_cordinacion_administrativa.vue";
-import SeePermit_coordinacion from "@/components/seePermit_coordinacion.vue";
-</script>
-
 <template>
-<div class="layout overflow-hidden d-flex">
-  <div class="layout__left col-3 overflow-auto">
-    <menu_cordinacion_administrativa></menu_cordinacion_administrativa>
-  </div>
-  <div class="layout__right col-9">
-    <see-permit_coordinacion></see-permit_coordinacion>
-  </div>
-</div>
+    <div>
+        <!-- Aquí puedes mostrar los documentos pendientes -->
+        <div v-for="document in pendingDocuments" :key="document.id">
+            {{ document.name }}
+        </div>
+    </div>
 </template>
 
-<style scoped>
-.layout__left{
-  scrollbar-width: thin;
-}
-</style>
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const API_BASE_URL = import.meta.env.VITE_MANAGER_API_URL;
+const token = localStorage.getItem('token');
+
+// Creamos una referencia reactiva para almacenar los documentos pendientes
+const pendingDocuments = ref([]);
+
+// Utilizamos el hook onMounted para realizar la solicitud GET cuando el componente se monte
+onMounted(async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/admin/documents/pending`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        pendingDocuments.value = response.data;
+    } catch (error) {
+        console.error('Hubo un error al obtener los documentos pendientes:', error);
+    }
+});
+</script>
