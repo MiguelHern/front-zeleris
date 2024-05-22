@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
+import { fetchDocumentHistory } from '@/api/teacherService.js';
 
-const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 const loading = ref(true);
 const noHistory = ref(false);
 const permissions = ref([]);
@@ -10,25 +10,20 @@ const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.toLocaleDateString('es-ES')}`;
 };
+
 onMounted(async () => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/Documents/history`, {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.token
-            },
-        });
-        const data = await response.json();
+    const { data, success } = await fetchDocumentHistory();
+
+    if (success) {
         permissions.value = data.data;
-        console.log(data)
         if (data && data.success === false && data.message === "No leave history found for the specified employee.") {
             console.log("No hay historial de documentos pendientes en este momento.");
             noHistory.value = true;
         }
-    } catch (error) {
-        console.error('Error al obtener los documentos pendientes:', error);
-    } finally {
-        loading.value = false;
+    } else {
+        noHistory.value = true;
     }
+    loading.value = false;
 });
 </script>
 

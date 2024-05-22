@@ -4,7 +4,7 @@
             <div class="header__left">
                 <a href="TeachersHome/Settings" class="header__settings">
                     <h1 class="header__user fs-4 fw-bold">
-                        {{ employee.name }} {{ employee.lastName }}
+                        <span>{{ employee.name }}</span>
                     </h1>
                     <i class="bi bi-gear-fill"></i>
                 </a>

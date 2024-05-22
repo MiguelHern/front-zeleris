@@ -16,7 +16,7 @@
           <option value="option2">Opción 2</option>
           <option value="option3">Opción 3</option>
         </select>
-        <button class="add-button" @click="agregarDocente">Añadir Docente</button>
+        <button class="add-button" @click="toggleModalNew">Añadir Docente</button>
       </div>
     </div>
 
@@ -33,8 +33,8 @@
             </th>
             <th>
               <div class="column-header">
-                <span>Matricula</span>
-                <button @click="pivotar('matricula')"><i class="bi bi-caret-down-fill"></i></button>
+                <span>Número de empleado</span>
+                <button @click="pivotar('Número de empleado')"><i class="bi bi-caret-down-fill"></i></button>
               </div>
             </th>
             <th>
@@ -64,70 +64,101 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Julio A Gutiérrez Gonzales</td>
-            <td>62587</td>
-            <td>JulioGutierrez@uacam.mx</td>
-            <td>I.S.C</td>
-            <td>Docente</td>
+          <tr v-for="employee in employees" :key="employee.id">
+            <td><span>{{employee.name}}</span> <span>{{employee.lastName}}</span></td>
+            <td>{{employee.matricula}}</td>
+            <td></td>
+            <td></td>
+            <td>{{employee.rol}}</td>
             <td>
-              <i class="bi bi-pencil-square" @click="alertar('Editar información del Docente')"></i>
-              <i class="bi bi-trash3" @click="alertar('eliminar el registro del Docente')"></i>
-              <i class="bi bi-person-gear" @click="alertar('modificar el rol del Docente')"></i>
-            </td>
-          </tr>
-          <tr>
-            <td>Julio A Gutiérrez Gonzales</td>
-            <td>62587</td>
-            <td>JulioGutierrez@uacam.mx</td>
-            <td>I.S.C</td>
-            <td>Docente</td>
-            <td>
-              <i class="bi bi-pencil-square"></i>
+              <i  class="bi bi-pencil-square"></i>
               <i class="bi bi-trash3"></i>
               <i class="bi bi-person-gear"></i>
             </td>
           </tr>
         </tbody>
       </table>
+        <div v-if="showModalNew" class="modal">
+            <div class="modal-content">
+                <div class="close__modal">
+                    <span class="close" @click="toggleModalNew">&#x2716;</span>
+                </div>
+                <h3 class="text-center">Agregar política</h3>
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre:</label>
+                        <input id="name" type="text" class="form-control" placeholder="Nombre" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Apellido:</label>
+                        <input id="lastName" type="text" class="form-control" placeholder="Apellido" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rol" class="form-label">Rol:</label>
+                        <select id="rol" class="form-control">
+                            <option value="option1">Docente</option>
+                            <option value="option2">Coordinador</option>
+                            <option value="option3">Admin</option>
+                        </select>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="quantityPermissions" class="form-label">Cantidad de Permisos:</label>
+                        <input id="quantityPermissions" type="number" class="form-control" placeholder="Cantidad de Permisos" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="matricula" class="form-label">Matrícula:</label>
+                        <input id="matricula" type="number" class="form-control" placeholder="Matrícula" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="dependencyId" class="form-label">ID de Dependencia:</label>
+                        <input id="dependencyId" type="number" class="form-control" placeholder="ID de Dependencia" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico:</label>
+                        <input id="email" type="email" class="form-control" placeholder="Correo Electrónico" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña:</label>
+                        <input id="password" type="password" class="form-control" placeholder="Contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+        </div>
     </div>
+
   </div>
+
+
 </template>
 
-<script>
-export default {
-  methods: {
-    agregarDocente() {
-      // Lógica para añadir un docente
-    },
-    pivotar(columna) {
-      // Lógica para pivotar la tabla por la columna seleccionada
-    },
-    alertar(accion) {
-      if (confirm(`¿Estás seguro de que deseas ${accion}?`)) {
-        this.realizarAccion(accion);
-      } else {
-        console.log('Acción cancelada');
-      }
-    },
-    realizarAccion(accion) {
-      // Aquí va la lógica para la funcionalidad que quieres ejecutar después de la confirmación
-      console.log(`Realizando acción: ${accion}`);
-      // Por ejemplo, podrías tener diferentes funcionalidades según la acción
-      if (accion === 'Editar') {
-        // Lógica para editar
-      } else if (accion === 'Eliminar') {
-        // Lógica para eliminar
-      } else if (accion === 'Configurar') {
-        // Lógica para configurar
-      }
+<script setup>
+import {ref, watchEffect} from 'vue';
+import { useEmployee } from '@/api/adminService.js';
+import { useModal } from '@/scripts/utils.js';
+
+const { employees } = useEmployee();
+const loading = ref(true);
+
+watchEffect(() => {
+    if (employees.value.length > 0) {
+        loading.value = false;
     }
-  }
-}
+});
+const  { showModal: showModalEdit, toggleModal: toggleModalEdit } = useModal();
+const { showModal: showModalNew, toggleModal: toggleModalNew } = useModal();
 </script>
 
 <style scoped>
-/* Estilos específicos para esta vista */
+
 .top-container {
   display: flex;
   justify-content: space-between;
@@ -353,4 +384,41 @@ td .bi:hover {
   box-shadow: 0 0 0 3px rgba(252, 191, 18, 0.5);
   /* Sombra al enfocarse */
 }
+
+.modal {
+    display: block!important;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+}
+.close__modal{
+    text-align: right;
+}
+.close {
+    text-align: right;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
 </style>

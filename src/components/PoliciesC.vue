@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const showModalEdit = ref(false);
 const showModalNew = ref(false);
@@ -11,6 +11,21 @@ const toggleModalEdit = () => {
 const toggleModalNew = () => {
   showModalNew.value = !showModalNew.value;
 };
+
+import { allPolices } from '@/api/allService.js';
+const loading = ref(true);
+const error = ref(null);
+const polices = ref([]);
+
+onMounted(async () => {
+    const { data, success, error: fetchError } = await allPolices();
+    if (success) {
+        polices.value = data.data;
+    } else {
+        error.value = fetchError;
+    }
+    loading.value = false;
+});
 </script>
 
 <template>
@@ -31,7 +46,7 @@ const toggleModalNew = () => {
             </tr>
             </thead>
             <tbody>
-            <tr class="list__polices" @click="toggleModalEdit">
+            <tr v-for="police in polices" :key="police.id" class="list__polices" @click="toggleModalEdit">
               <td class="" >
                 <span class="polices__police">Deberá informar cuando sea posible debido a que aja se portó mal porque debió haber ido.....</span>
               </td>

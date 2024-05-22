@@ -1,39 +1,39 @@
 <script setup>
 import TableHistory from "@/components/Teacher/TableHistory.vue";
 import { ref, onMounted } from 'vue';
+import PendingPermissions from "@/components/Teacher/PendingPermissions.vue";
 
 const history = ref({});
 const noHistory = ref(false);
 
-onMounted(async () => {
-    try {
-        const response = await fetch('https://service-teacher-zeleris.onrender.com/Documents/history', {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.token
-            },
-        });
-        const data = await response.json();
-        if (data && data.success === false && data.message === "No leave history found for the specified employee") {
-            console.log("No hay documentos pendientes en este momento.");
-            noHistory.value = true;
-            console.log(('No jalo'))
-        }
-        history.value = data.data;
-        console.log(data)
-    } catch (error) {
-        console.error('Error al obtener la información del empleado:', error);
-    }
-});
+
 </script>
 
 <template>
   <div class="layout">
-    <header class="header__cordinacion p-4 mb-5">
+    <header class="header__cordinacion p-4 mb-0">
       <h1 class="text-center">Historial de permisos</h1>
     </header>
-    <div class="layout__table">
-        <table-history></table-history>
-    </div>
+      <main class="d-flex flex-column p-3">
+          <div class="pending">
+              <header class="history__header">
+                  <h1 class="fs-3">Permisos pendientes</h1>
+              </header>
+              <div class="layout__table">
+                  <pending-permissions></pending-permissions>
+              </div>
+          </div>
+          <div class="history">
+              <header class="history__header">
+                  <h1 class="fs-3">Historial</h1>
+              </header>
+              <div class="layout__table">
+                  <table-history></table-history>
+              </div>
+          </div>
+
+      </main>
+
   </div>
 </template>
 

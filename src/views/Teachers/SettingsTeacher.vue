@@ -1,7 +1,7 @@
 <template>
     <div class="container-profile">
         <div class="carta">
-            <h1>Bienvenido Kevin Chan</h1>
+            <h1>Bienvenido <span>{{employee.name}}</span></h1>
             <div class="perfil">
                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="">
             </div>
@@ -9,8 +9,8 @@
             <form class="formulario">
                 <div class="columna">
                     <div class="inputs">
-                        <input type="text" id="nombre" placeholder=" " value="Heribé Felipe Uribe Santiago" readonly>
-                        <label for="nombre">Nombre completo</label>
+                        <input v-model="employeeFullName" type="text" id="nombre" placeholder=" " readonly>
+                        <label for="nombre">Nombre Completo</label>
                     </div>
                     <div class="inputs">
                         <input type="email" id="email" placeholder=" " value="heribeuribe@uacam.mx" readonly>
@@ -59,62 +59,77 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue';
+import { useEmployee } from "@/api/teacherService.js";
 import EditFirmaDigital from "@/scripts/EditFirmaDigital";
 
 export default {
-    data() {
-        return {
-            signatureBase64: '',
-            showModal: false,
-            imagePreview: null
-        };
-    },
-    mounted() {
-        console.log(import.meta.env.VITE_APP_API_URL);
-    },
-    methods: {
-        async editarFirma() {
+    name: 'ProfileComponent',
+    setup() {
+        const { employee } = useEmployee();
+
+        // Computed property to concatenate name and last name
+        const employeeFullName = computed(() => {
+            return `${employee.value.name} ${employee.value.lastName}`;
+        });
+
+        // Reactive data properties
+        const signatureBase64 = ref('');
+        const showModal = ref(false);
+        const imagePreview = ref(null);
+
+        const editarFirma = async () => {
             const editF = new EditFirmaDigital();
-            const token = localStorage.getItem('token'); // Obtén el token del almacenamiento local
+            const token = localStorage.getItem('token');
 
             if (!token) {
                 console.error('No token found');
                 return;
             }
-
             try {
-                const respuesta = await editF.editarFirma(this.signatureBase64, token);
+                const respuesta = await editF.editarFirma(signatureBase64.value, token);
                 console.log('Respuesta del servidor:', respuesta.signatureBase64);
-
-                // Haz algo con la respuesta, por ejemplo, redirige a otra página o cierra el modal
-                this.closeModal();
+                closeModal();
             } catch (error) {
                 console.error('Error en la solicitud:', error);
-                // Maneja el error de alguna manera, por ejemplo, muestra un mensaje al usuario
             }
-        },
+        };
 
-        triggerFileInput() {
-            this.$refs.fileInput.click();
-        },
-        handleFileInputChange(event) {
+        const triggerFileInput = () => {
+            fileInput.value.click();
+        };
+
+        const handleFileInputChange = (event) => {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    this.signatureBase64 = e.target.result.split(',')[1]; // Guarda la imagen en base64 sin el encabezado de data URL
-                    this.imagePreview = e.target.result;
-                    this.showModal = true;
+                    signatureBase64.value = e.target.result.split(',')[1];
+                    imagePreview.value = e.target.result;
+                    showModal.value = true;
                 };
                 reader.readAsDataURL(file);
             }
-        },
-        closeModal() {
-            this.showModal = false;
-            this.imagePreview = null;
-        }
+        };
+
+        const closeModal = () => {
+            showModal.value = false;
+            imagePreview.value = null;
+        };
+
+        return {
+            employee,
+            employeeFullName,
+            signatureBase64,
+            showModal,
+            imagePreview,
+            editarFirma,
+            triggerFileInput,
+            handleFileInputChange,
+            closeModal
+        };
     }
-}
+};
 </script>
 
 <style scoped>
