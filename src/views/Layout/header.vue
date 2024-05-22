@@ -5,7 +5,7 @@
 <template>
 <header>
   <div class="container__img">
-  <img src="/src/assets/img/Zeleris.jpg" class="logo">
+  <img src="/src/assets/img/ISCLogo.jpg" class="logo" style="max-width: 44px; max-height: 44px;">
   </div>
   <h1 class="header__company">Zeleris</h1>
   <h1 class="header__tipo">Coordinación de Ingeniería en Sistemas Computacionales</h1>
@@ -23,8 +23,7 @@ header{
   pointer-events: none;
 }
 .container__img{
-  width: 50px;
-  height: 50px;
+  padding: 3px 8px 3px 10px;
 }
 .header__company{
   font-size: 1.6rem;

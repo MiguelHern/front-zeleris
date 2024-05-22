@@ -62,9 +62,14 @@ if (respuesta.success) {
 
     <div class="img__container">
       <img class="img__zeleris" src="/src/assets/img/Zeleris.jpg" alt="">
+      <img src="/src/assets/img/UACLogo.jpg" class="logouac" style="max-width: 75px; max-height: 75px;">
+
     </div>
     <div class="content d-flex flex-column align-items-center justify-content-center">
       <div class="layout">
+        <div class="logoContainer" >
+          <img src="/src/assets/img/ISCLogo.jpg" class="logoisc" style="max-width: 85px; max-height: 85px;">
+        </div>
         <div class="layout__header">
           <div v-if="error" class="error-message card">
             <div class="card-body">
@@ -94,6 +99,21 @@ if (respuesta.success) {
 </template>
 
 <style scoped>
+.logouac{
+  margin-left: 20px;
+  margin-top: -80px;
+  text-align:start;
+  justify-self:flex-start;
+}
+.logoContainer{
+  display: flex;
+  flex-direction: column;
+}
+.logoisc{
+  align-self: center;
+  margin-bottom: 15px;
+}
+
 .img__container {
   pointer-events: none;
   position: absolute;

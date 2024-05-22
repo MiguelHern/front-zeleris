@@ -87,6 +87,7 @@ watchEffect(() => {
     </div>
     <div class="row vh-100 flex-nowrap">
       <nav class="col-1 d-flex flex-column justify-content-between layout__aside" style="padding: 80px 0 0 0 ;">
+        <img src="/src/assets/img/UACLogo.jpg" class="logouac" style="max-width: 60px; max-height: 60px;">
         <ul class="menu__list">
           <li class="text-center botonNavegacion menu__option" @click="irHomeTeachers"
             :class="{ active: botonActivo === 'TeachersHome' }">
@@ -122,6 +123,13 @@ watchEffect(() => {
 </template>
 
 <style scoped>
+.logouac{
+  margin-left: 5px;
+  margin-top: -74px;
+  text-align:start;
+  justify-self:flex-start;
+}
+
 .col-1 {
   width: 70px;
 }
