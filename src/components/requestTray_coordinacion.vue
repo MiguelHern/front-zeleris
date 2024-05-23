@@ -51,14 +51,18 @@
                 </div>
             </div>
         </div>
-
+        <div v-if="loading" class="loading-overlay">
+            <div class="spinner"></div>
+        </div>
     </div>
 </template>
 
 <script setup>
+
 import { ref, onMounted, watchEffect } from 'vue';
 import { fetchPendingPermissions, fetchDocumentDetails } from '@/api/cordinationService.js';
 
+const loading = ref(false);
 const pendingPermissions = ref({ data: [] });
 const selectedDocumentId = ref(null);
 const documentDetails = ref(null);
@@ -81,6 +85,7 @@ watchEffect(() => {
 
 // Función para obtener el ID del documento al hacer clic en la fila
 const getDocumentId = async (id) => {
+    loading.value = true;
     console.log('ID del documento:', id);
     selectedDocumentId.value = id;
     try {
@@ -93,6 +98,8 @@ const getDocumentId = async (id) => {
         formattedCreatedDate.value = createdDate.toLocaleDateString(); // Puedes ajustar el formato según tus preferencias
     } catch (error) {
         console.error('Error al obtener los detalles del documento:', error);
+    }finally {
+        loading.value = false;
     }
 }
 </script>
@@ -300,6 +307,37 @@ h1[id="perfil_Icon"]{
     background-color: #1B365D;
     text-shadow: 1px 1px 5px #0f1e33;
     border: none;
+}
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #ffffff;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
 
