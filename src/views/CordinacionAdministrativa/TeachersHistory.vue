@@ -27,8 +27,8 @@ onMounted(() =>{
 })
 
 const crearDocente = async () =>{
-    const response = await APIS.CrearDocente(name,lastName,rol,quantityPermissions,matricula,dependencyId,email,password)
-    console.log(response)
+    var response = await APIS.CrearDocente(name.value,lastName.value,rol.value,quantityPermissions.value,matricula.value,dependencyId.value,email.value,password.value)
+    console.log(response.data)
 }
 
 const { showModal: showModalNew, toggleModal: toggleModalNew } = useModal();
@@ -121,7 +121,7 @@ const { showModal: showModalNew, toggleModal: toggleModalNew } = useModal();
                     <span class="close" @click="toggleModalNew">&#x2716;</span>
                 </div>
                 <h3 class="text-center">Agregar docente</h3>
-                <form @submit.prevent="crearDocente">
+                <form @submit.prevent="handleSubmit">
                     <div class="mb-3">
                         <label for="name" class="form-label">Nombre:</label>
                         <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required>
@@ -158,7 +158,7 @@ const { showModal: showModalNew, toggleModal: toggleModalNew } = useModal();
                         <label for="password" class="form-label">Contraseña:</label>
                         <input v-model="password" id="password" type="password" class="form-control" placeholder="Contraseña" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <button @click="crearDocente()" type="submit" class="btn btn-primary">Enviar</button>
                 </form>
             </div>
         </div>
