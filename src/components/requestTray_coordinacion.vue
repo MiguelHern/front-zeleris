@@ -87,9 +87,9 @@ const getDocumentId = async (id) => {
                         <div class="data__container d-flex">
                             <h5 class="col-4">Cantidad de días solicitados </h5><h5>{{ documentDetails.data.quantityDays }}</h5>
                         </div>
-                        <div class="data__container">
+                        <div class="data__container d-flex">
                             <h5 class="col-4">Días solicitados</h5>
-                            <span v-for="date in documentDetails.data.permitDates" :key="date" class="days">{{ date }}</span>
+                            <p v-for="date in documentDetails.data.permitDates" :key="date.id" class="days">{{ date.requestDate }},</p>
                         </div>
                         <div class="data__container d-flex">
                             <h5 class="col-4">Motivo </h5><p class="text-wrap">{{ documentDetails.data.reason }}</p>

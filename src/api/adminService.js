@@ -38,9 +38,9 @@ export async function deleteEmployee(employeeId) {
 
 
 //Políticas
-//Crear políticas
-export const APIS = {
 
+export const APIS = {
+//Crear políticas
     newPolice: async (description, createdDate) => {
 
         const data = {
@@ -60,6 +60,64 @@ export const APIS = {
         });
 
         console.log(response)
+    },
+//Modificar políticas
+    editPolice: async (id, description) => {
+        const data = {
+            id: id,
+            description: description,
+        };
+
+        const token = localStorage.token;
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_MANAGER_API_URL}/admin/Policies/${id}`, {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error al editar la política:', errorData);
+                return { success: false, data: errorData };
+            }
+
+            const responseData = await response.json();
+            return { success: true, data: responseData };
+        } catch (error) {
+            console.error('Error al realizar la solicitud:', error);
+            return { success: false, data: error };
+        }
+    },
+    //Eliminar políticas
+    deletePolice: async (id) => {
+        const token = localStorage.token;
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_MANAGER_API_URL}/admin/Policies/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error al eliminar la política:', errorData);
+                return { success: false, data: errorData };
+            }
+
+            const responseData = await response.json();
+            return { success: true, data: responseData };
+        } catch (error) {
+            console.error('Error al realizar la solicitud:', error);
+            return { success: false, data: error };
+        }
     }
 
 }

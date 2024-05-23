@@ -22,3 +22,27 @@ export async function fetchDocumentDetails(documentId) {
         throw new Error('Error al obtener los detalles del documento: ' + error.message);
     }
 }
+export const APIS = {
+
+    uploadDesign: async (employeeId, documentPermitId) => {
+
+        const data = {
+            employeeId: employeeId,
+            documentPermitId: documentPermitId,
+        };
+
+        const token = localStorage.token;
+
+        const response = await fetch(`${import.meta.env.VITE_MANAGER_API_URL}/Signed`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        console.log(response.data)
+    }
+
+}

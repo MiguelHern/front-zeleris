@@ -44,9 +44,9 @@ onMounted(async () => {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="police in polices" :key="police.id" class="list__polices" @click="toggleModalEdit">
+            <tr v-for="police in polices" :key="police.id" class="list__polices">
               <td class="" >
-                <span class="polices__police">Deberá informar cuando sea posible debido a que aja se portó mal porque debió haber ido.....</span>
+                <p class="polices__police">{{police.description}}</p>
               </td>
             </tr>
             </tbody>
@@ -57,20 +57,6 @@ onMounted(async () => {
   </div>
 
   <!--Ventana emergente para ver política-->
-  <div v-if="showModalEdit" class="modal">
-    <div class="modal-content">
-      <div class="close__modal">
-        <span class="close" @click="toggleModalEdit">&#x2716;</span>
-      </div>
-      <h3 class="text-center">Cuidar el salón</h3>
-      <div class="form-control modal__edit-text">
-        <p></p>
-      </div>
-      <div class="buttons__edit">
-        <button @click="toggleModalEdit" class="btn btn__submit">Cerrar</button>
-      </div>
-    </div>
-  </div>
 
   <!--Ventana emergente para agregar política-->
 </template>
