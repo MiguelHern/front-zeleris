@@ -1,3 +1,40 @@
+<script setup>
+import {onMounted, ref, watchEffect} from 'vue';
+import { useEmployee } from '@/api/adminService.js';
+import { useModal } from '@/scripts/utils.js';
+import { deleteEmployee } from '@/api/adminService.js';
+import {APIS} from "@/scripts/Consumibles.js";
+
+const { employees } = useEmployee();
+const loading = ref(true);
+const name = ref("")
+const lastName = ref("")
+const quantityPermissions = ref(0)
+const rol = ref()
+const matricula = ref(0)
+const dependencyId = ref(0)
+const email = ref("")
+const password = ref("")
+
+watchEffect(() => {
+    if (employees.value.length > 0) {
+        loading.value = false;
+    }
+});
+
+onMounted(() =>{
+
+})
+
+const crearDocente = async () =>{
+    var response = await APIS.CrearDocente(name,lastName,rol,quantityPermissions,matricula,dependencyId,email,password)
+    console.log(response)
+}
+
+const { showModal: showModalNew, toggleModal: toggleModalNew } = useModal();
+
+</script>
+
 <template>
   <div>
     <!-- Div de arriba -->
@@ -96,9 +133,9 @@
                     <div class="mb-3">
                         <label for="rol" class="form-label">Rol:</label>
                         <select v-model="rol" id="rol" class="form-control">
-                            <option value="option1">Docente</option>
-                            <option value="option2">Coordinador</option>
-                            <option value="option3">Admin</option>
+                            <option value="Docente">Docente</option>
+                            <option value="Coordinador">Coordinador</option>
+                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -121,7 +158,7 @@
                         <label for="password" class="form-label">Contraseña:</label>
                         <input v-model="password" id="password" type="password" class="form-control" placeholder="Contraseña" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <button @click="crearDocente()" type="submit" class="btn btn-primary">Enviar</button>
                 </form>
             </div>
         </div>
@@ -131,24 +168,6 @@
 
 
 </template>
-
-<script setup>
-import {ref, watchEffect} from 'vue';
-import { useEmployee } from '@/api/adminService.js';
-import { useModal } from '@/scripts/utils.js';
-import { deleteEmployee } from '@/api/adminService.js';
-
-const { employees } = useEmployee();
-const loading = ref(true);
-
-watchEffect(() => {
-    if (employees.value.length > 0) {
-        loading.value = false;
-    }
-});
-const { showModal: showModalNew, toggleModal: toggleModalNew } = useModal();
-
-</script>
 
 <style scoped>
 
