@@ -15,6 +15,7 @@ const dependencyId = ref(0)
 const email = ref("")
 const password = ref("")
 const showModalNew = ref(false);
+const showModal = ref(false);
 
 const toggleModalNew = () => {
     showModalNew.value = !showModalNew.value;
@@ -32,9 +33,9 @@ onMounted(() =>{
 
 const crearDocente = async () => {
     var response = await APIS.CrearDocente(name.value, lastName.value, rol.value, quantityPermissions.value, matricula.value, dependencyId.value, email.value, password.value);
-
     if (response.success) {
         toggleModalNew();
+        showModal.value = true;
     } else {
         console.error('Error al crear el docente:', response.message);
     }
@@ -43,6 +44,12 @@ const crearDocente = async () => {
 </script>
 
 <template>
+    <div v-if="showModal" class="modal">
+        <div class="modal-content modal-contentt">
+            <p class="fs-5">Usuario creado</p>
+            <a class=" p-1 btn bg-primary text-body" href="/Admin/History">Aceptar</a>
+        </div>
+    </div>
   <div>
     <!-- Div de arriba -->
     <div class="top-container">
@@ -413,15 +420,16 @@ td .bi:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
-
 }
-
 .modal-content {
     background-color: #fefefe;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #888;
     width: 40%;
+}
+.modal-contentt{
+    margin: 20% auto;
 }
 .close__modal{
     text-align: right;
