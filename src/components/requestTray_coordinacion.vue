@@ -1,62 +1,3 @@
-<template>
-    <div class="d-flex w-100">
-        <table class="table shadow-sm w-25">
-            <thead>
-            <tr>
-                <th scope="col" class="col-4">Nombre</th>
-                <th scope="col" class="col-1">Número de empleado</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="permission in pendingPermissions.data" :key="permission.id" class="align-content-center" @click="getDocumentId(permission.id)">
-                <td class=" align-content-center fw-bold text-body-secondary">
-                    {{ permission.name }} {{ permission.lastName }}
-                </td>
-                <td class="align-content-center">
-                    <span>{{ permission.id }}</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="w-75" v-if="documentDetails">
-            <!-- Mostrar detalles del documento aquí -->
-            <div id="cuerpo">
-                <div class="details">
-                    <p> Detalles del Permiso Económico</p>
-                    <div class="applicantDetails">
-                        <h1 id="perfil_Icon">
-                            <i class="bi bi-person-square"></i>
-                        </h1>
-                        <div id="nameMail">
-                            <label>Julio A Gutiérrez Gonzáles</label>
-                            <label>JulioGutierrez@uacam.mx</label>
-                        </div>
-                        <div id="permitDate"> Fecha de la solicitud: {{ formattedCreatedDate }}</div>
-
-                    </div>
-                </div>
-
-                <div class="fillingArea"> Cantidad de día(s) solicitada(s): <span>{{ documentDetails.data.quantityDays }}</span>
-                    <div id="selectedDays">
-                        <div v-for="date in documentDetails.data.permitDates" :key="date" class="days">{{ date }}</div>
-                    </div>
-                    <div id="reasons"> Motivo de la solicitud:</div>
-                    <div id="textBox">
-                        <p>{{ documentDetails.data.reason }}</p>
-                    </div>
-                </div>
-                <div class="submissionArea">
-                    <input class="declineButton" type="submit" name="Boton1" value="Rechazar">
-                    <input class="acceptButton" type="submit" name="Boton2" value="Aceptar">
-                </div>
-            </div>
-        </div>
-        <div v-if="loading" class="loading-overlay">
-            <div class="spinner"></div>
-        </div>
-    </div>
-</template>
-
 <script setup>
 
 import { ref, onMounted, watchEffect } from 'vue';
@@ -104,209 +45,103 @@ const getDocumentId = async (id) => {
 }
 </script>
 
-<style>
-#cuerpo{
-    display: flex;
-    flex-direction:column;
-    width: 100%;
-    /*border: 3px solid red;*/
-}
+<template>
+    <div class=" w-100">
+        <div class="d-flex h-100 w-100 p-2">
+            <div class="over w-25 overflow-x-auto bca">
+                <header class="bandeja__header pt-2 pb-2">
+                    <h1 class="fs-3">
+                        Bandeja de solicitudes
+                    </h1>
+                </header>
+                <table class=" table shadow-sm ">
+                    <thead>
+                    <tr class="bg-danger">
+                        <th scope="col" class="col-4">Nombre</th>
+                        <th scope="col" class="col-1">Número de empleado</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr role="button" v-for="permission in pendingPermissions.data" :key="permission.id" class="tr__permission" @click="getDocumentId(permission.id)">
+                        <td class="td__permission align-content-center ">
+                            {{ permission.name }} {{ permission.lastName }}
+                        </td>
+                        <td class="td__permission align-content-center">
+                            <span>{{ permission.id }}</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class=" w-75 p-4" v-if="documentDetails">
+                <div class="bc p-3 shadow">
+                    <div class="header__document">
+                        <h1 class="document__title">
+                            Solicitud de <span>{{ documentDetails.data.employee }}</span>
+                        </h1>
+                    </div>
+                    <div class="main d-flex flex-column mt-2 gap-2 w-100">
+                        <div class="data__container d-flex">
+                           <h5 class="col-4">Fecha de solicitud</h5><h5>{{ formattedCreatedDate }}</h5>
+                        </div>
+                        <div class="data__container d-flex">
+                            <h5 class="col-4">Cantidad de días solicitados </h5><h5>{{ documentDetails.data.quantityDays }}</h5>
+                        </div>
+                        <div class="data__container">
+                            <h5 class="col-4">Días solicitados</h5>
+                            <span v-for="date in documentDetails.data.permitDates" :key="date" class="days">{{ date }}</span>
+                        </div>
+                        <div class="data__container d-flex">
+                            <h5 class="col-4">Motivo </h5><p class="text-wrap">{{ documentDetails.data.reason }}</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="w-50">
+                                <label for="file">Firmar documento</label>
+                                <input
+                                    type="file"
+                                    id="file"
+                                    name="file"
+                                    class="form-control"
+                                    accept="image/*"
+                                    data-browse="Seleccionar archivo"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-p{
-    background-color: #C8C8C8;
-    min-height: 50px;
-    width: 100%;
-    border-radius: 6px;
-    padding-left: 20px;
-    align-content: center;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 700;
-    /*font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
-    font-size: 18px;
-}
+            </div>
+            <div v-if="loading" class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+</template>
 
-.details{
-    flex-direction:column;
-    min-height: 140px;
-    /*background-color: lightgreen;*/
-    background-color:white;
-    display: flex;
-    width: calc(100%-30px);
-    margin-left: 15px;
-    margin-right: 15px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
 
-.applicantDetails{
-    min-height: 40px;
-    /*border: 2px solid green;*/
-    display: flex;
-    width: 100%;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 15px;
-    margin-bottom: 2px;
-    /*margin-top: 0px;*/
-}
 
-h1[id="perfil_Icon"]{
-    /*border: 2px solid green;*/
-    margin-top: 3px;
-    margin-left: 15px;
-    align-content: center;
-}
-
-#nameMail{
-    /*border: 3px solid yellow;*/
-    padding-left: 15px;
-    padding-right: 10px;
-    width: 72%;
-    align-content: center;
-    margin-bottom: 0px;
-}
-
-#permitDate{
-    /*background-color: #f5b642;*/
-    background-color: #EDEDED;
-    border-radius: 6px;
-    min-width: 28%;
-    /*min-width RECUERDA MODIFICAR CUANDO HAGAS LA BANDEJA*/
-    margin-right: 15px;
+<style scoped>
+.bandeja__header{
     text-align: center;
-    align-content: center;
-    padding-right: 5px;
-    padding-left: 5px;
-    padding-top: 3px;
-    padding-bottom: 3px;
+    background-color: var(--principal-color);
+    color: white;
 }
 
-.fillingArea{
-    display: flex;
-    flex-direction:column;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 500;
-    font-size: 15px;
-    height: 250px;
-    /*background-color: #f762be;*/
-    background-color: #EDEDED;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    width: calc(100%-30px);
-    margin-left: 30px;
-    margin-right: 30px;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    padding-right: 13px;
-    padding-left: 27px;
+.data__container{
+    padding: 3px 0;
+    border-bottom: 1px solid hsl(0, 0%, 94%);
 }
-
-#selectedDays{
-    display: flex;
-    padding-bottom: 15px;
-    padding-top: 13px;
-    justify-content: center;
+.over{
+    height: calc(100vh - 70px);
 }
-
-.days{
-    display: flex;
-    flex-direction: column;
-    border: 1px solid black;
-    background-color: white;
-    border-radius: 5px;
-    min-width: 24%;
-    /*min-width RECUERDA MODIFICAR CUANDO HAGAS LA BANDEJA*/
-    margin-left: 30px;
-    margin-right: 30px;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 15px;
-    padding-right: 15px;
-    text-align: center;
-    align-content: center;
+.bca{
+    border-right: 1px solid var(--principal-color);
 }
-
-#textBox{
-    display: flex;
-    flex-direction: column;
-    padding-left: 20px;
-    padding-right: 35px;
-    margin-bottom: 25px;
-    /*background-color: green;*/
-    background-color: #EDEDED;
-    height: 250px;
+.td__permission{
+    transition: all 150ms ease;
 }
-
-.reasonsText{
-    margin-top: 5px;
-    min-height: 110px;
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.submissionArea{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    height: 10%;
-    /*background-color: blue;*/
-    background-color: #EDEDED;
-    margin-left: 30px;
-    margin-right: 30px;
-}
-
-.remainingDays{
-    text-align: center;
-    align-content: center;
-    background-color: #EDEDED;
-    margin-left: 30px;
-    margin-right: 30px;
-    padding-top: 10px;
-    padding-left: 80px;
-    padding-right: 80px;
-    padding-bottom: 20px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-.declineButton, .acceptButton{
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 1px;
-    height: 37px;
-    width: 150px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    /*box-shadow: 3px 3px 6px rgba(0, 0, 0, .3);*/
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    transition: .3s ease-in;
-}
-
-.declineButton{
-    background-color: #fae3a0;
-    color:black;
-    margin-right: 30px;
-    border: none;
-}
-.declineButton:hover{
-    background-color: #FCBF12;
-    text-shadow: 1px 1px 5px #e2aa11;
-    border: none;
-}
-
-.acceptButton{
-    background-color: #758CA3;
-    color:white;
-    border: none;
-}
-.acceptButton:hover {
-    background-color: #1B365D;
-    text-shadow: 1px 1px 5px #0f1e33;
-    border: none;
+.tr__permission:hover .td__permission{
+    background-color: var(--grayy)!important;
 }
 .loading-overlay {
     position: fixed;
