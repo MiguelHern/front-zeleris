@@ -13,7 +13,6 @@ const toggleModalNew = () => {
 };
 
 import { allPolices } from '@/api/allService.js';
-const loading = ref(true);
 const error = ref(null);
 const polices = ref([]);
 
@@ -24,7 +23,6 @@ onMounted(async () => {
     } else {
         error.value = fetchError;
     }
-    loading.value = false;
 });
 </script>
 
@@ -66,7 +64,7 @@ onMounted(async () => {
       </div>
       <h3 class="text-center">Cuidar el salón</h3>
       <div class="form-control modal__edit-text">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p></p>
       </div>
       <div class="buttons__edit">
         <button @click="toggleModalEdit" class="btn btn__submit">Cerrar</button>

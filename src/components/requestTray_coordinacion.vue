@@ -77,7 +77,7 @@ const getDocumentId = async (id) => {
                 <div class="bc p-3 shadow">
                     <div class="header__document">
                         <h1 class="document__title">
-                            Solicitud de <span>{{ documentDetails.data.employee }}</span>
+                            Solicitud de <span>{{ documentDetails.data.nameEmployee }}</span>
                         </h1>
                     </div>
                     <div class="main d-flex flex-column mt-2 gap-2 w-100">

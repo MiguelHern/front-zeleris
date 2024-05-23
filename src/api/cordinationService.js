@@ -2,7 +2,6 @@ import axios from 'axios';
 const API_BASE_URL = import.meta.env.VITE_MANAGER_API_URL;
 export async function fetchPendingPermissions() {
     const token = localStorage.getItem('token');
-
     try {
         const response = await axios.get(`${API_BASE_URL}/coordination/pending/permissions`, {
             headers: {

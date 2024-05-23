@@ -35,3 +35,31 @@ export async function deleteEmployee(employeeId) {
         throw new Error('Error deleting employee'); // Maneja el error según tu lógica de aplicación
     }
 }
+
+
+//Políticas
+//Crear políticas
+export const APIS = {
+
+    newPolice: async (description, createdDate) => {
+
+        const data = {
+            description: description,
+            createdDate: createdDate,
+        };
+
+        const token = localStorage.token;
+
+        const response = await fetch(`${import.meta.env.VITE_MANAGER_API_URL}/admin/Policies`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        console.log(response)
+    }
+
+}
