@@ -26,7 +26,7 @@ export const APIS = {
             body: JSON.stringify(data)
         });
 
-        console.log(response)
+        console.log(response.data)
     }
 
 }

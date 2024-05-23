@@ -27,8 +27,8 @@ onMounted(() =>{
 })
 
 const crearDocente = async () =>{
-    var response = await APIS.CrearDocente(name,lastName,rol,quantityPermissions,matricula,dependencyId,email,password)
-    console.log(response)
+    var response = await APIS.CrearDocente(name.value,lastName.value,rol.value,quantityPermissions.value,matricula.value,dependencyId.value,email.value,password.value)
+    console.log(response.data)
 }
 
 const { showModal: showModalNew, toggleModal: toggleModalNew } = useModal();
