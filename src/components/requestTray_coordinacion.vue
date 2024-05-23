@@ -67,7 +67,7 @@ const getDocumentId = async (id) => {
                             {{ permission.name }} {{ permission.lastName }}
                         </td>
                         <td class="td__permission align-content-center">
-                            <span>{{ permission.id }}</span>
+                            <span>{{ permission.matricula }}</span>
                         </td>
                     </tr>
                     </tbody>

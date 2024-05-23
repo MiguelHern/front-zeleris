@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, ref, watchEffect} from 'vue';
 import { useEmployee } from '@/api/adminService.js';
-import { useModal } from '@/scripts/utils.js';
 import { deleteEmployee } from '@/api/adminService.js';
 import {APIS} from "@/scripts/Consumibles.js";
 
@@ -15,6 +14,11 @@ const matricula = ref(0)
 const dependencyId = ref(0)
 const email = ref("")
 const password = ref("")
+const showModalNew = ref(false);
+
+const toggleModalNew = () => {
+    showModalNew.value = !showModalNew.value;
+};
 
 watchEffect(() => {
     if (employees.value.length > 0) {
@@ -26,12 +30,15 @@ onMounted(() =>{
 
 })
 
-const crearDocente = async () =>{
-    var response = await APIS.CrearDocente(name.value,lastName.value,rol.value,quantityPermissions.value,matricula.value,dependencyId.value,email.value,password.value)
-    console.log(response.data)
-}
+const crearDocente = async () => {
+    var response = await APIS.CrearDocente(name.value, lastName.value, rol.value, quantityPermissions.value, matricula.value, dependencyId.value, email.value, password.value);
 
-const { showModal: showModalNew, toggleModal: toggleModalNew } = useModal();
+    if (response.success) {
+        toggleModalNew();
+    } else {
+        console.error('Error al crear el docente:', response.message);
+    }
+}
 
 </script>
 

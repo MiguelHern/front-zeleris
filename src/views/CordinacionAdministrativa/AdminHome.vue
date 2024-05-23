@@ -4,9 +4,6 @@
     </div>
     <div>
         <!-- Aquí puedes mostrar los documentos pendientes -->
-        <div v-for="document in pendingDocuments" :key="document.id">
-            {{ document.name }}
-        </div>
     </div>
 </template>
 

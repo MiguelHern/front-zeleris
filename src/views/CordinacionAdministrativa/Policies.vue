@@ -24,7 +24,7 @@ const newPolice = async () => {
     const response = await APIS.newPolice(description.value, createdDate);
     console.log(response);
     showModalNew.value = false;
-    await loadPolicies(); // Refresca la lista de políticas después de agregar una nueva
+    await loadPolicies();
 };
 
 const editPolice = async () => {

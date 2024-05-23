@@ -48,15 +48,20 @@ onMounted(async () => {
                 <i class="bi bi-file-earmark-check-fill"></i>
             </td>
             <td class="align-content-center hoverTabla" style="max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                {{permission.reason}}
+                {{ permission.reason }}
             </td>
-            <td class="text-center align-content-center">{{formatDate(permission.createdDate)}}</td>
+            <td class="text-center align-content-center">{{ formatDate(permission.createdDate) }}</td>
             <td class="text-center align-content-center">
-                FALTA ARRAY DE FECHAS
+                <ul>
+                    <li v-for="(dateRequest, index) in permission.datesRequests" :key="index">
+                        {{ formatDate(dateRequest) }}
+                    </li>
+                </ul>
             </td>
-            <td :class="{'pending': permission.status === 'Pendiente', 'approved': permission.status === 'aprobado'}" class="text-center align-content-center">{{permission.status}}</td>
+            <td :class="{'pending': permission.status === 'Pendiente', 'approved': permission.status === 'aprobado'}" class="text-center align-content-center">{{ permission.status }}</td>
         </tr>
         </tbody>
+
     </table>
 </template>
 
