@@ -17,10 +17,12 @@
         <div class="layout__table">
             <pending-permissions></pending-permissions>
         </div>
+        <Footer></Footer>
     </div>
 </template>
 
 <script setup>
+import Footer from "@/components/Footer.vue";
 import { useEmployee } from "@/api/teacherService.js";
 import PendingPermissions from "@/components/Teacher/PendingPermissions.vue";
 const { employee } = useEmployee();
