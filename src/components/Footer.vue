@@ -1,12 +1,4 @@
-<script>
-export default {
-    name: 'Footer',
-    props: {
-        msg: {
-            type: String,
-        }
-    }
-}
+<script setup>
 </script>
 
 <template>

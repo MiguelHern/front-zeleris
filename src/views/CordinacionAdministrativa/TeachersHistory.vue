@@ -1,4 +1,5 @@
 <script setup>
+import Footer from "@/components/Footer.vue";
 import {onMounted, ref, watchEffect} from 'vue';
 import { useEmployee } from '@/api/adminService.js';
 import { deleteEmployee } from '@/api/adminService.js';
@@ -177,7 +178,7 @@ const crearDocente = async () => {
             </div>
         </div>
     </div>
-
+    <Footer></Footer>
   </div>
 
 

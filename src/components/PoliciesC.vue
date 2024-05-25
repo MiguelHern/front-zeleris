@@ -1,4 +1,5 @@
 <script setup>
+import Footer from "@/components/Footer.vue";
 import { onMounted, ref } from 'vue';
 
 const showModalEdit = ref(false);
@@ -54,6 +55,7 @@ onMounted(async () => {
         </section>
       </div>
     </div>
+    <Footer></Footer>
   </div>
 
   <!--Ventana emergente para ver política-->

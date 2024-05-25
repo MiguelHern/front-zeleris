@@ -1,4 +1,5 @@
 <script setup>
+import Footer from "@/components/Footer.vue";
 import TableHistory from "@/components/Teacher/TableHistory.vue";
 import { ref, onMounted } from 'vue';
 import PendingPermissions from "@/components/Teacher/PendingPermissions.vue";
@@ -33,7 +34,7 @@ const noHistory = ref(false);
           </div>
 
       </main>
-
+      <Footer></Footer>
   </div>
 </template>
 

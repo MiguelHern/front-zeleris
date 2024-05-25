@@ -1,4 +1,5 @@
 <script setup>
+import Footer from "@/components/Footer.vue";
 import { onMounted, ref } from 'vue';
 import { APIS } from "@/api/adminService.js";
 import { allPolices } from "@/api/allService.js";
@@ -141,6 +142,7 @@ onMounted(async () => {
             </form>
         </div>
     </div>
+    <Footer></Footer>
 </template>
 
 
