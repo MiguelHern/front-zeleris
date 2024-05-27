@@ -1,187 +1,254 @@
 <script setup>
 import Footer from "@/components/Footer.vue";
-import {onMounted, ref, watchEffect} from 'vue';
+import { onMounted, ref, watch, watchEffect } from 'vue';
 import { useEmployee } from '@/api/adminService.js';
 import { deleteEmployee } from '@/api/adminService.js';
-import {APIS} from "@/scripts/Consumibles.js";
+import { APIS } from "@/scripts/Consumibles.js";
+import DependencyService from '@/scripts/Dependency.js'; // Importa DependencyService en lugar de Dependency
+import { computed } from 'vue';
 
+const dependencyService = new DependencyService(); // Instancia de DependencyService
+const dependencyId = ref("");
+const dependencies = ref([]); // Variable reactiva para las dependencias
 const { employees } = useEmployee();
 const loading = ref(true);
-const name = ref("")
-const lastName = ref("")
-const quantityPermissions = ref(0)
-const rol = ref()
-const matricula = ref(0)
-const dependencyId = ref(0)
-const email = ref("")
-const password = ref("")
+const name = ref("");
+const lastName = ref("");
+const quantityPermissions = ref(0);
+const rol = ref();
+const matricula = ref(0);
+const email = ref("");
 const showModalNew = ref(false);
 const showModal = ref(false);
+const symbolOrNumberEntered = ref(false); // Variable para rastrear si se ha ingresado un símbolo o número
 
 const toggleModalNew = () => {
-    showModalNew.value = !showModalNew.value;
+  showModalNew.value = !showModalNew.value;
 };
 
-watchEffect(() => {
-    if (employees.value.length > 0) {
-        loading.value = false;
-    }
+const checkForSymbols = () => {
+  const regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+  const numberRegex = /\d/;
+
+  if (regex.test(name.value) || regex.test(lastName.value) || numberRegex.test(name.value) || numberRegex.test(lastName.value)) {
+    symbolOrNumberEntered.value = true;
+    alert("No se permiten símbolos o números en el nombre y apellido.");
+    // Puedes limpiar el valor del campo aquí si lo deseas
+  } else {
+    symbolOrNumberEntered.value = false;
+  }
+};
+
+const validarEmail = () => {
+  // Expresión regular para validar el formato del correo electrónico
+  const emailPattern = /^[^\s@]+@(uacam\.mx|gmail\.com|outlook\.com)$/i;
+  return emailPattern.test(email.value);
+};
+
+const formularioValido = computed(() => {
+  return (
+    name.value &&
+    lastName.value &&
+    rol.value &&
+    quantityPermissions.value &&
+    matricula.value &&
+    dependencyId.value &&
+    validarEmail() &&
+    !symbolOrNumberEntered.value // Agregar la condición para verificar si no se ha ingresado ningún símbolo o número
+  );
 });
 
-onMounted(() =>{
+watchEffect(() => {
+  if (employees.value.length > 0) {
+    loading.value = false;
+  }
+});
 
-})
+onMounted(async () => {
+  try {
+    // Utiliza la instancia de dependencyService para obtener las dependencias
+    const response = await dependencyService.getDependencies();
+    dependencies.value = response.data; // Asigna directamente el array de dependencias
+    console.log('Dependencias obtenidas:', dependencies.value);
+  } catch (error) {
+    console.error('Error al obtener dependencias:', error);
+  }
+});
 
 const crearDocente = async () => {
-    var response = await APIS.CrearDocente(name.value, lastName.value, rol.value, quantityPermissions.value, matricula.value, dependencyId.value, email.value, password.value);
-    if (response.success) {
-        toggleModalNew();
-        showModal.value = true;
-    } else {
-        console.error('Error al crear el docente:', response.message);
-    }
-}
+  var response = await APIS.CrearDocente(name.value, lastName.value, rol.value, quantityPermissions.value, matricula.value, dependencyId.value, email.value);
+  if (response.success) {
+    toggleModalNew();
+    showModal.value = true;
+  } else {
+    console.error('Error al crear el docente:', response.message);
+  }
+};
 
+// Watch for quantityPermissions changes
+watch(quantityPermissions, (newVal) => {
+  if (newVal > 10) {
+    quantityPermissions.value = 0;
+    alert('No se pueden colocar más de 10 permisos');
+  } else if (newVal < 0) {
+    quantityPermissions.value = 0;
+    alert('No se permiten números negativos en la cantidad de permisos');
+  }
+});
 </script>
 
 <template>
-    <div v-if="showModal" class="modal">
-        <div class="modal-content modal-contentt">
-            <p class="fs-5">Usuario creado</p>
-            <a class=" p-1 btn bg-primary text-body" href="/Admin/History">Aceptar</a>
-        </div>
-    </div>
   <div>
-    <!-- Div de arriba -->
-    <div class="top-container">
-      <div>
-        <span style="font-size: 24px; font-family: 'Jost', sans-serif; margin-left: 70px;">Docentes</span>
-      </div>
-      <div class="input-container" style="margin-right: 70px;">
-        <div class="search-container">
-          <input type="text" class="search-input" placeholder="Buscar...">
-        </div>
-        <select class="filter-select">
-          <option disabled selected>Filtrar</option>
-          <!-- opciones del combo box -->
-          <option value="option1">Opción 1</option>
-          <option value="option2">Opción 2</option>
-          <option value="option3">Opción 3</option>
-        </select>
-        <button class="add-button" @click="toggleModalNew">Añadir Docente</button>
+    <div v-if="showModal" class="modal">
+      <div class="modal-content modal-contentt">
+        <p class="fs-5">Usuario creado</p>
+        <a class=" p-1 btn bg-primary text-body" href="/Admin/History">Aceptar</a>
       </div>
     </div>
+    <div>
+      <!-- Div de arriba -->
+      <div class="top-container">
+        <div>
+          <span style="font-size: 24px; font-family: 'Jost', sans-serif; margin-left: 70px;">Docentes</span>
+        </div>
+        <div class="input-container" style="margin-right: 70px;">
+          <div class="search-container">
+            <input type="text" class="search-input" placeholder="Buscar...">
+          </div>
+          <select class="filter-select">
+            <option disabled selected>Filtrar</option>
+            <!-- opciones del combo box -->
+            <option value="option1">Opción 1</option>
+            <option value="option2">Opción 2</option>
+            <option value="option3">Opción 3</option>
+          </select>
+          <button class="add-button" @click="toggleModalNew">Añadir Docente</button>
+        </div>
+      </div>
 
-    <!-- Div de abajo -->
-    <div class="bottom-container">
-      <table>
-        <thead>
-          <tr>
-            <th>
-              <div class="column-header">
-                <span>Nombre</span>
-                <button @click="pivotar('nombre')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Número de empleado</span>
-                <button @click="pivotar('Número de empleado')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Correo</span>
-                <button @click="pivotar('correo')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Carrera</span>
-                <button @click="pivotar('carrera')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Cargo</span>
-                <button @click="pivotar('cargo')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Acciones</span>
-                <button @click="pivotar('acciones')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-        <tr v-for="employee in employees" :key="employee.id">
-            <td><span>{{employee.name}}</span><span>{{employee.lastName}}</span></td>
-            <td>{{employee.matricula}}</td>
-            <td>{{employee.email}}</td>
-            <td>{{employee.dependency}}</td>
-            <td>{{employee.rol}}</td>
-            <td>
+      <!-- Div de abajo -->
+      <div class="bottom-container">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <div class="column-header">
+                  <span>Nombre</span>
+                  <button @click="pivotar('nombre')"><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th>
+                <div class="column-header">
+                  <span>Número de empleado</span>
+                  <button @click="pivotar('Número de empleado')"><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th>
+                <div class="column-header">
+                  <span>Correo</span>
+                  <button @click="pivotar('correo')"><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th>
+                <div class="column-header">
+                  <span>Carrera</span>
+                  <button @click="pivotar('carrera')"><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th>
+                <div class="column-header">
+                  <span>Cargo</span>
+                  <button @click="pivotar('cargo')"><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th>
+                <div class="column-header">
+                  <span>Acciones</span>
+                  <button @click="pivotar('acciones')"><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="employee in employees" :key="employee.id">
+              <td><span>{{ employee.name }}</span><span>{{ employee.lastName }}</span></td>
+              <td>{{ employee.matricula }}</td>
+              <td>{{ employee.email }}</td>
+              <td>{{ employee.dependency }}</td>
+              <td>{{ employee.rol }}</td>
+              <td>
                 <i class="bi bi-pencil-square"></i>
                 <i class="bi bi-trash3" @click="deleteEmployee(employee.id)"></i>
                 <i class="bi bi-person-gear"></i>
-            </td>
-        </tr>
-        </tbody>
-      </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <div v-if="showModalNew" class="modal">
-            <div class="modal-content">
-                <div class="close__modal">
-                    <span class="close" @click="toggleModalNew">&#x2716;</span>
-                </div>
-                <h3 class="text-center">Agregar docente</h3>
-                <form @submit.prevent="handleSubmit">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nombre:</label>
-                        <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lastName" class="form-label">Apellido:</label>
-                        <input v-model="lastName" id="lastName" type="text" class="form-control" placeholder="Apellido" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="rol" class="form-label">Rol:</label>
-                        <select v-model="rol" id="rol" class="form-control">
-                            <option value="Docente">Docente</option>
-                            <option value="Coordinador">Coordinador</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="quantityPermissions" class="form-label">Cantidad de Permisos:</label>
-                        <input v-model="quantityPermissions" id="quantityPermissions" type="number" class="form-control" placeholder="Cantidad de Permisos" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="matricula" class="form-label">Número de empleado:</label>
-                        <input v-model="matricula" id="matricula" type="number" class="form-control" placeholder="Matrícula" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="dependencyId" class="form-label">ID de Dependencia:</label>
-                        <input v-model="dependencyId" id="dependencyId" type="number" class="form-control" placeholder="ID de Dependencia" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Correo Electrónico:</label>
-                        <input v-model="email" id="email" type="email" class="form-control" placeholder="Correo Electrónico" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña:</label>
-                        <input v-model="password" id="password" type="password" class="form-control" placeholder="Contraseña" required>
-                    </div>
-                    <button @click="crearDocente()" type="submit" class="btn btn-primary">Enviar</button>
-                </form>
+          <div class="modal-content">
+            <div class="close__modal">
+              <span class="close" @click="toggleModalNew">&#x2716;</span>
             </div>
+            <h3 class="text-center">Agregar docente</h3>
+            <form @submit.prevent="crearDocente">
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre:</label>
+                <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required
+                  pattern="[A-Za-z]+" title="Solo letras, sin números ni símbolos" @input="checkForSymbols">
+              </div>
+              <div class="mb-3">
+                <label for="lastName" class="form-label">Apellido:</label>
+                <input v-model="lastName" id="lastName" type="text" class="form-control" placeholder="Apellido" required
+                  pattern="[A-Za-z]+" title="Solo letras, sin números ni símbolos" @input="checkForSymbols">
+              </div>
+              <div class="mb-3">
+                <label for="rol" class="form-label">Rol:</label>
+                <select v-model="rol" id="rol" class="form-control">
+                  <option value="Director">Director</option>
+                  <option value="Docente">Docente</option>
+                  <option value="Coordinador">Coordinador de carrera</option>
+                  <option value="Admin">Coordinador administrativo</option>
+                  <option value="Adiministrativo">Administrativo</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="quantityPermissions" class="form-label">Cantidad de Permisos:</label>
+                <input v-model.number="quantityPermissions" id="quantityPermissions" type="number" class="form-control"
+                  placeholder="Cantidad de Permisos" min="0" max="10" required>
+              </div>
+              <div class="mb-3">
+                <label for="matricula" class="form-label">Número de empleado:</label>
+                <input v-model="matricula" id="matricula" type="number" class="form-control" placeholder="Matrícula"
+                  required>
+              </div>
+              <div class="mb-3">
+                <label for="dependencyId" class="form-label">ID de Dependencia:</label>
+                <select v-model="dependencyId" class="form-control">
+                  <option disabled value="">Seleccione una dependencia</option>
+                  <option v-for="dependency in dependencies" :key="dependency.id" :value="dependency.id">
+                    {{ dependency.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico:</label>
+                <input v-model="email" id="email" type="email" class="form-control" placeholder="Correo Electrónico"
+                  required>
+                <small v-if="!validarEmail" class="text-danger">El correo electrónico no es válido.</small>
+              </div>
+
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <button :disabled="!formularioValido" type="submit" class="btn btn-primary">Enviar</button>
+              </div>
+
+            </form>
+          </div>
         </div>
+      </div>
+      <Footer></Footer>
     </div>
-    <Footer></Footer>
   </div>
-
-
 </template>
 
 <style scoped>
@@ -413,40 +480,43 @@ td .bi:hover {
 }
 
 .modal {
-    display: block!important;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+  display: block !important;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
 }
+
 .modal-content {
-    background-color: #fefefe;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 40%;
+  background-color: #fefefe;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
 }
-.modal-contentt{
-    margin: 20% auto;
+
+.modal-contentt {
+  margin: 20% auto;
 }
-.close__modal{
-    text-align: right;
+
+.close__modal {
+  text-align: right;
 }
+
 .close {
-    text-align: right;
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
+  text-align: right;
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
 }
+
 .close:hover,
 .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
-
-
 </style>
