@@ -1,4 +1,5 @@
 import { ref, onMounted } from 'vue';
+import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 export function useEmployee() {
     const employee = ref({});
@@ -53,6 +54,28 @@ export const usePendingDocuments = () => {
         PendingDocuments,
     };
 };
+//Obtener quien ha firmado el permiso
+export function useSigned() {
+    const sign = ref({});
+    onMounted(async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/Signed/GetSignerByDocumentId/${documentId}`, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.token
+                },
+            });
+            const data = await response.json();
+            sign.value = data.data;
+            console.log(sign.value)
+        } catch (error) {
+            console.error('Error al obtener las firmas:', error);
+        }
+    });
+    return {
+        sign
+    };
+}
+
 //Employee history
 export const fetchDocumentHistory = async () => {
     try {
@@ -68,5 +91,6 @@ export const fetchDocumentHistory = async () => {
         return { error, success: false };
     }
 };
+
 
 

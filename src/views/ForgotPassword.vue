@@ -50,7 +50,7 @@ document.addEventListener('keydown', (event) => {
             <img class="img__zeleris" src="/src/assets/img/Zeleris.jpg" alt="">
         </div>
         <div class="content d-flex flex-column align-items-center justify-content-center">
-            <div class="layout">
+            <div class="layout card">
                 <div class="layout__header">
                     <div v-if="showSuccessMessage">
                         <p class="alert alert-success text-center">Código enviado.</p>
@@ -62,7 +62,7 @@ document.addEventListener('keydown', (event) => {
                 </div>
                 <form @submit.prevent="handleSubmit" class="login__form">
                     <div class="form__group">
-                        <input v-model="email" type="email" class="form__input" name="email" required placeholder="Email">
+                        <input v-model="email" type="email" class="form__input card" name="email" required placeholder="Email">
                         <label for="email" class="form__label">Email</label>
                     </div>
                     <input type="submit" value="Enviar" class="form__button">
@@ -116,9 +116,6 @@ document.addEventListener('keydown', (event) => {
 }
 .form__input
 {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    border: none;
-    border-bottom: 1px solid var(--grayy);
     position: relative;
     width: 100%;
     display: block;
@@ -126,7 +123,7 @@ document.addEventListener('keydown', (event) => {
     padding: 1rem 3rem 1rem 1.5rem;
     border-radius: 0.5rem;
     outline: none;
-    line-height: 2.1rem;
+
 
 }
 .form__label{

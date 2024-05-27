@@ -8,6 +8,7 @@ const showModalNew = ref(false);
 const description = ref('');
 const selectedPolicyId = ref(null);
 const error = ref(null);
+const loading = ref(true);
 
 const toggleModalEdit = (id, currentDescription) => {
     selectedPolicyId.value = id;
@@ -32,10 +33,10 @@ const editPolice = async () => {
     if (response.success) {
         showModalEdit.value = false;
         console.log('Política editada con éxito:', response.data);
-        await loadPolicies(); // Refresca la lista de políticas después de editar
+        await loadPolicies();
     } else {
         console.error('Error al editar la política:', response.data);
-        error.value = response.data; // Guarda el error en una variable reactiva
+        error.value = response.data;
     }
 };
 
@@ -44,10 +45,10 @@ const deletePolice = async (id) => {
         const response = await APIS.deletePolice(id);
         if (response.success) {
             console.log('Política eliminada con éxito:', response.data);
-            await loadPolicies(); // Refresca la lista de políticas después de eliminar
+            await loadPolicies();
         } else {
             console.error('Error al eliminar la política:', response.data);
-            error.value = response.data; // Guarda el error en una variable reactiva
+            error.value = response.data;
         }
     }
 };
@@ -55,9 +56,11 @@ const deletePolice = async (id) => {
 const polices = ref([]);
 
 const loadPolicies = async () => {
+    loading.value = true
     const { data, success, error: fetchError } = await allPolices();
     if (success) {
         polices.value = data.data;
+        loading.value = false;
     } else {
         console.error('Error al obtener las políticas:', fetchError);
         error.value = fetchError;
@@ -89,6 +92,7 @@ onMounted(async () => {
                             <th scope="col" class="col-1">Eliminar</th>
                         </tr>
                         </thead>
+                        <i v-if="loading" class="c-inline-spinner"></i>
                         <tbody>
                         <tr v-for="police in polices" :key="police.id" class="align-content-center">
                             <td>
@@ -132,7 +136,7 @@ onMounted(async () => {
                 <span class="close" @click="toggleModalNew">&#x2716;</span>
             </div>
             <h3 class="text-center">Agregar política</h3>
-            <form @submit.prevent="newPolice">
+            <form @submit.prevent=" newPolice">
                 <textarea v-model="description" class="form-control modal__edit-text"></textarea>
                 <div class="buttons__edit">
                     <button type="button" @click="toggleModalNew" class="btn__cancel btn">Cancelar</button>

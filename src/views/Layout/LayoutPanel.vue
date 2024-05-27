@@ -123,6 +123,7 @@ watchEffect(() => {
 </template>
 
 <style scoped>
+
 .logouac{
   margin-left: 5px;
   margin-top: -74px;

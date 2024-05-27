@@ -1,5 +1,5 @@
 <template>
-    <div class="layout">
+    <div class="layout p-3">
         <header class="header__cordinacion d-flex justify-content-between p-4 mb-5">
             <div class="header__left">
                 <a href="TeachersHome/Settings" class="header__settings">
@@ -10,8 +10,10 @@
                 </a>
             </div>
             <div class="header__right d-flex align-items-baseline">
-                <h2 class="header__user fs-5 fw-bold">Permisos económicos disponibles: <span>{{ employee.quantityPermissions }}</span></h2>
-                <a href="TeachersHome/GenerarPermiso" class="btn btn__new  d-inline-block" style="margin-left: 30px" >Generar nuevo permiso</a>
+                <h2 class="header__user fs-5 fw-bold">Permisos económicos disponibles:
+                    <span>{{ employee.quantityPermissions }}</span></h2>
+                <a href="TeachersHome/GenerarPermiso" class="btn btn__new  d-inline-block" style="margin-left: 30px">Generar
+                    nuevo permiso</a>
             </div>
         </header>
         <div class="layout__table">
@@ -21,28 +23,31 @@
 </template>
 
 <script setup>
-import { useEmployee } from "@/api/teacherService.js";
+import {useEmployee} from "@/api/teacherService.js";
 import PendingPermissions from "@/components/Teacher/PendingPermissions.vue";
-const { employee } = useEmployee();
+
+const {employee} = useEmployee();
 </script>
 
 
-
 <style scoped>
-.btn__new{
-  background-color: var(--grayy);
-  color: var(--white-color);
+.btn__new {
+    background-color: var(--grayy);
+    color: var(--white-color);
 }
-.btn__new:hover{
-  background-color: var(--principal-color);
+
+.btn__new:hover {
+    background-color: var(--principal-color);
 }
-.header__settings{
-  display: flex;
-  align-items: center;
-  gap: 10px;
+
+.header__settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-.header__settings:hover{
-  color: var(--principal-color);
+
+.header__settings:hover {
+    color: var(--principal-color);
 }
 
 </style>

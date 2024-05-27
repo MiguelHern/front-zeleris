@@ -1,102 +1,194 @@
 <script setup>
-
-import { ref, onMounted, watchEffect } from 'vue';
-import { fetchPendingPermissions, fetchDocumentDetails } from '@/api/cordinationService.js';
+import {ref, onMounted} from 'vue';
+import {fetchPendingPermissions, fetchDocumentDetails} from '@/api/cordinationService.js';
+import {APISPERMIT} from "@/api/adminService.js";
 
 const loading = ref(false);
-const pendingPermissions = ref({ data: [] });
+const loadingDocuments = ref({});
+const pendingPermissions = ref({data: []});
 const selectedDocumentId = ref(null);
 const documentDetails = ref(null);
-const formattedCreatedDate = ref(null); // Variable para almacenar la fecha formateada
+const formattedCreatedDate = ref(null);
+const file = ref("");
+let imageBase64 = '';
+const errorMessage = ref(false);
+const isCheckboxChecked = ref(false);
 
 onMounted(async () => {
+    loading.value = true;
     try {
         const response = await fetchPendingPermissions();
         pendingPermissions.value = response;
-        console.log('Permisos pendientes:', pendingPermissions.value);
     } catch (error) {
-        console.error('Error al obtener los permisos pendientes:', error);
+    } finally {
+        loading.value = false;
     }
 });
 
-// Watcher para observar cambios en pendingPermissions
-watchEffect(() => {
-    console.log('Nuevos permisos pendientes:', pendingPermissions.value);
-});
-
-// Función para obtener el ID del documento al hacer clic en la fila
 const getDocumentId = async (id) => {
-    loading.value = true;
-    console.log('ID del documento:', id);
+    loadingDocuments.value[id] = true;
     selectedDocumentId.value = id;
+    console.log(selectedDocumentId.value)
     try {
         const documentDetailsResponse = await fetchDocumentDetails(id);
         documentDetails.value = documentDetailsResponse;
-        console.log('Detalles del documento:', documentDetails.value);
-
-        // Formatear la fecha de creación después de obtenerla
+        file.value = documentDetails.value.data.file;
         const createdDate = new Date(documentDetails.value.data.createdDate);
-        formattedCreatedDate.value = createdDate.toLocaleDateString(); // Puedes ajustar el formato según tus preferencias
+        formattedCreatedDate.value = createdDate.toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
     } catch (error) {
         console.error('Error al obtener los detalles del documento:', error);
-    }finally {
-        loading.value = false;
+    } finally {
+        loadingDocuments.value[id] = false;
     }
-}
+};
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            imageBase64 = reader.result.split(',')[1];
+        };
+    }
+};
+
+const handleCheckboxChange = () => {
+    if (isCheckboxChecked.value) {
+        imageBase64 = null;
+    }
+};
+
+const downloadFile = () => {
+    const link = document.createElement('a');
+    link.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${file.value}`;
+    link.download = 'document.docx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
+const signPermit = async () => {
+
+    if (!imageBase64) {
+        errorMessage.value = true
+        return;
+    }
+    try {
+        if (isCheckboxChecked.value) {
+            imageBase64 = null;
+        }
+        const response = await APISPERMIT.signPermit(imageBase64, selectedDocumentId.value);
+        errorMessage.value = false
+        console.log('Documento firmado con éxito:', response);
+    } catch (error) {
+        console.error('Error al firmar el permiso:', error);
+    }
+};
 </script>
 
+
 <template>
-    <div class=" w-100">
-        <div class="d-flex h-100 w-100 p-2">
-            <div class="over w-25 overflow-x-auto bca">
-                <header class="bandeja__header pt-2 pb-2">
-                    <h1 class="fs-3">
-                        Bandeja de solicitudes
-                    </h1>
+    <div class="w-100">
+        <div class="d-flex h-100 w-100 p-2 gap-2">
+            <section class="bandeja col-3 card p-3">
+                <header class="bandeja__title mb-2">
+                    <h1 class="fs-3">Bandeja de solicitudes</h1>
                 </header>
-                <table class=" table shadow-sm ">
-                    <thead>
-                    <tr class="bg-danger">
-                        <th scope="col" class="col-4">Nombre</th>
-                        <th scope="col" class="col-1">Número de empleado</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr role="button" v-for="permission in pendingPermissions.data" :key="permission.id" class="tr__permission" @click="getDocumentId(permission.id)">
-                        <td class="td__permission align-content-center ">
+                <i v-if="loading" class="c-inline-spinner"></i>
+                <div class="solicitudes__cards d-flex flex-column gap-3 navbar-nav-scroll">
+                    <div class="solicitudes__card p-1" role="button" v-for="permission in pendingPermissions.data"
+                         @click="getDocumentId(permission.id)"
+                         :key="permission.id">
+                        <h3 class="fs-6 mb-2">
                             {{ permission.name }} {{ permission.lastName }}
-                        </td>
-                        <td class="td__permission align-content-center">
-                            <span>{{ permission.matricula }}</span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class=" w-75 p-4" v-if="documentDetails">
-                <div class="bc p-3 shadow">
-                    <div class="header__document">
-                        <h1 class="document__title">
-                            Solicitud de <span>{{ documentDetails.data.nameEmployee }}</span>
-                        </h1>
+                            <i v-if="loadingDocuments[permission.id]" class="c-inline-spinner"></i>
+                        </h3>
+                        <div class="card__email d-flex align-items-center gap-2">
+                            <h4 class="fs-6">{{ permission.account.email }}</h4>
+                            <svg viewBox="0 0 2 2" width="4" height="4" class="nc rd aol">
+                                <circle cx="1" cy="1" r="1"></circle>
+                            </svg>
+                            <h4 class="fs-6">{{ permission.matricula }}</h4>
+                        </div>
                     </div>
-                    <div class="main d-flex flex-column mt-2 gap-2 w-100">
-                        <div class="data__container d-flex">
-                           <h5 class="col-4">Fecha de solicitud</h5><h5>{{ formattedCreatedDate }}</h5>
-                        </div>
-                        <div class="data__container d-flex">
-                            <h5 class="col-4">Cantidad de días solicitados </h5><h5>{{ documentDetails.data.quantityDays }}</h5>
-                        </div>
-                        <div class="data__container d-flex">
-                            <h5 class="col-4">Días solicitados</h5>
-                            <p v-for="date in documentDetails.data.permitDates" :key="date.id" class="days">{{ date.requestDate }},</p>
-                        </div>
-                        <div class="data__container d-flex">
-                            <h5 class="col-4">Motivo </h5><p class="text-wrap">{{ documentDetails.data.reason }}</p>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="w-50">
-                                <label for="file">Firmar documento</label>
+                </div>
+            </section>
+            <div class="d-flex flex-column align-items-center justify-content-center display-1 w-75"
+                 v-if="!documentDetails">
+                <i class="bi bi-card-text"></i>
+                <h2 class="text-center">Seleccione un permiso pendiente <br> para visualizar su información</h2>
+            </div>
+            <div class="w-75 card p-5 pt-3" v-if="documentDetails">
+                <div v-if="errorMessage">
+                    <p class="alert alert-danger text-center">No se ha seleccionado ningún archivo</p>
+                </div>
+                <header class="details__header">
+                    <h2 class="fs-3">{{ documentDetails.data.nameEmployee }}</h2>
+                    <h3 class="fs-5 text-gray">Solicitud de permiso económico</h3>
+                </header>
+                <main class="details__main">
+                    <table class="table">
+                        <tbody>
+                        <tr class="align-content-center">
+                            <td>
+                                <h5 class="fs-6">Fecha de solicitud</h5>
+                            </td>
+                            <td>
+                                <h5 class="fs-6 text-gray">{{ formattedCreatedDate }}</h5>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-content-center">
+                                <h5 class="fs-6">Cantidad de días solicitados</h5>
+                            </td>
+                            <td class="align-content-center">
+                                <h5 class="fs-6 text-gray">{{ documentDetails.data.quantityDays }}</h5>
+                            </td>
+                        </tr>
+                        <tr class="align-content-center">
+                            <td>
+                                <h5 class="fs-6">Días solicitados</h5>
+                            </td>
+                            <td>
+                                <h5 v-for="date in documentDetails.data.permitDates" :key="date.id"
+                                    class="fs-6 text-gray">
+                                    {{
+                                        new Date(date.requestDate).toLocaleDateString('es-ES', {
+                                            year: 'numeric',
+                                            month: '2-digit',
+                                            day: '2-digit'
+                                        })
+                                    }},
+                                </h5>
+                            </td>
+                        </tr>
+                        <tr class="align-content-center">
+                            <td>
+                                <h5 class="fs-6">Motivo</h5>
+                            </td>
+                            <td>
+                                <p class="fs-6 text-gray">{{ documentDetails.data.reason }}</p>
+                            </td>
+                        </tr>
+                        <tr class="align-content-center">
+                            <td>
+                                <h5 class="fs-6">Descargar documento</h5>
+                            </td>
+                            <td>
+                                <button @click="downloadFile" class="btn btn__new">Descargar</button>
+                            </td>
+                        </tr>
+
+                        <tr class="align-content-center">
+                            <td>
+                                <label class="fs-6" for="file">Firmar documento</label>
+                            </td>
+                            <td>
                                 <input
                                     type="file"
                                     id="file"
@@ -104,65 +196,48 @@ const getDocumentId = async (id) => {
                                     class="form-control"
                                     accept="image/*"
                                     data-browse="Seleccionar archivo"
+                                    @change="handleFileChange"
+                                    required
+                                    :disabled="isCheckboxChecked"
+                                    :required="!isCheckboxChecked"
                                 />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div v-if="loading" class="loading-overlay">
-                <div class="spinner"></div>
+                                <div class="d-flex align-items-center gap-3 mt-1">
+                                <input
+                                    id="firmacheck"
+                                    type="checkbox"
+                                    class="form-check-input m-0"
+                                    v-model="isCheckboxChecked"
+                                    @change="handleCheckboxChange"
+                                >
+                                <label for="firmacheck" class="align-content-center">Ya tengo firma</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="align-content-center">
+                            <td>
+                                <h5 class="fs-6">Enviar respuesta</h5>
+                            </td>
+                            <td class="d-flex gap-3">
+                                <button @click="signPermit" class="btn btn__new">Aceptar</button>
+                                <button class="btn text-danger">Rechazar</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </main>
             </div>
         </div>
     </div>
 </template>
 
 
-
 <style scoped>
-.bandeja__header{
-    text-align: center;
-    background-color: var(--principal-color);
-    color: white;
+td {
+    padding: 20px 0;
 }
 
-.data__container{
-    padding: 3px 0;
-    border-bottom: 1px solid hsl(0, 0%, 94%);
-}
-.over{
+.bandeja {
     height: calc(100vh - 70px);
-}
-.bca{
-    border-right: 1px solid var(--principal-color);
-}
-.td__permission{
-    transition: all 150ms ease;
-}
-.tr__permission:hover .td__permission{
-    background-color: var(--grayy)!important;
-}
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.spinner {
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top: 4px solid #ffffff;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -174,5 +249,31 @@ const getDocumentId = async (id) => {
         transform: rotate(360deg);
     }
 }
-</style>
 
+.solicitudes__card {
+    border-bottom: 1px solid hsl(0, 0%, 94%);
+    transition: all 200ms ease-in-out;
+}
+
+.bandeja__title {
+    border-bottom: 1px solid hsl(0, 0%, 80%);
+}
+
+.card__email {
+    color: #758CA3;
+}
+
+.solicitudes__card:hover {
+    background-color: var(--principal-color);
+    color: white;
+}
+
+.btn__new {
+    color: var(--white-color);
+    background-color: var(--principal-color);
+}
+
+.btn__new:hover {
+    background-color: var(--grayy);
+}
+</style>

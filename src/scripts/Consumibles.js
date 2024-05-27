@@ -9,7 +9,6 @@ export const APIS = {
             dependencyId: dependencyId,
             credentials: {
                 email: email,
-                password: password
             }
         };
 

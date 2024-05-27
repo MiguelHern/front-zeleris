@@ -34,10 +34,9 @@ const formatDate = (dateString) => {
             </td>
             <td class="align-content-center text-center">{{ PendingDocument.quantityDays }}</td>
             <td class="text-center">
-                <span v-for="(permitDate, index) in PendingDocument.permitDates" :key="index">
-                    {{ formatDate(permitDate.requestDate) }}
-                    <div v-if="index < PendingDocument.permitDates.length - 1"></div>
-                </span>
+                <h5 v-for="date in PendingDocument.datesRequests" :key="date.id" class="fs-6">
+                    {{ new Date(date.requestDate).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) }}
+                </h5>
             </td>
             <td class="text-center align-content-center text-danger">Pendiente</td>
         </tr>

@@ -14,6 +14,7 @@ export async function fetchPendingPermissions() {
         throw new Error('Error al obtener los permisos pendientes de coordinación: ' + error.message);
     }
 }
+
 export async function fetchDocumentDetails(documentId) {
     try {
         const response = await axios.get(`${API_BASE_URL}/Documents/${documentId}`);
@@ -22,6 +23,7 @@ export async function fetchDocumentDetails(documentId) {
         throw new Error('Error al obtener los detalles del documento: ' + error.message);
     }
 }
+
 export const APIS = {
 
     uploadDesign: async (employeeId, documentPermitId) => {

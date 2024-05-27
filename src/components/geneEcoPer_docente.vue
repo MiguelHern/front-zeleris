@@ -212,6 +212,7 @@ const enviarSolicitud = async () => {
         loading.value = false;
     }
 };
+
 </script>
 
 

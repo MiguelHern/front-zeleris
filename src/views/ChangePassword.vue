@@ -196,7 +196,7 @@ const handleSubmit = () => {
   border: none;
   width: 100%;
   cursor: pointer;
-  padding: 1rem 3rem;
+  padding: 0.6rem 3rem;
   font-size: 1.3rem;
   background-color: var(--grayy);
   color: var(--white-color);

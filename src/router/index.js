@@ -80,6 +80,11 @@ const router = createRouter({
           component: () => import('@/views/Cordinacion/CordinationHome.vue')
         },
         {
+          path: '/Coordination/Profile',
+          name: 'Profile',
+          component: () => import('@/views/Cordinacion/ProfileCordination.vue')
+        },
+        {
           path: '/Cordination/Polices',
           name: 'Cordination/Polices',
           component: () => import('@/views/Cordinacion/Policies.vue')
@@ -112,6 +117,11 @@ const router = createRouter({
           path: '/Admin/History/Docentes',
           name: 'Admin/History/Docentes',
           component: () => import('@/views/CordinacionAdministrativa/DocentesPermisos.vue')
+        },
+        {
+          path: '/Admin/Dependencies',
+          name: 'Admin/Dependencies',
+          component: () => import('@/views/CordinacionAdministrativa/Dependencies.vue')
         },
       ]
     },
