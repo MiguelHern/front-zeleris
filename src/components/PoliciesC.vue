@@ -1,4 +1,5 @@
 <script setup>
+import Footer from "@/components/Footer.vue";
 import { onMounted, ref } from 'vue';
 
 import { allPolices } from '@/api/allService.js';
@@ -47,6 +48,7 @@ const toggleModalEdit = (id, currentDescription) => {
         </section>
       </div>
     </div>
+    <Footer></Footer>
   </div>
     <div v-if="showModalEdit" class="modal">
         <div class="modal-content">

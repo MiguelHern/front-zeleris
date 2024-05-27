@@ -5,9 +5,11 @@
     <div>
         <!-- Aquí puedes mostrar los documentos pendientes -->
     </div>
+    <Footer></Footer>
 </template>
 
 <script setup>
+import Footer from "@/components/Footer.vue";
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Menu_cordinacion_administrativa from "@/components/menu_cordinacion_administrativa.vue";

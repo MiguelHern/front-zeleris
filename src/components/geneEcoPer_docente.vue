@@ -6,7 +6,7 @@
         <div v-if="errorMessage" class="alert alert-danger">
             {{ errorMessage }}
         </div>
-        <form @submit.prevent="enviarSolicitud">
+        <form @submit.prevent="openPasswordModal">
             <div class="applicant_Details">
                 <p id="p_ad">Solicitar Permiso Económico</p>
                 <div class="teacherDetails">
@@ -90,11 +90,27 @@
                 <button type="submit" class="btn btn-submit form__submit">Crear</button>
             </div>
         </form>
-    </div>
-    <div v-if="showModal" class="modal">
-        <div class="modal-content">
-            <p class="fs-5">Solicitud de permiso enviada</p>
-            <a class="form__button p-1" href="/TeachersHome">Aceptar</a>
+    
+        <div v-if="showPasswordModal" class="modal">
+            <div class="modal-content_pass">
+                <p class="pContent_passH">Confirmar Contraseña</p>
+                <p class="pContent_pass">Por favor, ingrese su contraseña para confirmar la solicitud.</p>
+                <input style="border: 1px solid var(--grayy); margin-bottom: 15px;" type="password" v-model="password" class="form-control" />
+                <div class="modal-buttons">
+                    <button style="background-color: #1B365D; margin-right: 20px; margin-left: 20px; margin-bottom: 10px;  border: none;" @click="validatePassword" class="btn btn-primary">Confirmar</button>
+                    <button style="background-color: #FCBF12; color:black; border: none; margin-bottom: 10px;" @click="cancelPasswordModal" class="btn btn-secondary">Cancelar</button>
+                </div>
+                <div style="min-height: 50px; text-align: center; margin-top: 5px; padding-top: 12px; padding-bottom: 11px" v-if="passwordError" class="alert alert-danger">
+                    {{ passwordError }}
+                </div>
+            </div>
+        </div>
+
+        <div v-if="showModal" class="modal">
+            <div class="modal-content">
+                <p  class="fs-5">Solicitud de permiso enviada</p>
+                <a class="form__button p-1" href="/TeachersHome">Aceptar</a>
+            </div>
         </div>
     </div>
 </template>
@@ -118,6 +134,9 @@ const selectedReason = ref('');
 const isCheckboxChecked = ref(false);
 const errorMessage = ref('');
 const showModal = ref(false);
+const showPasswordModal = ref(false);
+const password = ref('');
+const passwordError = ref('');
 const isReadonly = ref(false);
 
 let signatureImageBase64 = '';
@@ -175,6 +194,37 @@ const handleCheckboxChange = () => {
 const updateReason = () => {
     reason.value = Reasons[selectedReason.value] || '';
     isReadonly.value = selectedReason.value !== '';
+};
+
+const openPasswordModal = () => {
+    showPasswordModal.value = true;
+};
+
+const cancelPasswordModal = () => {
+    showPasswordModal.value = false;
+    password.value = '';
+    passwordError.value = '';
+};
+
+const validatePassword = async () => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/Accounts/validate/password`, {
+            password: password.value
+        }, {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.token
+            }
+        });
+        if (response.data.success) {
+            showPasswordModal.value = false;
+            enviarSolicitud();
+        } else {
+            passwordError.value = 'Contraseña incorrecta.';
+        }
+    } catch (error) {
+        console.error('Error al validar la contraseña:', error);
+        passwordError.value = 'Error al validar la contraseña.';
+    }
 };
 
 const enviarSolicitud = async () => {
@@ -438,6 +488,19 @@ body {
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
+}
+.modal-content_pass{
+    width: 35%;
+    background: white;
+    padding: 1.5rem 3rem;
+    border-radius: 8px;
+    text-align: center;
+}
+.pContent_passH{
+    font-size: 1.5rem;
+}
+.pContent_pass{
+    font-size: 1rem;
 }
 .modal-content {
     width: 25%;
