@@ -74,7 +74,7 @@ const downloadFile = () => {
 const signPermit = async () => {
     if (!imageBase64 && isCheckboxChecked.value === false) {
         errorMessage.value = true;
-        return; // Salir del método si no se cumple la condición
+        return;
     }
 
     try {
