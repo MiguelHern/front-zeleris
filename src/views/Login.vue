@@ -38,7 +38,7 @@ export default {
                     } else if (localStorage.rol === 'Admin') {
                         this.$router.replace('/AdminHome');
                     } else if (localStorage.rol === 'Director') {
-                        this.$router.replace('/DirectortHome');
+                        this.$router.replace('/PrincipalHome');
                     } else {
                         this.$router.replace('/');
                     }

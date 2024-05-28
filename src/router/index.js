@@ -135,7 +135,7 @@ const router = createRouter({
                 },
                 {
                     path: '/Admin/Profile',
-                    name: 'Profile',
+                    name: 'Admin/Profile',
                     component: () => import('@/views/CordinacionAdministrativa/Profile.vue'),
                     children: [
                         {
@@ -152,6 +152,63 @@ const router = createRouter({
                             path: 'permiso',
                             name: 'Permiso',
                             component: () => import('@/views/CordinacionAdministrativa/RequestPermit.vue')
+                        }
+                    ]
+                }
+
+            ]
+        },
+        {
+            path: '/PanelDirector',
+            name: 'PanelDirector',
+            redirect: '/PanelDirector',
+            component: () => import('../views/Principal/LayoutPanelPrincipal.vue'),
+            children: [
+                //Rutas Coordinación administrativa
+                {
+                    path: '/PrincipalHome',
+                    name: 'PrincipalHome',
+                    component: () => import('@/views/Principal/PrincipalHome.vue')
+                },
+                {
+                    path: '/Principal/Policies',
+                    name: 'Principal/Policies',
+                    component: () => import('@/views/Principal/PoliciesPrincipal.vue')
+                },
+                {
+                    path: '/Principal/History',
+                    name: 'Principal/History',
+                    component: () => import('@/views/Principal/TeachersHistory.vue')
+                },
+                {
+                    path: '/Principal/History/Docentes',
+                    name: 'Principal/History/Docentes',
+                    component: () => import('@/views/Principal/DocentesPermisos.vue')
+                },
+                {
+                    path: '/Principal/Dependencies',
+                    name: 'Principal/Dependencies',
+                    component: () => import('@/views/Principal/Dependencies.vue')
+                },
+                {
+                    path: '/Principal/Profile',
+                    name: 'Profile',
+                    component: () => import('@/views/Principal/Profile.vue'),
+                    children: [
+                        {
+                            path: 'settings',
+                            name: 'Settings',
+                            component: () => import('@/views/Principal/Settings.vue')
+                        },
+                        {
+                            path: 'historial',
+                            name: 'Historial',
+                            component: () => import('@/views/Principal/Historial.vue')
+                        },
+                        {
+                            path: 'permiso',
+                            name: 'Permiso',
+                            component: () => import('@/views/Principal/RequestPermit.vue')
                         }
                     ]
                 }
