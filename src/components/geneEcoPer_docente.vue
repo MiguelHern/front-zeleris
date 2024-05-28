@@ -22,7 +22,8 @@
                         <span class="num">{{ number }}</span>
                         <span class="plus" @click="increaseNumber">+</span>
                     </div>
-                    <div id="availablePermissions">Permisos disponibles: <span>{{ employee.quantityPermissions }}</span></div>
+                    <div id="availablePermissions">Permisos disponibles: <span>{{ employee.quantityPermissions }}</span>
+                    </div>
                 </div>
                 <div class="applicant">
                     <div id="category">Docente</div>
@@ -90,17 +91,25 @@
                 <button type="submit" class="btn btn-submit form__submit">Crear</button>
             </div>
         </form>
-    
+
         <div v-if="showPasswordModal" class="modal">
             <div class="modal-content_pass">
                 <p class="pContent_passH">Confirmar Contraseña</p>
                 <p class="pContent_pass">Por favor, ingrese su contraseña para confirmar la solicitud.</p>
-                <input style="border: 1px solid var(--grayy); margin-bottom: 15px;" type="password" v-model="password" class="form-control" />
+                <input style="border: 1px solid var(--grayy); margin-bottom: 15px;" type="password" v-model="password"
+                       class="form-control"/>
                 <div class="modal-buttons">
-                    <button style="background-color: #1B365D; margin-right: 20px; margin-left: 20px; margin-bottom: 10px;  border: none;" @click="validatePassword" class="btn btn-primary">Confirmar</button>
-                    <button style="background-color: #FCBF12; color:black; border: none; margin-bottom: 10px;" @click="cancelPasswordModal" class="btn btn-secondary">Cancelar</button>
+                    <button
+                        style="background-color: #1B365D; margin-right: 20px; margin-left: 20px; margin-bottom: 10px;  border: none;"
+                        @click="validatePassword" class="btn btn-primary">Confirmar
+                    </button>
+                    <button style="background-color: #FCBF12; color:black; border: none; margin-bottom: 10px;"
+                            @click="cancelPasswordModal" class="btn btn-secondary">Cancelar
+                    </button>
                 </div>
-                <div style="min-height: 50px; text-align: center; margin-top: 5px; padding-top: 12px; padding-bottom: 11px" v-if="passwordError" class="alert alert-danger">
+                <div
+                    style="min-height: 50px; text-align: center; margin-top: 5px; padding-top: 12px; padding-bottom: 11px"
+                    v-if="passwordError" class="alert alert-danger">
                     {{ passwordError }}
                 </div>
             </div>
@@ -108,8 +117,8 @@
 
         <div v-if="showModal" class="modal">
             <div class="modal-content">
-                <p  class="fs-5">Solicitud de permiso enviada</p>
-                <a class="form__button p-1" href="/TeachersHome">Aceptar</a>
+                <p class="fs-5">Solicitud de permiso enviada</p>
+                <button class="form__button p-1" @click="irDirecciones">Aceptar</button>
             </div>
         </div>
     </div>
@@ -117,11 +126,12 @@
 
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import axios from 'axios';
-import { useEmployee } from "@/api/teacherService.js";
+import {useEmployee} from "@/api/teacherService.js";
+import router from "@/router/index.js";
 
-const { employee } = useEmployee();
+const {employee} = useEmployee();
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -262,7 +272,20 @@ const enviarSolicitud = async () => {
         loading.value = false;
     }
 };
-
+const irDirecciones = () => {
+    const role = localStorage.rol;
+    if (role === 'Docente') {
+        router.push('/TeachersHome');
+    } else if (role === 'Coordinador') {
+        router.push('/CordinationHome');
+    } else if (role === 'Admin') {
+        router.push('/AdminHome');
+    } else if (role === 'Director') {
+        router.push('/DirectortHome');
+    } else {
+        router.push('/');
+    }
+};
 </script>
 
 
@@ -271,6 +294,7 @@ const enviarSolicitud = async () => {
 .layout {
     padding: 1rem;
 }
+
 .applicant_Details, .filling_Area, .submissionArea {
     display: flex;
 }
@@ -329,10 +353,12 @@ h1 {
     width: 25%;
     align-content: center
 }
-.form__submit{
+
+.form__submit {
     background-color: var(--principal-color);
     color: white;
 }
+
 #nameMail {
     /*border: 1px solid black;*/
     padding-left: 15px;
@@ -413,7 +439,7 @@ h1 {
 }
 
 #motivo {
-    margin-right: 10px; 
+    margin-right: 10px;
     font-weight: 700;
 }
 
@@ -462,6 +488,7 @@ h1 {
     border-radius: 5px;
     resize: none;
 }
+
 .submissionArea {
     display: flex;
     align-items: center;
@@ -472,6 +499,7 @@ h1 {
     background-color: white;
 
 }
+
 body {
     display: flex;
     flex-direction: column;
@@ -489,19 +517,23 @@ body {
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
 }
-.modal-content_pass{
+
+.modal-content_pass {
     width: 35%;
     background: white;
     padding: 1.5rem 3rem;
     border-radius: 8px;
     text-align: center;
 }
-.pContent_passH{
+
+.pContent_passH {
     font-size: 1.5rem;
 }
-.pContent_pass{
+
+.pContent_pass {
     font-size: 1rem;
 }
+
 .modal-content {
     width: 25%;
     background: white;
@@ -509,22 +541,37 @@ body {
     border-radius: 8px;
     text-align: center;
 }
+
 .modal-content p {
     margin-bottom: 1rem;
     font-size: 1.25rem;
 }
+
 .modal-content a {
     padding: 0.75rem 1.5rem;
-    background-color: var(--grayy)!important;
+    background-color: var(--grayy) !important;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: all 300ms ease-in-out;
 }
-.modal-content a:hover{
-    background-color: var(--principal-color)!important; ;
+
+.modal-content a:hover {
+    background-color: var(--principal-color) !important;;
 }
+.form__button {
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    padding: 0.8rem 3rem;
+    font-size: 1.3rem;
+    background-color: var(--principal-color);
+    color: var(--white-color);
+    border-radius: 6px;
+    transition: all 200ms linear;
+}
+
 .loading-overlay {
     position: fixed;
     top: 0;

@@ -67,31 +67,36 @@ const router = createRouter({
 
       ]
     },
-    {
-      path: '/PanelCordination',
-      name: 'PanelCordination',
-      redirect: '/PanelCordination',
-      component: () => import('../views/Cordinacion/LayoutPanelCordination.vue'),
-      children: [
-        //Rutas coordinación
-        {
-          path: '/CordinationHome',
-          name: 'CordinationHome',
-          component: () => import('@/views/Cordinacion/CordinationHome.vue')
-        },
-        {
-          path: '/Coordination/Profile',
-          name: 'Profile',
-          component: () => import('@/views/Cordinacion/ProfileCordination.vue')
-        },
-        {
-          path: '/Cordination/Polices',
-          name: 'Cordination/Polices',
-          component: () => import('@/views/Cordinacion/Policies.vue')
-        },
-      ]
-    },
-    {
+      {
+          path: '/PanelCordination',
+          name: 'PanelCordination',
+          redirect: '/PanelCordination',
+          component: () => import('../views/Cordinacion/LayoutPanelCordination.vue'),
+          children: [
+              //Rutas coordinación
+              {
+                  path: '/CordinationHome',
+                  name: 'CordinationHome',
+                  component: () => import('@/views/Cordinacion/CordinationHome.vue')
+              },
+              {
+                  path: '/Cordination/Profile',
+                  name: 'Profile',
+                  component: () => import('@/views/Cordinacion/ProfileCordination.vue'),
+              },
+              {
+                  path: '/Cordination/RequestPermit',
+                  name: 'RequestPermit',
+                  component: () => import('@/views/Cordinacion/RequestPermit.vue')
+              },
+              {
+                  path: '/Cordination/Polices',
+                  name: 'Cordination/Polices',
+                  component: () => import('@/views/Cordinacion/Policies.vue')
+              },
+          ]
+      },
+      {
       path: '/PanelAdmin',
       name: 'PanelAdmin',
       redirect: '/PanelAdmin',
@@ -131,7 +136,7 @@ const router = createRouter({
 // Middleware de navegación para verificar la existencia del token antes de cada navegación
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('token');
-  
+
   if (to.path === '/ForgotPassword' && from.path !== '/') {
     // Solo permitir acceso a ForgotPassword si viene desde Login
     next('/');

@@ -32,12 +32,13 @@ const {employee} = useEmployee();
 
 <style scoped>
 .btn__new {
-    background-color: var(--grayy);
+    background-color: var(--principal-color);
     color: var(--white-color);
 }
 
 .btn__new:hover {
-    background-color: var(--principal-color);
+    background-color: var(--grayy);
+
 }
 
 .header__settings {

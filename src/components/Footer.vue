@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <footer class="main-footer">
+    <div class="main-footer">
         <div class="footer_">
             <div class="footer-content">
                 <div class="footer-text">
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
 </template>
 
 <style scoped>
@@ -60,7 +60,6 @@
 }
 #contactmail{
     text-align: center;
-
 }
 #labelContact_1{
     font-size: 13px;

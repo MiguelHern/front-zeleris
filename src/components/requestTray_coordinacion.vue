@@ -237,7 +237,7 @@ td {
 }
 
 .bandeja {
-    height: calc(100vh - 70px);
+    height: calc(100vh - 120px);
 }
 
 @keyframes spin {

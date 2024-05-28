@@ -29,7 +29,7 @@ const formatDate = (dateString) => {
             <td class="text-lg-center align-content-center fw-bold text-body-secondary">
                 <i class="bi bi-file-earmark-check-fill"></i>
             </td>
-            <td class="align-content-center ">
+            <td class="align-content-center">
                 <span>{{ PendingDocument.reason }}</span>
             </td>
             <td class="align-content-center text-center">{{ PendingDocument.quantityDays }}</td>
@@ -38,8 +38,27 @@ const formatDate = (dateString) => {
                     {{ new Date(date.requestDate).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) }}
                 </h5>
             </td>
-            <td class="text-center align-content-center text-danger">Pendiente</td>
+            <td class="dropdown align-content-center text-center text-danger">
+                <a class="btn btn-default dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ PendingDocument.status }}
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <span class="dropdown-item text-success" v-if="PendingDocument.signed.coordinador">Coordinador: Firmado</span>
+                        <span class="dropdown-item text-danger" v-else>Coordinador: No firmado</span>
+                    </li>
+                    <li>
+                        <span class="dropdown-item text-success" v-if="PendingDocument.signed.coordinadorAdmin">Coordinador Administrativo: Firmado</span>
+                        <span class="dropdown-item text-danger" v-else>Coordinador Administrativo: No firmado</span>
+                    </li>
+                    <li>
+                        <span class="dropdown-item text-success" v-if="PendingDocument.signed.director">Director: Firmado</span>
+                        <span class="dropdown-item text-danger" v-else>Director: No firmado</span>
+                    </li>
+                </ul>
+            </td>
         </tr>
+
         </tbody>
     </table>
 </template>

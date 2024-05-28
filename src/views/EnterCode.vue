@@ -199,7 +199,6 @@ form button:hover{
   color: #0056b3;
   text-align: center;
   transition: all 200ms ease-in-out;
-  text-decoration: underline;
 }
 .cancelar:hover{
   color: var(--secondary-color);

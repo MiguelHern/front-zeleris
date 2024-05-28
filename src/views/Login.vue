@@ -153,7 +153,7 @@ export default {
     background-color: var(--white-color);
     position: relative;
     border-radius: 6px;
-    box-shadow: var(--bs-box-shadow);
+    box-shadow: var(--bs-box-shadow-sm);
 }
 
 .layout__title {

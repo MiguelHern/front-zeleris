@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from 'vue';
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 const email = ref('');
@@ -27,8 +27,7 @@ const handleSubmit = async () => {
         }
     } catch (error) {
         console.error('Error al enviar la solicitud:', error);
-    }
-    finally {
+    } finally {
         loading.value = false;
     }
 };
@@ -62,47 +61,55 @@ document.addEventListener('keydown', (event) => {
                 </div>
                 <form @submit.prevent="handleSubmit" class="login__form">
                     <div class="form__group">
-                        <input v-model="email" type="email" class="form__input card" name="email" required placeholder="Email">
+                        <input v-model="email" type="email" class="form__input card" name="email" required
+                               placeholder="Email">
                         <label for="email" class="form__label">Email</label>
                     </div>
                     <input type="submit" value="Enviar" class="form__button">
                 </form>
-                <a href="/" class="cancelar">Cancelar</a>
+                <div class="d-flex justify-content-center">
+                    <a href="/" class="cancelar">Cancelar</a>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.logouacfp{
-  margin-left: 20px;
-  margin-top: 20px;
-  text-align:start;
-  justify-self:flex-start;
+.logouacfp {
+    margin-left: 20px;
+    margin-top: 20px;
+    text-align: start;
+    justify-self: flex-start;
 }
-.cancelar{
+
+.cancelar {
     text-align: center;
     transition: all 200ms ease-in-out;
     margin-top: 1rem;
-    text-decoration: underline;
 }
-.cancelar:hover{
+
+.cancelar:hover {
     color: #FCBF12;
 }
-.img__container{
+
+.img__container {
     pointer-events: none;
     position: absolute;
     height: 100px;
     width: 100px;
 }
-.background{
+
+.background {
     width: 100%;
     height: 100vh;
 }
-.content{
+
+.content {
     height: 100%
 }
-.layout{
+
+.layout {
     width: 450px;
     height: auto;
     padding: 3rem;
@@ -111,17 +118,19 @@ document.addEventListener('keydown', (event) => {
     border-radius: 6px;
     box-shadow: var(--bs-box-shadow);
 }
-.layout__title{
+
+.layout__title {
     font-size: 1.8rem;
     text-align: center;
     margin-bottom: 3rem;
 }
-.form__group{
+
+.form__group {
     position: relative;
     margin-bottom: 2.5rem;
 }
-.form__input
-{
+
+.form__input {
     position: relative;
     width: 100%;
     display: block;
@@ -132,7 +141,8 @@ document.addEventListener('keydown', (event) => {
 
 
 }
-.form__label{
+
+.form__label {
     position: absolute;
     top: 1rem;
     left: 1.5rem;
@@ -140,37 +150,43 @@ document.addEventListener('keydown', (event) => {
     transition: all 250ms ease-in-out;
     pointer-events: none;
 }
-.form__input:focus~label,
-.form__input:not(:placeholder-shown)~label
-{
+
+.form__input:focus ~ label,
+.form__input:not(:placeholder-shown) ~ label {
     top: -2rem;
     left: 0;
     z-index: 1;
     color: var(--principal-color);
 }
-.form__input::-webkit-input-placeholder{
+
+.form__input::-webkit-input-placeholder {
     color: transparent;
 }
-.form__input::-moz-placeholder{
+
+.form__input::-moz-placeholder {
     color: transparent;
 }
-.form__button{
+
+.form__button {
     border: none;
     width: 100%;
     cursor: pointer;
-    padding: 1rem 3rem;
+    padding: 0.8rem 3rem;
     font-size: 1.3rem;
-    background-color: var(--grayy);
+    background-color: var(--principal-color);
     color: var(--white-color);
     border-radius: 6px;
     transition: all 200ms linear;
 }
-.form__button:hover{
-    background-color: var(--principal-color);
-}
-.form__button:active{
+
+.form__button:hover {
     background-color: var(--grayy);
 }
+
+.form__button:active {
+    background-color: var(--grayy);
+}
+
 .loading-overlay {
     position: fixed;
     top: 0;

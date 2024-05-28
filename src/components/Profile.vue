@@ -5,7 +5,6 @@
             <div class="perfil">
                 <i class="display-1 bi bi-person-circle"></i>
             </div>
-
             <form class="formulario">
                 <div class="columna">
                     <div class="inputs">
@@ -36,7 +35,7 @@
                     </div>
                 </div>
                 <div class="botones">
-                    <button>Cambiar contraseña <i id="changePassIcon" class="bi bi-lock-fill"></i> </button>
+                    <router-link to="RequestPermit"><button>Pedir permiso económico</button></router-link>
                     <label for="file" id="fileInput" role="button" @click="triggerFileInput">Editar firma digital
                         <input type="file" id="frontFInput" accept="image/*" @change="handleFileInputChange"
                                ref="fileInput"></input>

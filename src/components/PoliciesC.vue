@@ -48,7 +48,6 @@ const toggleModalEdit = (id, currentDescription) => {
         </section>
       </div>
     </div>
-    <Footer></Footer>
   </div>
     <div v-if="showModalEdit" class="modal">
         <div class="modal-content">

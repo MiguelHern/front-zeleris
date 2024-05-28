@@ -6,19 +6,62 @@ const API_TEACHER_URL = import.meta.env.VITE_APP_API_URL;
 import axios from 'axios';
 //Obtener empleados
 
-export function useEmployee() {
-    const employees = ref([]);
-    onMounted(async () => {
+export const pendingPermissionCordination = async () => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/documents/pending`, {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.token
+            },
+        });
+        if (!response.ok) {
+            return { error: new Error('Respuesta no exitosa'), success: false };
+        }
+        const responseText = await response.text();
         try {
-            const response = await axios.get(`${API_BASE_URL}/admin/Employees`);
-            employees.value = response.data.data;
+            const data = JSON.parse(responseText);
+            console.log(data);
+            return { data, success: true };
+        } catch (jsonError) {
+            return { error: jsonError, success: false };
+        }
+    } catch (error) {
+        console.error('Error al obtener los documentos pendientes:', error);
+        return { error, success: false };
+    }
+}
+
+export function useEmployee(page = 1, itemsPerPage = 10) {
+    const employees = ref([]);
+    const totalItems = ref(0);
+    const totalPages = ref(0);
+
+    const fetchEmployees = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/admin/Employees`, {
+                params: {
+                    page,
+                    itemsPerPage,
+                },
+            });
+            const responseData = response.data;
+            employees.value = responseData.data.dataEmployees;  // Ajustar la propiedad correctamente
+            totalItems.value = responseData.data.totalItems;
+            totalPages.value = responseData.data.totalPaginas;
             console.log(employees.value);
+            console.log(totalItems.value);
+            console.log(totalPages.value);
         } catch (error) {
             console.error('Error al obtener la información del empleado:', error);
         }
-    });
+    };
+
+    onMounted(fetchEmployees);
+
     return {
         employees,
+        totalItems,
+        totalPages,
+        fetchEmployees,
     };
 }
 
@@ -45,6 +88,7 @@ export const useDependencies = async () => {
         return { error, success: false };
     }
 };
+
 //Eliminar empleados
 export async function deleteEmployee(employeeId) {
     try {
