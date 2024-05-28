@@ -122,19 +122,19 @@ const signPermit = async () => {
                 </header>
                 <i v-if="loading" class="c-inline-spinner"></i>
                 <div class="solicitudes__cards d-flex flex-column gap-3 navbar-nav-scroll">
-                    <div class="solicitudes__card p-1" role="button" v-for="permission in pendingPermissions.data"
-                         @click="getDocumentId(permission.id)"
-                         :key="permission.id">
+                    <div class="solicitudes__card p-1" role="button" v-for="pendings in pending"
+                         @click="getDocumentId(pending.id)"
+                         :key="pending.id">
                         <h3 class="fs-6 mb-2">
-                            {{ permission.name }} {{ permission.lastName }}
-                            <i v-if="loadingDocuments[permission.id]" class="c-inline-spinner"></i>
+                            {{ pending.name }} {{ pending.lastName }}
+                            <i v-if="loadingDocuments[pending.id]" class="c-inline-spinner"></i>
                         </h3>
                         <div class="card__email d-flex align-items-center gap-2">
-                            <h4 class="fs-6">{{ permission.account.email }}</h4>
+                            <h4 class="fs-6">{{ pending.account.email }}</h4>
                             <svg viewBox="0 0 2 2" width="4" height="4" class="nc rd aol">
                                 <circle cx="1" cy="1" r="1"></circle>
                             </svg>
-                            <h4 class="fs-6">{{ permission.matricula }}</h4>
+                            <h4 class="fs-6">{{ pending.matricula }}</h4>
                         </div>
                     </div>
                 </div>
@@ -252,5 +252,48 @@ const signPermit = async () => {
 </template>
 
 <style scoped>
+td {
+    padding: 20px 0;
+}
 
+.bandeja {
+    height: calc(100vh - 120px);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.solicitudes__card {
+    border-bottom: 1px solid hsl(0, 0%, 94%);
+    transition: all 200ms ease-in-out;
+}
+
+.bandeja__title {
+    border-bottom: 1px solid hsl(0, 0%, 80%);
+}
+
+.card__email {
+    color: #758CA3;
+}
+
+.solicitudes__card:hover {
+    background-color: var(--principal-color);
+    color: white;
+}
+
+.btn__new {
+    color: var(--white-color);
+    background-color: var(--principal-color);
+}
+
+.btn__new:hover {
+    background-color: var(--grayy);
+}
 </style>

@@ -1,7 +1,6 @@
 <template>
-    <div class="accordion" id="accordionExample"></div>
     <div class="layout">
-        <div class="lay p-4">
+        <div class="lay  p-4">
             <header>
                 <h1 class="header__title text-center">Empleados</h1>
             </header>
@@ -39,16 +38,16 @@
                         </tr>
                         </tbody>
                     </table>
-                    <nav aria-label="Page navigation example" class="d-flex justify-content-end">
-                        <ul class="pagination">
-                            <li  class="page-item"><button class="page-link" style="color: var(--principal-color)!important;" @click="previousPage" :disabled="currentPage === 1">Anterior</button></li>
-                            <li class="page-item"><div class="page-link" style="color: var(--principal-color)!important;">{{ currentPage }}</div></li>
-                            <li class="page-item"><div class="page-link" style="color: var(--principal-color)!important;">de</div></li>
-                            <li class="page-item"><div class="page-link" style="color: var(--principal-color)!important;">{{ totalPages }}</div></li>
-                            <li class="page-item"><button class="page-link" style="color: var(--principal-color)!important;" @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button></li>
-                        </ul>
-                    </nav>
                 </section>
+                <nav aria-label="Page navigation example" class="d-flex justify-content-end">
+                    <ul class="pagination">
+                        <li  class="page-item"><button class="page-link" style="color: var(--principal-color)!important;" @click="previousPage" :disabled="currentPage === 1">Anterior</button></li>
+                        <li class="page-item"><div class="page-link" style="color: var(--principal-color)!important;">{{ currentPage }}</div></li>
+                        <li class="page-item"><div class="page-link" style="color: var(--principal-color)!important;">de</div></li>
+                        <li class="page-item"><div class="page-link" style="color: var(--principal-color)!important;">{{ totalPages }}</div></li>
+                        <li class="page-item"><button class="page-link" style="color: var(--principal-color)!important;" @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -76,38 +75,73 @@
             <div class="close__modal">
                 <span class="close" @click="toggleModalNew">&#x2716;</span>
             </div>
-            <h3 class="text-center">Agregar política</h3>
-            <form @submit.prevent=" newPolice">
-                <textarea v-model="description" class="form-control modal__edit-text"></textarea>
-                <div class="buttons__edit">
-                    <button type="button" @click="toggleModalNew" class="btn__cancel btn">Cancelar</button>
-                    <input type="submit" class="btn btn__submit" value="Guardar" />
+            <h3 class="text-center">Agregar docente</h3>
+            <form @submit.prevent="newEmployee">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nombre:</label>
+                    <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required
+                           pattern="[A-Za-z]+" title="Solo letras, sin números ni símbolos" @input="checkForSymbols">
+                </div>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Apellido:</label>
+                    <input v-model="lastName" id="lastName" type="text" class="form-control" placeholder="Apellido" required
+                           pattern="[A-Za-z]+" title="Solo letras, sin números ni símbolos" @input="checkForSymbols">
+                </div>
+                <div class="mb-3">
+                    <label for="rol" class="form-label">Rol:</label>
+                    <select v-model="rol" id="rol" class="form-control">
+                        <option value="Director">Director</option>
+                        <option value="Docente">Docente</option>
+                        <option value="Coordinador">Coordinador de carrera</option>
+                        <option value="Admin">Coordinador administrativo</option>
+                        <option value="Adiministrativo">Administrativo</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="quantityPermissions" class="form-label">Cantidad de Permisos:</label>
+                    <input v-model.number="quantityPermissions" id="quantityPermissions" type="number" class="form-control"
+                           placeholder="Cantidad de Permisos" min="0" max="10" required>
+                </div>
+                <div class="mb-3">
+                    <label for="matricula" class="form-label">Número de empleado:</label>
+                    <input v-model="matricula" id="matricula" type="number" class="form-control" placeholder="Matrícula"
+                           required>
+                </div>
+                <div class="mb-3">
+                    <label for="dependencyId" class="form-label">ID de Dependencia:</label>
+                    <select v-model="dependencyId" class="form-control">
+                        <option disabled value="">Seleccione una dependencia</option>
+                        <option v-for="dependency in dependencies" :key="dependency.id" :value="dependency.id">
+                            {{ dependency.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo Electrónico:</label>
+                    <input v-model="email" id="email" type="email" class="form-control" placeholder="Correo Electrónico"
+                           required>
+                    <small v-if="!validarEmail" class="text-danger">El correo electrónico no es válido.</small>
+                </div>
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <button :disabled="!formularioValido" type="submit" class="btn btn-primary">Enviar</button>
                 </div>
             </form>
         </div>
     </div>
+
 </template>
 
 <script setup>
-import {onMounted, ref, watchEffect} from 'vue';
+import {onMounted, ref, watch, watchEffect} from 'vue';
 
 const showModalEdit = ref(false);
 const showModalNew = ref(false);
-const description = ref('');
-const selectedPolicyId = ref(null);
 const error = ref(null);
 
-const toggleModalEdit = (id, currentDescription) => {
-    selectedPolicyId.value = id;
-    description.value = currentDescription;
-    showModalEdit.value = !showModalEdit.value;
-};
 
-const toggleModalNew = () => {
-    showModalNew.value = !showModalNew.value;
-};
 
-import { useEmployee } from '@/api/adminService.js';
+import {APISEMPLOYEES, useEmployee} from '@/api/adminService.js';
 
 const currentPage = ref(1);
 const itemsPerPage = 10;
@@ -127,9 +161,100 @@ const previousPage = () => {
     }
 };
 
-// Use watchEffect to re-fetch employees when currentPage changes
 watchEffect(() => {
     fetchEmployees();
+});
+
+import DependencyService from '@/scripts/Dependency.js';
+import { computed } from 'vue';
+const dependencyService = new DependencyService();
+const dependencyId = ref("");
+const dependencies = ref([]);
+const name = ref("");
+const lastName = ref("");
+const quantityPermissions = ref(0);
+const rol = ref();
+const email = ref("");
+const matricula = ref("");
+const showModal = ref(false);
+const symbolOrNumberEntered = ref(false);
+
+const toggleModalNew = () => {
+    showModalNew.value = !showModalNew.value;
+};
+
+const checkForSymbols = () => {
+    const regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    const numberRegex = /\d/;
+
+    if (regex.test(name.value) || regex.test(lastName.value) || numberRegex.test(name.value) || numberRegex.test(lastName.value)) {
+        symbolOrNumberEntered.value = true;
+        alert("No se permiten símbolos o números en el nombre y apellido.");
+    } else {
+        symbolOrNumberEntered.value = false;
+    }
+};
+
+const validarEmail = () => {
+    const emailPattern = /^[^\s@]+@(uacam\.mx|gmail\.com|outlook\.com)$/i;
+    return emailPattern.test(email.value);
+};
+
+const formularioValido = computed(() => {
+    return (
+        name.value &&
+        lastName.value &&
+        rol.value &&
+        quantityPermissions.value &&
+        matricula.value &&
+        dependencyId.value &&
+        validarEmail() &&
+        !symbolOrNumberEntered.value
+    );
+});
+
+
+onMounted(async () => {
+    try {
+        const response = await dependencyService.getDependencies();
+        dependencies.value = response.data;
+        console.log('Dependencias obtenidas:', dependencies.value);
+    } catch (error) {
+        console.error('Error al obtener dependencias:', error);
+    }
+});
+
+const newEmployee = async () => {
+    try {
+        const response = await APISEMPLOYEES.newEmployee(
+            name.value,
+            lastName.value,
+            rol.value,
+            quantityPermissions.value,
+            matricula.value,
+            dependencyId.value,
+            email.value
+        );
+
+        if (response && response.success) {
+            toggleModalNew();
+            showModal.value = true;
+        } else {
+            console.error('Error al crear el docente:', response ? response.message : 'Respuesta indefinida');
+        }
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+    }
+};
+
+watch(quantityPermissions, (newVal) => {
+    if (newVal > 10) {
+        quantityPermissions.value = 0;
+        alert('No se pueden colocar más de 10 permisos');
+    } else if (newVal < 0) {
+        quantityPermissions.value = 0;
+        alert('No se permiten números negativos en la cantidad de permisos');
+    }
 });
 
 </script>
@@ -172,7 +297,7 @@ td:hover .bi{
 
 .modal-content {
     background-color: #fefefe;
-    margin: 12% auto;
+    margin: 0 auto;
     padding: 20px;
     border: 1px solid #888;
     width: 50%;
