@@ -27,6 +27,7 @@ export default {
                 localStorage.token = respuesta.data.token;
                 localStorage.rol = respuesta.data.rol;
                 localStorage.username = respuesta.data.usearname;
+                localStorage.setItem('name_Coordination', respuesta.data.name_Coordination);
                 localStorage.expiredTime = respuesta.data.expiredTime;
 
                 if (respuesta.success) {
@@ -68,10 +69,8 @@ export default {
         </div>
         <div class="content d-flex flex-column align-items-center justify-content-center">
             <div class="layout card">
-                <div v-if="error" class="error-message card">
-                    <div class="card-body">
-                        {{ error }}
-                    </div>
+                <div v-if="error" class="alert alert-danger text-center" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> ¡{{ error }}!
                 </div>
                 <div class="logoContainer">
                     <img src="/src/assets/img/ISCLogo.jpg" class="logoisc" style="max-width: 85px; max-height: 85px;">
@@ -82,12 +81,12 @@ export default {
                 <form @submit.prevent="iniciarSesion" class="login__form">
                     <div class="form__group">
                         <input v-model="email" type="email" class="form__input card" name="email" required
-                               placeholder="Email">
+                            placeholder="Email">
                         <label for="email" class="form__label">Email</label>
                     </div>
                     <div class="form__group">
                         <input v-model="password" type="password" class="form__input card" name="contraseña" required
-                               placeholder="Contraseña">
+                            placeholder="Contraseña">
                         <label for="contraseña" class="form__label">Contraseña</label>
                     </div>
                     <div class="recover text-end m-0 p-0">
@@ -188,8 +187,8 @@ export default {
     pointer-events: none;
 }
 
-.form__input:focus ~ label,
-.form__input:not(:placeholder-shown) ~ label {
+.form__input:focus~label,
+.form__input:not(:placeholder-shown)~label {
     top: -2rem;
     left: 0;
     z-index: 1;
@@ -220,9 +219,7 @@ export default {
     background-color: var(--grayy);
 }
 
-.form__button:active {
-
-}
+.form__button:active {}
 
 .error-message {
     border: 1px solid #ff0000;
