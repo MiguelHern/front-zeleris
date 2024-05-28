@@ -1,5 +1,5 @@
 //Obtener empleados
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, watch} from 'vue';
 
 const API_BASE_URL = import.meta.env.VITE_MANAGER_API_URL;
 const API_TEACHER_URL = import.meta.env.VITE_APP_API_URL;
@@ -31,16 +31,17 @@ export const pendingPermissionCordination = async () => {
     }
 }
 
-export function useEmployee(page = 1, itemsPerPage = 10) {
+export function useEmployee(itemsPerPage = 10) {
     const employees = ref([]);
     const totalItems = ref(0);
     const totalPages = ref(0);
+    const page = ref(1);
 
     const fetchEmployees = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/admin/Employees`, {
                 params: {
-                    page,
+                    page: page.value,
                     itemsPerPage,
                 },
             });
@@ -58,11 +59,15 @@ export function useEmployee(page = 1, itemsPerPage = 10) {
 
     onMounted(fetchEmployees);
 
+    // Volver a cargar empleados cuando la página cambie
+    watch(page, fetchEmployees);
+
     return {
         employees,
         totalItems,
         totalPages,
         fetchEmployees,
+        page,
     };
 }
 
@@ -239,7 +244,7 @@ export const APISPERMIT = {
         };
         try {
             const token = localStorage.token;
-            const response = await axios.post(`${API_TEACHER_URL}/Documents/sign`, data, {
+            const response = await axios.patch(`${API_TEACHER_URL}/Documents/sign`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'

@@ -1,12 +1,12 @@
 <template>
     <div class="layout">
-        <div class="lay  p-4">
+        <div class="lay p-4">
             <header>
                 <h1 class="header__title text-center">Empleados</h1>
             </header>
             <div class="main">
                 <div class="main__header text-end">
-                    <button class="btn btn__new " @click="toggleModalNew">Agregar empleado</button>
+                    <button class="btn btn__new" @click="toggleModalNew">Agregar empleado</button>
                 </div>
                 <section class="main__policies w-100 h-75">
                     <table class="table shadow-sm">
@@ -29,25 +29,35 @@
                             <td>{{ employee.email }}</td>
                             <td>{{ employee.dependency }}</td>
                             <td>{{ employee.rol }}</td>
-                            <td class="align-content-center" role="button" @click="toggleModalEdit(police.id, police.description)">
+                            <td class="align-content-center" role="button" @click="toggleModalEdit(employee.id, employee.description)">
                                 <i class="bi bi-pencil-square"></i>
                             </td>
-                            <td class="align-content-center" role="button" @click="deletePolice(police.id)">
+                            <td class="align-content-center" role="button" @click="deleteEmployee(employee.id)">
                                 <i class="bi bi-trash3-fill"></i>
                             </td>
                         </tr>
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation example" class="d-flex justify-content-end">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <button class="page-link" style="color: var(--principal-color)!important;" @click="previousPage" :disabled="currentPage === 1">Anterior</button>
+                            </li>
+                            <li class="page-item">
+                                <div class="page-link" style="color: var(--principal-color)!important;">{{ currentPage }}</div>
+                            </li>
+                            <li class="page-item">
+                                <div class="page-link" style="color: var(--principal-color)!important;">de</div>
+                            </li>
+                            <li class="page-item">
+                                <div class="page-link" style="color: var(--principal-color)!important;">{{ totalPages }}</div>
+                            </li>
+                            <li class="page-item">
+                                <button class="page-link" style="color: var(--principal-color)!important;" @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button>
+                            </li>
+                        </ul>
+                    </nav>
                 </section>
-                <nav aria-label="Page navigation example" class="d-flex justify-content-end">
-                    <ul class="pagination">
-                        <li  class="page-item"><button class="page-link" style="color: var(--principal-color)!important;" @click="previousPage" :disabled="currentPage === 1">Anterior</button></li>
-                        <li class="page-item"><div class="page-link" style="color: var(--principal-color)!important;">{{ currentPage }}</div></li>
-                        <li class="page-item"><div class="page-link" style="color: var(--principal-color)!important;">de</div></li>
-                        <li class="page-item"><div class="page-link" style="color: var(--principal-color)!important;">{{ totalPages }}</div></li>
-                        <li class="page-item"><button class="page-link" style="color: var(--principal-color)!important;" @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button></li>
-                    </ul>
-                </nav>
             </div>
         </div>
     </div>
@@ -59,7 +69,7 @@
                 <span class="close" @click="toggleModalEdit">&#x2716;</span>
             </div>
             <h3 class="text-center">Modificar política</h3>
-            <form @submit.prevent="editPolice">
+            <form @submit.prevent="editEmployee">
                 <textarea v-model="description" class="form-control modal__edit-text"></textarea>
                 <div class="buttons__edit">
                     <button type="button" @click="toggleModalEdit" class="btn__cancel btn">Cancelar</button>
@@ -77,6 +87,7 @@
             </div>
             <h3 class="text-center">Agregar docente</h3>
             <form @submit.prevent="newEmployee">
+                <!-- Formulario de nuevo empleado -->
                 <div class="mb-3">
                     <label for="name" class="form-label">Nombre:</label>
                     <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required
@@ -94,7 +105,7 @@
                         <option value="Docente">Docente</option>
                         <option value="Coordinador">Coordinador de carrera</option>
                         <option value="Admin">Coordinador administrativo</option>
-                        <option value="Adiministrativo">Administrativo</option>
+                        <option value="Administrativo">Administrativo</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -116,12 +127,11 @@
                         </option>
                     </select>
                 </div>
-
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo Electrónico:</label>
                     <input v-model="email" id="email" type="email" class="form-control" placeholder="Correo Electrónico"
                            required>
-                    <small v-if="!validarEmail" class="text-danger">El correo electrónico no es válido.</small>
+                    <small v-if="!validarEmail()" class="text-danger">El correo electrónico no es válido.</small>
                 </div>
                 <div class="d-grid gap-2 col-6 mx-auto">
                     <button :disabled="!formularioValido" type="submit" class="btn btn-primary">Enviar</button>
@@ -129,46 +139,38 @@
             </form>
         </div>
     </div>
-
 </template>
 
 <script setup>
-import {onMounted, ref, watch, watchEffect} from 'vue';
+import {ref, onMounted, computed, watch} from 'vue';
+import { APISEMPLOYEES, useEmployee } from '@/api/adminService.js';
+import DependencyService from '@/scripts/Dependency.js';
 
+// Estados para los modales y validaciones
 const showModalEdit = ref(false);
 const showModalNew = ref(false);
 const error = ref(null);
 
-
-
-import {APISEMPLOYEES, useEmployee} from '@/api/adminService.js';
-
-const currentPage = ref(1);
+// Estado de paginación y datos
+const { employees, totalItems, totalPages, fetchEmployees, page } = useEmployee();
+const currentPage = computed(() => page.value);
 const itemsPerPage = 10;
-const { employees, totalItems, totalPages, fetchEmployees, loading  } = useEmployee(currentPage.value, itemsPerPage);
 
+// Funciones de paginación
 const nextPage = () => {
     if (currentPage.value < totalPages.value) {
-        currentPage.value++;
-        fetchEmployees();
+        page.value++;
     }
 };
 
 const previousPage = () => {
     if (currentPage.value > 1) {
-        currentPage.value--;
-        fetchEmployees();
+        page.value--;
     }
 };
 
-watchEffect(() => {
-    fetchEmployees();
-});
-
-import DependencyService from '@/scripts/Dependency.js';
-import { computed } from 'vue';
+// Servicios y validaciones adicionales
 const dependencyService = new DependencyService();
-const dependencyId = ref("");
 const dependencies = ref([]);
 const name = ref("");
 const lastName = ref("");
@@ -176,7 +178,6 @@ const quantityPermissions = ref(0);
 const rol = ref();
 const email = ref("");
 const matricula = ref("");
-const showModal = ref(false);
 const symbolOrNumberEntered = ref(false);
 
 const toggleModalNew = () => {
@@ -186,7 +187,6 @@ const toggleModalNew = () => {
 const checkForSymbols = () => {
     const regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
     const numberRegex = /\d/;
-
     if (regex.test(name.value) || regex.test(lastName.value) || numberRegex.test(name.value) || numberRegex.test(lastName.value)) {
         symbolOrNumberEntered.value = true;
         alert("No se permiten símbolos o números en el nombre y apellido.");
@@ -213,15 +213,10 @@ const formularioValido = computed(() => {
     );
 });
 
-
 onMounted(async () => {
-    try {
-        const response = await dependencyService.getDependencies();
-        dependencies.value = response.data;
-        console.log('Dependencias obtenidas:', dependencies.value);
-    } catch (error) {
-        console.error('Error al obtener dependencias:', error);
-    }
+    await fetchEmployees();
+    const response = await dependencyService.getDependencies();
+    dependencies.value = response.data;
 });
 
 const newEmployee = async () => {
@@ -235,10 +230,9 @@ const newEmployee = async () => {
             dependencyId.value,
             email.value
         );
-
         if (response && response.success) {
             toggleModalNew();
-            showModal.value = true;
+            await fetchEmployees();
         } else {
             console.error('Error al crear el docente:', response ? response.message : 'Respuesta indefinida');
         }
@@ -256,8 +250,8 @@ watch(quantityPermissions, (newVal) => {
         alert('No se permiten números negativos en la cantidad de permisos');
     }
 });
-
 </script>
+
 
 <style>
 .pagination-controls {
