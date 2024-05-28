@@ -13,6 +13,8 @@ const file = ref("");
 let imageBase64 = '';
 const errorMessage = ref(false);
 const isCheckboxChecked = ref(false);
+const reasonRejection = ref('');
+const showModalEdit = ref(false);
 
 onMounted(async () => {
     loading.value = true;
@@ -87,6 +89,21 @@ const signPermit = async () => {
         console.log('Documento firmado con éxito:', response);
     } catch (error) {
         console.error('Error al firmar el permiso:', error);
+    }
+};
+
+const toggleModalEdit = () => {
+    showModalEdit.value = !showModalEdit.value;
+};
+
+const rejectPermit = async () => {
+    try {
+        const response = await APISPERMIT.rejectPermit(reasonRejection.value, selectedDocumentId.value);
+        console.log('Documento rechazado:', response);
+        alert('Documento rechazado');
+        showModalEdit.value = false
+    } catch (error) {
+        console.error('Error al rechazar permiso:', error);
     }
 };
 </script>
@@ -202,14 +219,14 @@ const signPermit = async () => {
                                     :required="!isCheckboxChecked"
                                 />
                                 <div class="d-flex align-items-center gap-3 mt-1">
-                                <input
-                                    id="firmacheck"
-                                    type="checkbox"
-                                    class="form-check-input m-0"
-                                    v-model="isCheckboxChecked"
-                                    @change="handleCheckboxChange"
-                                >
-                                <label for="firmacheck" class="align-content-center">Ya tengo firma</label>
+                                    <input
+                                        id="firmacheck"
+                                        type="checkbox"
+                                        class="form-check-input m-0"
+                                        v-model="isCheckboxChecked"
+                                        @change="handleCheckboxChange"
+                                    >
+                                    <label for="firmacheck" class="align-content-center">Ya tengo firma</label>
                                 </div>
                             </td>
                         </tr>
@@ -219,13 +236,29 @@ const signPermit = async () => {
                             </td>
                             <td class="d-flex gap-3">
                                 <button @click="signPermit" class="btn btn__new">Aceptar</button>
-                                <button class="btn text-danger">Rechazar</button>
+                                <button @click="toggleModalEdit()" class="btn bg-danger text-white">Rechazar</button>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </main>
             </div>
+        </div>
+    </div>
+    <div v-if="showModalEdit" class="modal">
+        <div class="modal-content">
+            <div class="close__modal">
+                <span class="close" @click="toggleModalEdit">&#x2716;</span>
+            </div>
+            <h3 class="text-center">Motivo para rechazar permiso</h3>
+            <form @submit.prevent="rejectPermit">
+                <div>
+                    <textarea v-model="reasonRejection" class="form-control modal__edit-text"></textarea>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button @click.stop="rejectPermit" class="btn bg-danger text-white">Rechazar</button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
@@ -275,5 +308,51 @@ td {
 
 .btn__new:hover {
     background-color: var(--grayy);
+}
+
+.modal {
+    display: block !important;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.4);
+
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 8% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+
+.close__modal {
+    text-align: right;
+}
+
+.close {
+    text-align: right;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal__edit-text {
+    height: 400px;
+    margin: 20px 0;
+    resize: none;
+    box-shadow: var(--bs-box-shadow-inset);
 }
 </style>

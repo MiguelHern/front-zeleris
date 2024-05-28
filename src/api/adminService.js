@@ -7,7 +7,7 @@ const API_TEACHER_URL = import.meta.env.VITE_APP_API_URL;
 import axios from 'axios';
 //Obtener empleados
 
-export const pendingPermissionCordination = async () => {
+export const pendingPermissionAdmin = async () => {
     try {
         const response = await fetch(`${API_BASE_URL}/admin/documents/pending`, {
             headers: {
@@ -245,6 +245,24 @@ export const APISPERMIT = {
         try {
             const token = localStorage.token;
             const response = await axios.patch(`${API_TEACHER_URL}/Documents/sign`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response);
+        } catch (error) {
+            console.error('Error a firmar el permiso:', error);
+        }
+    },
+    rejectPermit: async (reasonRejection, documentPermitId) => {
+        const data = {
+            reasonRejection: reasonRejection,
+            documentPermitId: documentPermitId,
+        };
+        try {
+            const token = localStorage.token;
+            const response = await axios.patch(`${API_TEACHER_URL}/Documents/rejection`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'

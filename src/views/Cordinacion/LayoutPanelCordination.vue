@@ -20,7 +20,7 @@ const irProfile = () => {
     router.push('/Cordination/Profile')
 }
 const irHistorial = () => {
-    router.push('/History')
+    router.push('/Cordination/HistorialPermisos')
 }
 
 const verBotonActivo = (button) => {
@@ -95,6 +95,11 @@ watchEffect(() => {
                         :class="{ active: botonActivo === 'Profile' }">
                         <i class="menu__icon bi bi-person-circle"></i>
                         <span class="menu__overlay">Perfil</span>
+                    </li>
+                    <li class="text-center botonNavegacion menu__option" @click="irHistorial"
+                        :class="{ active: botonActivo === 'PoliciesTeacher' }">
+                        <i class="menu__icon bi bi-journal-x"></i>
+                        <span class="menu__overlay">Historial</span>
                     </li>
                     <li class="text-center botonNavegacion menu__option" @click="irHomeCordinacion"
                         :class="{ active: botonActivo === 'TeachersHome' }">

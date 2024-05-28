@@ -22,7 +22,9 @@ const irHistorial = () => {
 const irDependencies = () => {
     router.push('/Admin/Dependencies')
 }
-
+const irProfile = () => {
+    router.push('/Admin/Profile')
+}
 
 const verBotonActivo = (button) => {
     botonActivo.value = button;
@@ -92,6 +94,11 @@ watchEffect(() => {
         <div class="row vh-100 flex-nowrap">
             <nav class="col-1 d-flex flex-column justify-content-between layout__aside" style="padding: 80px 0 0 0 ;">
                 <ul class="menu__list">
+                    <li class="text-center botonNavegacion menu__option" @click="irProfile"
+                        :class="{ active: botonActivo === 'Profile' }">
+                        <i class="menu__icon bi bi-person-circle"></i>
+                        <span class="menu__overlay">Perfil</span>
+                    </li>
                     <li class="text-center botonNavegacion menu__option" @click="irHomeCordinacion"
                         :class="{ active: botonActivo === 'TeachersHome' }">
                         <i class="menu__icon bi bi-house"></i>

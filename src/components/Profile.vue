@@ -35,7 +35,6 @@
                     </div>
                 </div>
                 <div class="botones">
-                    <router-link to="RequestPermit"><button>Pedir permiso económico</button></router-link>
                     <label for="file" id="fileInput" role="button" @click="triggerFileInput">Editar firma digital
                         <input type="file" id="frontFInput" accept="image/*" @change="handleFileInputChange"
                                ref="fileInput"></input>
@@ -195,7 +194,7 @@ input[id="frontFInput"] {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 130px);
     margin: 0;
 }
 

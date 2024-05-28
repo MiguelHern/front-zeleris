@@ -1,6 +1,6 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { pendingPermissionCordination } from '@/api/adminService.js';
+import {onMounted, ref} from 'vue';
+import {pendingPermissionAdmin} from '@/api/adminService.js';
 
 const pending = ref({});
 const loading = ref(true);
@@ -8,7 +8,7 @@ const error = ref(null);
 
 const loadPending = async () => {
     loading.value = true;
-    const { data, success, error: fetchError } = await pendingPermissionCordination();
+    const {data, success, error: fetchError} = await pendingPermissionAdmin();
     if (success) {
         pending.value = data;
         loading.value = false;
@@ -16,6 +16,71 @@ const loadPending = async () => {
         console.error('Error al obtener los permisos pendientes:', fetchError);
         error.value = fetchError;
         loading.value = false;
+    }
+};
+
+const getDocumentId = async (id) => {
+    loadingDocuments.value[id] = true;
+    selectedDocumentId.value = id;
+    console.log(selectedDocumentId.value)
+    try {
+        const documentDetailsResponse = await fetchDocumentDetails(id);
+        documentDetails.value = documentDetailsResponse;
+        file.value = documentDetails.value.data.file;
+        const createdDate = new Date(documentDetails.value.data.createdDate);
+        formattedCreatedDate.value = createdDate.toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+    } catch (error) {
+        console.error('Error al obtener los detalles del documento:', error);
+    } finally {
+        loadingDocuments.value[id] = false;
+    }
+};
+
+const downloadFile = () => {
+    const link = document.createElement('a');
+    link.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${file.value}`;
+    link.download = 'document.docx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            imageBase64 = reader.result.split(',')[1];
+        };
+    }
+};
+
+const handleCheckboxChange = () => {
+    if (isCheckboxChecked.value) {
+        imageBase64 = null;
+    }
+};
+
+const signPermit = async () => {
+
+    if (!imageBase64) {
+        errorMessage.value = true
+        return;
+    }
+    try {
+        if (isCheckboxChecked.value) {
+            imageBase64 = null;
+        }
+        const response = await APISPERMIT.signPermit(imageBase64, selectedDocumentId.value);
+        errorMessage.value = false
+        console.log('Documento firmado con éxito:', response);
+    } catch (error) {
+        console.error('Error al firmar el permiso:', error);
     }
 };
 
@@ -46,70 +111,7 @@ onMounted(async () => {
     }
 });
 
-const getDocumentId = async (id) => {
-    loadingDocuments.value[id] = true;
-    selectedDocumentId.value = id;
-    console.log(selectedDocumentId.value)
-    try {
-        const documentDetailsResponse = await fetchDocumentDetails(id);
-        documentDetails.value = documentDetailsResponse;
-        file.value = documentDetails.value.data.file;
-        const createdDate = new Date(documentDetails.value.data.createdDate);
-        formattedCreatedDate.value = createdDate.toLocaleDateString('es-ES', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        });
-    } catch (error) {
-        console.error('Error al obtener los detalles del documento:', error);
-    } finally {
-        loadingDocuments.value[id] = false;
-    }
-};
 
-const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            imageBase64 = reader.result.split(',')[1];
-        };
-    }
-};
-
-const handleCheckboxChange = () => {
-    if (isCheckboxChecked.value) {
-        imageBase64 = null;
-    }
-};
-
-const downloadFile = () => {
-    const link = document.createElement('a');
-    link.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${file.value}`;
-    link.download = 'document.docx';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-};
-
-const signPermit = async () => {
-
-    if (!imageBase64) {
-        errorMessage.value = true
-        return;
-    }
-    try {
-        if (isCheckboxChecked.value) {
-            imageBase64 = null;
-        }
-        const response = await APISPERMIT.signPermit(imageBase64, selectedDocumentId.value);
-        errorMessage.value = false
-        console.log('Documento firmado con éxito:', response);
-    } catch (error) {
-        console.error('Error al firmar el permiso:', error);
-    }
-};
 </script>
 
 
@@ -122,19 +124,17 @@ const signPermit = async () => {
                 </header>
                 <i v-if="loading" class="c-inline-spinner"></i>
                 <div class="solicitudes__cards d-flex flex-column gap-3 navbar-nav-scroll">
-                    <div class="solicitudes__card p-1" role="button" v-for="pendings in pending"
-                         @click="getDocumentId(pending.id)"
-                         :key="pending.id">
+                    <div class="solicitudes__card p-1" role="button"
+                         v-for="permission in pending.data" :key="permission.id"
+                         @click="getDocumentId(permission.id)"
+                    >
                         <h3 class="fs-6 mb-2">
-                            {{ pending.name }} {{ pending.lastName }}
-                            <i v-if="loadingDocuments[pending.id]" class="c-inline-spinner"></i>
+                            <h4 class="fs-6">{{ permission.employee.coordination }}</h4>
+
                         </h3>
                         <div class="card__email d-flex align-items-center gap-2">
-                            <h4 class="fs-6">{{ pending.account.email }}</h4>
-                            <svg viewBox="0 0 2 2" width="4" height="4" class="nc rd aol">
-                                <circle cx="1" cy="1" r="1"></circle>
-                            </svg>
-                            <h4 class="fs-6">{{ pending.matricula }}</h4>
+                            {{ permission.employee.name }}
+                            <i v-if="loadingDocuments[permission.id]" class="c-inline-spinner"></i>
                         </div>
                     </div>
                 </div>
@@ -240,7 +240,7 @@ const signPermit = async () => {
                             </td>
                             <td class="d-flex gap-3">
                                 <button @click="signPermit" class="btn btn__new">Aceptar</button>
-                                <button class="btn text-danger">Rechazar</button>
+                                <button class="btn bg-danger">Rechazar</button>
                             </td>
                         </tr>
                         </tbody>

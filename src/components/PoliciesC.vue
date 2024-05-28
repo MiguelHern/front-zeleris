@@ -18,8 +18,6 @@ onMounted(async () => {
     }
 });
 
-
-
 const toggleModalEdit = (id, currentDescription) => {
     selectedPolicyId.value = id;
     description.value = currentDescription;
