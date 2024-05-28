@@ -35,6 +35,7 @@
                     </div>
                 </div>
                 <div class="botones">
+                    <router-link to="RequestPermit"><button>Pedir permiso económico</button></router-link>
                     <label for="file" id="fileInput" role="button" @click="triggerFileInput">Editar firma digital
                         <input type="file" id="frontFInput" accept="image/*" @change="handleFileInputChange"
                                ref="fileInput"></input>

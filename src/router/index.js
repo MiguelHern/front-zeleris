@@ -81,7 +81,7 @@ const router = createRouter({
                 },
                 {
                     path: '/Cordination/Profile',
-                    name: 'Profile',
+                    name: 'Cordination/Profile',
                     component: () => import('@/views/Cordinacion/ProfileCordination.vue'),
                 },
                 {

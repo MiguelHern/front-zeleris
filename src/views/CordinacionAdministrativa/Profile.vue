@@ -5,13 +5,13 @@
 <template>
     <div class="d-flex flex-column">
         <div class="d-flex justify-content-center gap-4 mt-1">
-            <div class="settings btn btn-primary p-2">
+            <div class="settings card p-2">
                 <router-link :to="{ name: 'Settings' }">Perfil</router-link>
             </div>
-            <div class="settings  btn btn-primary p-2">
+            <div class="settings  card p-2">
                 <router-link :to="{ name: 'Permiso' }">Solicitar Permiso</router-link>
             </div>
-            <div class="settings  btn btn-primary p-2">
+            <div class="settings  card p-2">
                 <router-link :to="{ name: 'Historial' }">Historial</router-link>
             </div>
         </div>
