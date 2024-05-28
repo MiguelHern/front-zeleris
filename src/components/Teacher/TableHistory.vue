@@ -53,8 +53,8 @@ onMounted(async () => {
             <td class="text-center align-content-center">{{ formatDate(permission.createdDate) }}</td>
             <td class="text-center align-content-center">
                 <ul>
-                    <li v-for="(dateRequest, index) in permission.datesRequests" :key="index">
-                        {{ formatDate(dateRequest) }}
+                    <li v-for="dateRequest in permission.datesRequests" :key="dateRequest.id">
+                        {{ dateRequest.requestDate }}
                     </li>
                 </ul>
             </td>

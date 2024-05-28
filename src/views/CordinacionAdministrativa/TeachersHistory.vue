@@ -5,6 +5,18 @@
                 <h1 class="header__title text-center">Empleados</h1>
             </header>
             <div class="main">
+                <div class="search-employee">
+                    <!--
+                    <h2>Buscar Empleado</h2>
+                    <form @submit.prevent="searchEmployee(searchQuery)">
+                        <div class="form-group">
+                            <label for="searchQuery">Nombre del empleado:</label>
+                            <input v-model="searchQuery" type="text" id="searchQuery" class="form-control" placeholder="Nombre del empleado">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </form>
+                    -->
+                </div>
                 <div class="main__header text-end">
                     <button class="btn btn__new" @click="toggleModalNew">Agregar empleado</button>
                 </div>
@@ -67,7 +79,7 @@
         </div>
     </div>
 
-    <!--Ventana emergente para modificar política-->
+
     <div v-if="showModalEdit" class="modal">
         <div class="modal-content">
             <div class="close__modal">
@@ -84,7 +96,7 @@
         </div>
     </div>
 
-    <!--Ventana emergente para agregar política-->
+
     <div v-if="showModalNew" class="modal">
         <div class="modal-content">
             <div v-if="errorMessage" class="alert alert-danger mt-3" role="alert">
@@ -158,7 +170,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import { APISEMPLOYEES, useEmployee } from '@/api/adminService.js';
+import {APIS, APISEMPLOYEES, useEmployee} from '@/api/adminService.js';
 import DependencyService from '@/scripts/Dependency.js';
 
 // Estados para los modales y validaciones
@@ -245,6 +257,44 @@ const formularioValido = computed(() => {
         !symbolOrNumberEntered.value
     );
 });
+const searchQuery = ref('');
+
+// Función para buscar empleado
+const searchEmployee = async (nombre) => {
+    const resultado = await APISEMPLOYEES.searchEmployee(nombre);
+    if (resultado.success) {
+        console.log('Datos del empleado:', resultado.data);
+        // Actualizar la lista de empleados con los resultados de la búsqueda
+        employees.value = resultado.data;
+    } else {
+        console.error('Error al buscar el empleado:', resultado.data);
+    }
+};
+
+const editEmployee = async () => {
+    const response = await APIS.editPolice(selectedPolicyId.value, description.value);
+    if (response.success) {
+        showModalEdit.value = false;
+        console.log('Política editada con éxito:', response.data);
+        await fetchEmployees();
+    } else {
+        console.error('Error al editar la política:', response.data);
+        error.value = response.data;
+    }
+};
+
+const deleteEmployee = async (id) => {
+    if (confirm('¿Estás seguro de que deseas eliminar este empleado?')) {
+        const response = await APISEMPLOYEES.deleteEmployee(id);
+        if (response.success) {
+            console.log('Política eliminada con éxito:', response.data);
+            await fetchEmployees();
+        } else {
+            console.error('Error al eliminar la política:', response.data);
+            error.value = response.data;
+        }
+    }
+};
 
 onMounted(async () => {
     await fetchEmployees();

@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="botones">
-                    <router-link to="RequestPermit"><button>Pedir permiso económico</button></router-link>
+                    <router-link v-if="showRequestPermitButton" to="RequestPermit"><button>Pedir permiso económico</button></router-link>
                     <label for="file" id="fileInput" role="button" @click="triggerFileInput">Editar firma digital
                         <input type="file" id="frontFInput" accept="image/*" @change="handleFileInputChange"
                                ref="fileInput"></input>
@@ -81,14 +81,20 @@ export default {
     async mounted() {
         console.log(import.meta.env.VITE_APP_API_URL);
 
-        const userData= await this.perEm.perEmployees();
-        this.nombreCompleto= userData.data.name;
-        this.matriculaP= userData.data.matricula;
-        this.correoElecP= userData.data.email;
+        const userData = await this.perEm.perEmployees();
+        this.nombreCompleto = userData.data.name;
+        this.matriculaP = userData.data.matricula;
+        this.correoElecP = userData.data.email;
         this.fechaNacimientoP = userData.data.birthDate;
-        this.cantPermisosP= userData.data.quantityPermissions;
-        //this.fileDigitalP= userData.data.signature;
-        this.fileDigitalP= `data:image/png;base64,${userData.data.signature}`;
+        this.cantPermisosP = userData.data.quantityPermissions;
+        //this.fileDigitalP = userData.data.signature;
+        this.fileDigitalP = `data:image/png;base64,${userData.data.signature}`;
+    },
+    computed: {
+        showRequestPermitButton() {
+            const role = localStorage.getItem('rol');
+            return role === 'Coordinador' || role === 'Admin';
+        }
     },
     methods: {
         async editarFirma() {
@@ -132,6 +138,7 @@ export default {
     }
 }
 </script>
+
 
 <style scoped>
 

@@ -37,6 +37,7 @@ export const usePendingDocuments = () => {
             const data = await response.json();
             PendingDocuments.value = data.data;
             console.log(data);
+            console.log(PendingDocuments.value);
             if (data && data.success === false && data.message === "No Pending Document") {
                 console.log("No hay documentos pendientes en este momento.");
                 noPendingDocuments.value = true;
