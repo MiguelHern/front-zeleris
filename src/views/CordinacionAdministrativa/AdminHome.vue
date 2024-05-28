@@ -67,18 +67,19 @@ const handleCheckboxChange = () => {
 };
 
 const signPermit = async () => {
-
-    if (!imageBase64) {
-        errorMessage.value = true
+    if (!imageBase64 && isCheckboxChecked.value === false) {
+        errorMessage.value = true;
         return;
     }
+
     try {
         if (isCheckboxChecked.value) {
             imageBase64 = null;
         }
         const response = await APISPERMIT.signPermit(imageBase64, selectedDocumentId.value);
-        errorMessage.value = false
+        errorMessage.value = false;
         console.log('Documento firmado con éxito:', response);
+        alert('Documento firmado');
     } catch (error) {
         console.error('Error al firmar el permiso:', error);
     }
