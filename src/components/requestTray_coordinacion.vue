@@ -31,6 +31,7 @@ const getDocumentId = async (id) => {
     loadingDocuments.value[id] = true;
     selectedDocumentId.value = id;
     console.log(selectedDocumentId.value)
+    errorMessage.value = false
     try {
         const documentDetailsResponse = await fetchDocumentDetails(id);
         documentDetails.value = documentDetailsResponse;
@@ -59,11 +60,7 @@ const handleFileChange = (event) => {
     }
 };
 
-const handleCheckboxChange = () => {
-    if (isCheckboxChecked.value) {
-        imageBase64 = null;
-    }
-};
+
 
 const downloadFile = () => {
     const link = document.createElement('a');
@@ -75,18 +72,19 @@ const downloadFile = () => {
 };
 
 const signPermit = async () => {
-
-    if (!imageBase64) {
-        errorMessage.value = true
-        return;
+    if (!imageBase64 && isCheckboxChecked.value === false) {
+        errorMessage.value = true;
+        return; // Salir del método si no se cumple la condición
     }
+
     try {
         if (isCheckboxChecked.value) {
             imageBase64 = null;
         }
         const response = await APISPERMIT.signPermit(imageBase64, selectedDocumentId.value);
-        errorMessage.value = false
+        errorMessage.value = false;
         console.log('Documento firmado con éxito:', response);
+        alert('Documento firmado');
     } catch (error) {
         console.error('Error al firmar el permiso:', error);
     }

@@ -19,7 +19,6 @@ const loadPending = async () => {
 };
 
 const getDocumentId = async (id) => {
-    errorMessage.value = false
     loadingDocuments.value[id] = true;
     selectedDocumentId.value = id;
     console.log(selectedDocumentId.value)
