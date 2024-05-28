@@ -1,5 +1,6 @@
 //Obtener empleados
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
+
 const API_BASE_URL = import.meta.env.VITE_MANAGER_API_URL;
 const API_TEACHER_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -14,19 +15,19 @@ export const pendingPermissionCordination = async () => {
             },
         });
         if (!response.ok) {
-            return { error: new Error('Respuesta no exitosa'), success: false };
+            return {error: new Error('Respuesta no exitosa'), success: false};
         }
         const responseText = await response.text();
         try {
             const data = JSON.parse(responseText);
             console.log(data);
-            return { data, success: true };
+            return {data, success: true};
         } catch (jsonError) {
-            return { error: jsonError, success: false };
+            return {error: jsonError, success: false};
         }
     } catch (error) {
         console.error('Error al obtener los documentos pendientes:', error);
-        return { error, success: false };
+        return {error, success: false};
     }
 }
 
@@ -73,19 +74,19 @@ export const useDependencies = async () => {
             },
         });
         if (!response.ok) {
-            return { error: new Error('Respuesta no exitosa'), success: false };
+            return {error: new Error('Respuesta no exitosa'), success: false};
         }
         const responseText = await response.text();
         try {
             const data = JSON.parse(responseText);
             console.log(data)
-            return { data, success: true };
+            return {data, success: true};
         } catch (jsonError) {
-            return { error: jsonError, success: false };
+            return {error: jsonError, success: false};
         }
     } catch (error) {
         console.error('Error al obtener los documentos pendientes:', error);
-        return { error, success: false };
+        return {error, success: false};
     }
 };
 
@@ -138,14 +139,14 @@ export const APIS = {
 
             if (!response.data || !response.data.success) {
                 console.error('Error al editar la política:', response.data);
-                return { success: false, data: response.data };
+                return {success: false, data: response.data};
             }
 
             console.log('Política editada con éxito:', response.data);
-            return { success: true, data: response.data };
+            return {success: true, data: response.data};
         } catch (error) {
             console.error('Error al editar la política:', error);
-            return { success: false, data: error };
+            return {success: false, data: error};
         }
     },
     deletePolice: async (id) => {
@@ -154,14 +155,14 @@ export const APIS = {
 
             if (!response.data || !response.data.success) {
                 console.error('Error al eliminar la política:', response.data);
-                return { success: false, data: response.data };
+                return {success: false, data: response.data};
             }
 
             console.log('Política eliminada con éxito:', response.data);
-            return { success: true, data: response.data };
+            return {success: true, data: response.data};
         } catch (error) {
             console.error('Error al eliminar la política:', error);
-            return { success: false, data: error };
+            return {success: false, data: error};
         }
     }
 };
@@ -192,14 +193,14 @@ export const APISDEPENDENCE = {
 
             if (!response.data || !response.data.success) {
                 console.error('Error al eliminar la política:', response.data);
-                return { success: false, data: response.data };
+                return {success: false, data: response.data};
             }
 
             console.log('Política eliminada con éxito:', response.data);
-            return { success: true, data: response.data };
+            return {success: true, data: response.data};
         } catch (error) {
             console.error('Error al eliminar la política:', error);
-            return { success: false, data: error };
+            return {success: false, data: error};
         }
     },
     editDependence: async (id, name, phone, employeeId) => {
@@ -219,14 +220,14 @@ export const APISDEPENDENCE = {
 
             if (!response.data || !response.data.success) {
                 console.error('Error al editar la política:', response.data);
-                return { success: false, data: response.data };
+                return {success: false, data: response.data};
             }
 
             console.log('Política editada con éxito:', response.data);
-            return { success: true, data: response.data };
+            return {success: true, data: response.data};
         } catch (error) {
             console.error('Error al editar la política:', error);
-            return { success: false, data: error };
+            return {success: false, data: error};
         }
     },
 }
@@ -247,6 +248,108 @@ export const APISPERMIT = {
             console.log(response);
         } catch (error) {
             console.error('Error a firmar el permiso:', error);
+        }
+    },
+}
+
+export const APISEMPLOYEES = {
+    newEmployee: async (name, lastName, rol, quantityPermissions, matricula, dependencyId, email) => {
+        const data = {
+            name: name,
+            lastName: lastName,
+            rol: rol,
+            quantityPermissions: quantityPermissions,
+            matricula: matricula,
+            dependencyId: dependencyId,
+            email: email
+        };
+        try {
+            const token = localStorage.token;
+            const response = await axios.post(`${API_BASE_URL}/admin/Employees`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response);
+            return response.data; // Devuelve los datos de la respuesta
+        } catch (error) {
+            console.error('Error al crear el empleado:', error);
+            return {success: false, message: error.message}; // Devuelve un objeto de error en caso de fallo
+        }
+    },
+    deleteEmployee: async (id) => {
+        try {
+            const response = await axios.delete(`${API_BASE_URL}/admin/Employees/${id}`);
+
+            if (!response.data || !response.data.success) {
+                console.error('Error al eliminar la política:', response.data);
+                return {success: false, data: response.data};
+            }
+
+            console.log('Política eliminada con éxito:', response.data);
+            return {success: true, data: response.data};
+        } catch (error) {
+            console.error('Error al eliminar la política:', error);
+            return {success: false, data: error};
+        }
+    },
+    editEmployee: async (idEmployee, name, lastName, quantityPermissions, signature, birthDate, dependencyId) => {
+        const data = {
+            idEmployee: idEmployee,
+            name: name,
+            lastName: lastName,
+            quantityPermissions: quantityPermissions,
+            signature: signature,
+            birthDate: birthDate,
+            dependencyId: dependencyId
+        };
+        try {
+            const token = localStorage.token;
+            const response = await axios.patch(`${API_BASE_URL}/admin/Employees/Update`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.data || !response.data.success) {
+                console.error('Error al editar la política:', response.data);
+                return {success: false, data: response.data};
+            }
+
+            console.log('Política editada con éxito:', response.data);
+            return {success: true, data: response.data};
+        } catch (error) {
+            console.error('Error al editar la política:', error);
+            return {success: false, data: error};
+        }
+    },
+    changeRolEmployee: async (newRol, idEmployee, idDependency) => {
+        const data = {
+            newRol: newRol,
+            idEmployee: idEmployee,
+            idDependency: idDependency
+        };
+        try {
+            const token = localStorage.token;
+            const response = await axios.patch(`${API_BASE_URL}/admin/Employees/role`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.data || !response.data.success) {
+                console.error('Error al editar la política:', response.data);
+                return {success: false, data: response.data};
+            }
+
+            console.log('Política editada con éxito:', response.data);
+            return {success: true, data: response.data};
+        } catch (error) {
+            console.error('Error al editar la política:', error);
+            return {success: false, data: error};
         }
     },
 }
