@@ -43,7 +43,7 @@ onMounted(() => {
     <h1 v-else class="header__tipo">Rol no especificado</h1>
   </header>
   </template>
-  
+
 
 <style scoped>
 header{

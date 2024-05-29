@@ -4,24 +4,34 @@
 
 <template>
     <div class="d-flex flex-column">
-        <div class="d-flex justify-content-center gap-4 mt-1">
-            <div class="settings card p-2">
-                <router-link :to="{ name: 'Settings' }">Perfil</router-link>
+        <header class="d-flex justify-content-center gap-4 p-2">
+            <div class=" p-1 settings">
+                <router-link :to="{ name: 'SettingsA' }">Perfil</router-link>
             </div>
-            <div class="settings  card p-2">
-                <router-link :to="{ name: 'Permiso' }">Solicitar Permiso</router-link>
+            <div class=" p-1 settings">
+                <router-link :to="{ name: 'PermisoA' }">Solicitar Permiso</router-link>
             </div>
-            <div class="settings  card p-2">
-                <router-link :to="{ name: 'Historial' }">Historial</router-link>
+            <div class=" p-1 settings">
+                <router-link :to="{ name: 'HistorialA' }">Historial</router-link>
             </div>
+        </header>
+        <div class="router card m-3">
+            <router-view></router-view>
         </div>
-        <router-view></router-view>
     </div>
 </template>
 
 <style scoped>
-.settings{
+.settings {
     text-align: center;
     width: 140px;
+    color: white;
+}
+
+header {
+    background-color: #1B365D;
+}
+.router{
+    height: calc(100vh - 180px);
 }
 </style>

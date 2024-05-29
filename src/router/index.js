@@ -136,21 +136,22 @@ const router = createRouter({
                 {
                     path: '/Admin/Profile',
                     name: 'Admin/Profile',
+                    redirect: { name: 'SettingsA' },
                     component: () => import('@/views/CordinacionAdministrativa/Profile.vue'),
                     children: [
                         {
-                            path: 'settings',
-                            name: 'Settings',
+                            path: 'settingsA',
+                            name: 'SettingsA',
                             component: () => import('@/views/CordinacionAdministrativa/Settings.vue')
                         },
                         {
-                            path: 'historial',
-                            name: 'Historial',
+                            path: 'historialA',
+                            name: 'HistorialA',
                             component: () => import('@/views/CordinacionAdministrativa/Historial.vue')
                         },
                         {
-                            path: 'permiso',
-                            name: 'Permiso',
+                            path: 'permisoA',
+                            name: 'PermisoA',
                             component: () => import('@/views/CordinacionAdministrativa/RequestPermit.vue')
                         }
                     ]
@@ -193,6 +194,7 @@ const router = createRouter({
                 {
                     path: '/Principal/Profile',
                     name: 'Profile',
+                    redirect: { name: 'Settings' },
                     component: () => import('@/views/Principal/Profile.vue'),
                     children: [
                         {

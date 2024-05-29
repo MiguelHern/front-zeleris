@@ -5,7 +5,7 @@ import {pendingPermissionAdmin} from '@/api/adminService.js';
 const pending = ref({});
 const loading = ref(true);
 const error = ref(null);
-
+const loadingDocumentDetails = ref(false);
 const loadPending = async () => {
     loading.value = true;
     const {data, success, error: fetchError} = await pendingPermissionAdmin();
@@ -22,6 +22,7 @@ const loadPending = async () => {
 const getDocumentId = async (id) => {
     loadingDocuments.value[id] = true;
     selectedDocumentId.value = id;
+    loadingDocumentDetails.value = true;
     console.log(selectedDocumentId.value)
     try {
         const documentDetailsResponse = await fetchDocumentDetails(id);
@@ -36,6 +37,7 @@ const getDocumentId = async (id) => {
     } catch (error) {
         console.error('Error al obtener los detalles del documento:', error);
     } finally {
+        loadingDocumentDetails.value = false;
         loadingDocuments.value[id] = false;
     }
 };
@@ -145,109 +147,115 @@ onMounted(async () => {
                 <i class="bi bi-card-text"></i>
                 <h2 class="text-center">Seleccione un permiso pendiente <br> para visualizar su información</h2>
             </div>
-            <div class="w-75 card p-5 pt-3" v-if="documentDetails">
+            <section class="w-75 card p-5 pt-3" v-if="documentDetails">
                 <div v-if="errorMessage">
                     <p class="alert alert-danger text-center">No se ha seleccionado ningún archivo</p>
                 </div>
-                <header class="details__header">
-                    <h2 class="fs-3">{{ documentDetails.data.nameEmployee }}</h2>
-                    <h3 class="fs-5 text-gray">Solicitud de permiso económico</h3>
-                </header>
-                <main class="details__main">
-                    <table class="table">
-                        <tbody>
-                        <tr class="align-content-center">
-                            <td>
-                                <h5 class="fs-6">Fecha de solicitud</h5>
-                            </td>
-                            <td>
-                                <h5 class="fs-6 text-gray">{{ formattedCreatedDate }}</h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="align-content-center">
-                                <h5 class="fs-6">Cantidad de días solicitados</h5>
-                            </td>
-                            <td class="align-content-center">
-                                <h5 class="fs-6 text-gray">{{ documentDetails.data.quantityDays }}</h5>
-                            </td>
-                        </tr>
-                        <tr class="align-content-center">
-                            <td>
-                                <h5 class="fs-6">Días solicitados</h5>
-                            </td>
-                            <td>
-                                <h5 v-for="date in documentDetails.data.permitDates" :key="date.id"
-                                    class="fs-6 text-gray">
-                                    {{
-                                        new Date(date.requestDate).toLocaleDateString('es-ES', {
-                                            year: 'numeric',
-                                            month: '2-digit',
-                                            day: '2-digit'
-                                        })
-                                    }},
-                                </h5>
-                            </td>
-                        </tr>
-                        <tr class="align-content-center">
-                            <td>
-                                <h5 class="fs-6">Motivo</h5>
-                            </td>
-                            <td>
-                                <p class="fs-6 text-gray">{{ documentDetails.data.reason }}</p>
-                            </td>
-                        </tr>
-                        <tr class="align-content-center">
-                            <td>
-                                <h5 class="fs-6">Descargar documento</h5>
-                            </td>
-                            <td>
-                                <button @click="downloadFile" class="btn btn__new">Descargar</button>
-                            </td>
-                        </tr>
+                <div v-if="loadingDocumentDetails" class="d-flex justify-content-center align-items-center h-100">
+                    <div class="casual-spinner"></div>
+                </div>
 
-                        <tr class="align-content-center">
-                            <td>
-                                <label class="fs-6" for="file">Firmar documento</label>
-                            </td>
-                            <td>
-                                <input
-                                    type="file"
-                                    id="file"
-                                    name="file"
-                                    class="form-control"
-                                    accept="image/*"
-                                    data-browse="Seleccionar archivo"
-                                    @change="handleFileChange"
-                                    required
-                                    :disabled="isCheckboxChecked"
-                                    :required="!isCheckboxChecked"
-                                />
-                                <div class="d-flex align-items-center gap-3 mt-1">
+                <div v-else>
+                    <header class="details__header">
+                        <h2 class="fs-3">{{ documentDetails.data.nameEmployee }}</h2>
+                        <h3 class="fs-5 text-gray">Solicitud de permiso económico</h3>
+                    </header>
+                    <main class="details__main">
+                        <table class="table">
+                            <tbody>
+                            <tr class="align-content-center">
+                                <td>
+                                    <h5 class="fs-6">Fecha de solicitud</h5>
+                                </td>
+                                <td>
+                                    <h5 class="fs-6 text-gray">{{ formattedCreatedDate }}</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="align-content-center">
+                                    <h5 class="fs-6">Cantidad de días solicitados</h5>
+                                </td>
+                                <td class="align-content-center">
+                                    <h5 class="fs-6 text-gray">{{ documentDetails.data.quantityDays }}</h5>
+                                </td>
+                            </tr>
+                            <tr class="align-content-center">
+                                <td>
+                                    <h5 class="fs-6">Días solicitados</h5>
+                                </td>
+                                <td>
+                                    <h5 v-for="date in documentDetails.data.permitDates" :key="date.id"
+                                        class="fs-6 text-gray">
+                                        {{
+                                            new Date(date.requestDate).toLocaleDateString('es-ES', {
+                                                year: 'numeric',
+                                                month: '2-digit',
+                                                day: '2-digit'
+                                            })
+                                        }},
+                                    </h5>
+                                </td>
+                            </tr>
+                            <tr class="align-content-center">
+                                <td>
+                                    <h5 class="fs-6">Motivo</h5>
+                                </td>
+                                <td>
+                                    <p class="fs-6 text-gray">{{ documentDetails.data.reason }}</p>
+                                </td>
+                            </tr>
+                            <tr class="align-content-center">
+                                <td>
+                                    <h5 class="fs-6">Descargar documento</h5>
+                                </td>
+                                <td>
+                                    <button @click="downloadFile" class="btn btn__new">Descargar</button>
+                                </td>
+                            </tr>
+
+                            <tr class="align-content-center">
+                                <td>
+                                    <label class="fs-6" for="file">Firmar documento</label>
+                                </td>
+                                <td>
                                     <input
-                                        id="firmacheck"
-                                        type="checkbox"
-                                        class="form-check-input m-0"
-                                        v-model="isCheckboxChecked"
-                                        @change="handleCheckboxChange"
-                                    >
-                                    <label for="firmacheck" class="align-content-center">Ya tengo firma</label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="align-content-center">
-                            <td>
-                                <h5 class="fs-6">Enviar respuesta</h5>
-                            </td>
-                            <td class="d-flex gap-3">
-                                <button @click="signPermit" class="btn btn__new">Aceptar</button>
-                                <button class="btn bg-danger">Rechazar</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </main>
-            </div>
+                                        type="file"
+                                        id="file"
+                                        name="file"
+                                        class="form-control"
+                                        accept="image/*"
+                                        data-browse="Seleccionar archivo"
+                                        @change="handleFileChange"
+                                        required
+                                        :disabled="isCheckboxChecked"
+                                        :required="!isCheckboxChecked"
+                                    />
+                                    <div class="d-flex align-items-center gap-3 mt-1">
+                                        <input
+                                            id="firmacheck"
+                                            type="checkbox"
+                                            class="form-check-input m-0"
+                                            v-model="isCheckboxChecked"
+                                            @change="handleCheckboxChange"
+                                        >
+                                        <label for="firmacheck" class="align-content-center">Ya tengo firma</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="align-content-center">
+                                <td>
+                                    <h5 class="fs-6">Enviar respuesta</h5>
+                                </td>
+                                <td class="d-flex gap-3">
+                                    <button @click="signPermit" class="btn btn__new">Aceptar</button>
+                                    <button class="btn bg-danger">Rechazar</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </main>
+                </div>
+            </section>
         </div>
     </div>
 </template>
@@ -269,6 +277,14 @@ td {
     100% {
         transform: rotate(360deg);
     }
+}
+.casual-spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 4px solid #ccc;
+    border-top-color: #555;
+    animation: spin 1s ease-in-out infinite;
 }
 
 .solicitudes__card {
