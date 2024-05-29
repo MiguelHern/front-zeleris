@@ -98,7 +98,7 @@ watchEffect(() => {
                     </li>
                     <li class="text-center botonNavegacion menu__option" @click="irHistorial"
                         :class="{ active: botonActivo === 'PoliciesTeacher' }">
-                        <i class="menu__icon bi bi-journal-x"></i>
+                        <i class="menu__icon bi bi-clock-history"></i>
                         <span class="menu__overlay">Historial</span>
                     </li>
                     <li class="text-center botonNavegacion menu__option" @click="irHomeCordinacion"
