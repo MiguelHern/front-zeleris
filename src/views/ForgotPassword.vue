@@ -47,7 +47,7 @@ document.addEventListener('keydown', (event) => {
             <div class="spinner"></div>
         </div>
         <div class="img__container">
-            <img class="img__zeleris" src="/src/assets/img/Zeleris.jpg" alt="">
+            <img src="/src/assets/img/UACLogo.jpg" class="logouacfp" style="max-width: 75px; max-height: 75px;">
         </div>
         <div class="content d-flex flex-column align-items-center justify-content-center">
             <div class="layout">
@@ -74,6 +74,12 @@ document.addEventListener('keydown', (event) => {
 </template>
 
 <style scoped>
+.logouacfp{
+  margin-left: 20px;
+  margin-top: 20px;
+  text-align:start;
+  justify-self:flex-start;
+}
 .cancelar{
     text-align: center;
     transition: all 200ms ease-in-out;

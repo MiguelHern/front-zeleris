@@ -85,7 +85,7 @@ const handleSubmit = async () => {
             <div class="spinner"></div>
         </div>
         <div class="img__container">
-            <img class="img__zeleris" src="/src/assets/img/Zeleris.jpg" alt="">
+            <img src="/src/assets/img/UACLogo.jpg" class="logouacfp" style="max-width: 75px; max-height: 75px;">
         </div>
         <div class="content d-flex flex-column align-items-center justify-content-center">
             <div class="container">
@@ -109,6 +109,12 @@ const handleSubmit = async () => {
 
 
 <style scoped>
+.logouacfp{
+  margin-left: 20px;
+  margin-top: 20px;
+  text-align:start;
+  justify-self:flex-start;
+}
 .img__container{
   pointer-events: none;
   position: absolute;
