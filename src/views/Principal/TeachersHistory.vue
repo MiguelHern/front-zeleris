@@ -1,152 +1,6 @@
-<template>
-    <div class="layout">
-        <div class="lay p-4">
-            <header>
-                <h1 class="header__title text-center">Empleados</h1>
-            </header>
-            <div class="main mt-5 h-75">
-                <section class="main__policies w-100 h-100">
-                    <table class="table shadow-sm">
-                        <thead>
-                            <tr>
-                                <th class="col-1">Matrícula</th>
-                                <th class="col-3">Nombre</th>
-                                <th class="col-3">Email</th>
-                                <th class="col-3">Dependencia</th>
-                                <th class="col-3">Rol</th>
-                            </tr>
-                        </thead>
-                        <i v-if="loading" class="c-inline-spinner"></i>
-                        <tbody>
-                            <tr v-for="employee in employees" :key="employee.id">
-                                <td>{{ employee.matricula }}</td>
-                                <td><span>{{ employee.name }}</span><span> {{ employee.lastName }}</span></td>
-                                <td>{{ employee.email }}</td>
-                                <td>{{ employee.dependency }}</td>
-                                <td>{{ employee.rol }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-                <nav aria-label="Page navigation example" class="d-flex justify-content-end">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <button class="page-link" style="color: var(--principal-color)!important;"
-                                    @click="previousPage" :disabled="currentPage === 1">Anterior</button>
-                        </li>
-                        <li class="page-item">
-                            <div class="page-link" style="color: var(--principal-color)!important;">{{ currentPage
-                                }}</div>
-                        </li>
-                        <li class="page-item">
-                            <div class="page-link" style="color: var(--principal-color)!important;">de</div>
-                        </li>
-                        <li class="page-item">
-                            <div class="page-link" style="color: var(--principal-color)!important;">{{ totalPages }}
-                            </div>
-                        </li>
-                        <li class="page-item">
-                            <button class="page-link" style="color: var(--principal-color)!important;"
-                                    @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-
-    <!--Ventana emergente para modificar política-->
-    <div v-if="showModalEdit" class="modal">
-        <div class="modal-content">
-            <div class="close__modal">
-                <span class="close" @click="toggleModalEdit">&#x2716;</span>
-            </div>
-            <h3 class="text-center">Modificar política</h3>
-            <form @submit.prevent="editEmployee">
-                <textarea v-model="description" class="form-control modal__edit-text"></textarea>
-                <div class="buttons__edit">
-                    <button type="button" @click="toggleModalEdit" class="btn__cancel btn">Cancelar</button>
-                    <input type="submit" class="btn btn__submit" value="Guardar" />
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!--Ventana emergente para agregar política-->
-    <div v-if="showModalNew" class="modal">
-        <div class="modal-content">
-            <div v-if="errorMessage" class="alert alert-danger mt-3" role="alert">
-                {{ errorMessage }}
-            </div>
-            <div class="close__modal">
-                <span class="close" @click="toggleModalNew">&#x2716;</span>
-            </div>
-            <h3 class="text-center">Agregar docente</h3>
-            <form @submit.prevent="newEmployee">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nombre:</label>
-                    <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required
-                        pattern="[A-Za-z ]+" title="Solo letras y espacios, sin números ni símbolos"
-                        @input="checkForSymbols">
-                </div>
-                <div class="mb-3">
-                    <label for="lastName" class="form-label">Apellido:</label>
-                    <input v-model="lastName" id="lastName" type="text" class="form-control" placeholder="Apellido"
-                        required pattern="[A-Za-z ]+" title="Solo letras y espacios, sin números ni símbolos"
-                        @input="checkForSymbols">
-                </div>
-                <div class="mb-3">
-                    <label for="rol" class="form-label">Rol:</label>
-                    <select v-model="rol" id="rol" class="form-control">
-                        <option disabled value="">Seleccione un rol</option>
-                        <option value="Director">Director</option>
-                        <option value="Docente">Docente</option>
-                        <option value="Coordinador">Coordinador de carrera</option>
-                        <option value="Admin">Coordinador administrativo</option>
-                        <option value="Administrativo">Administrativo</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="quantityPermissions" class="form-label">Cantidad de Permisos:</label>
-                    <input v-model.number="quantityPermissions" id="quantityPermissions" type="number"
-                        class="form-control" placeholder="Cantidad de Permisos" min="0" max="10" required>
-                </div>
-                <div class="mb-3">
-                    <label for="matricula" class="form-label">Número de empleado:</label>
-                    <input v-model="matricula" id="matricula" type="number" class="form-control" placeholder="Matrícula"
-                        required>
-                </div>
-                <div class="mb-3">
-                    <label for="dependencyId" class="form-label">ID de Dependencia:</label>
-                    <select v-model="dependencyId" id="dependencyId" class="form-control" required>
-                        <option disabled value="">Seleccione una dependencia</option>
-                        <option v-for="dependency in dependencies" :key="dependency.id" :value="dependency.id">
-                            {{ dependency.name }}
-                        </option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Correo Electrónico:</label>
-                    <input v-model="email" id="email" type="email" class="form-control" placeholder="Correo Electrónico"
-                        required>
-                    <small v-if="email.value && !validarEmail()" class="text-danger">El correo electrónico no es
-                        válido.</small>
-                </div>
-                <div class="d-grid gap-2 col-6 mx-auto">
-                    <button :disabled="!formularioValido" type="submit" class="btn btn-primary">
-                        <span v-if="loading" class="spinner-border spinner-border-sm" role="status"
-                            aria-hidden="true"></span>
-                        <span v-if="!loading">Enviar</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import { APISEMPLOYEES, useEmployee } from '@/api/adminService.js';
+import {APIS, APISEMPLOYEES, useEmployee} from '@/api/adminService.js';
 import DependencyService from '@/scripts/Dependency.js';
 
 // Estados para los modales y validaciones
@@ -234,6 +88,53 @@ const formularioValido = computed(() => {
     );
 });
 
+const searchQuery = ref('');
+
+// Función para buscar empleado
+const searchEmployee = async (nombre) => {
+    const resultado = await APISEMPLOYEES.searchEmployee(nombre);
+    if (resultado.success) {
+        console.log('Datos del empleado:', resultado.data);
+        employees.value = resultado.data.data;
+    } else {
+        console.error('Error al buscar el empleado:', resultado.data);
+    }
+};
+
+const buscarEmpleado = () => {
+    if (searchQuery.value.trim() === '') {
+        fetchEmployees();
+    } else {
+        searchEmployee(searchQuery.value);
+    }
+};
+
+
+const editEmployee = async () => {
+    const response = await APIS.editPolice(selectedPolicyId.value, description.value);
+    if (response.success) {
+        showModalEdit.value = false;
+        console.log('Política editada con éxito:', response.data);
+        await fetchEmployees();
+    } else {
+        console.error('Error al editar la política:', response.data);
+        error.value = response.data;
+    }
+};
+
+const deleteEmployee = async (id) => {
+    if (confirm('¿Estás seguro de que deseas eliminar este empleado?')) {
+        const response = await APISEMPLOYEES.deleteEmployee(id);
+        if (response.success) {
+            console.log('Política eliminada con éxito:', response.data);
+            await fetchEmployees();
+        } else {
+            console.error('Error al eliminar la política:', response.data);
+            error.value = response.data;
+        }
+    }
+};
+
 onMounted(async () => {
     await fetchEmployees();
     const response = await dependencyService.getDependencies();
@@ -278,13 +179,80 @@ watch(quantityPermissions, (newVal) => {
 });
 </script>
 
+<template>
+    <div class="layout">
+        <div class="lay p-4">
+            <header>
+                <h1 class="header__title text-center">Empleados</h1>
+            </header>
+            <div class="main">
+                <div class="main__header d-flex justify-content-between">
+                    <input
+                        v-model="searchQuery"
+                        @input="buscarEmpleado"
+                        placeholder="Buscar empleado por nombre"
+                        class="form-control w-25"
+                    />
+                </div>
+                <section class="main__policies w-100 mt-4">
+                    <table class="table shadow-sm">
+                        <thead>
+                        <tr>
+                            <th class="col-1">Matrícula</th>
+                            <th class="col-2">Nombre</th>
+                            <th class="col-2">Email</th>
+                            <th class="col-2">Dependencia</th>
+                            <th class="col-1">Rol</th>
+                        </tr>
+                        </thead>
+                        <i v-if="loading" class="c-inline-spinner"></i>
+                        <tbody>
+                        <tr v-for="employee in employees" :key="employee.id">
+                            <td>{{ employee.matricula }}</td>
+                            <td><span>{{ employee.name }}</span><span> {{ employee.lastName }}</span></td>
+                            <td>{{ employee.email }}</td>
+                            <td>{{ employee.dependency }}</td>
+                            <td>{{ employee.rol }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <nav aria-label="Page navigation example" class="mt-3 d-flex justify-content-end">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <button class="page-link" style="color: var(--principal-color)!important;"
+                                    @click="previousPage" :disabled="currentPage === 1">Anterior</button>
+                        </li>
+                        <li class="page-item">
+                            <div class="page-link" style="color: var(--principal-color)!important;">{{ currentPage
+                                }}</div>
+                        </li>
+                        <li class="page-item">
+                            <div class="page-link" style="color: var(--principal-color)!important;">de</div>
+                        </li>
+                        <li class="page-item">
+                            <div class="page-link" style="color: var(--principal-color)!important;">{{ totalPages }}
+                            </div>
+                        </li>
+                        <li class="page-item">
+                            <button class="page-link" style="color: var(--principal-color)!important;"
+                                    @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+
 
 <style>
-.pagination-controls {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+.main__policies{
+    height: 475px;
 }
+
 
 .pagination-controls button {
     margin: 0 5px;
@@ -317,15 +285,14 @@ td:hover .bi {
     height: 100%;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.4);
-
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 0 auto;
+    margin: 2% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 50%;
+    width: 30%;
 }
 
 .close__modal {

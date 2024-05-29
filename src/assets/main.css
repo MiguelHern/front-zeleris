@@ -157,3 +157,20 @@ h1,h2,h3,h4,h5,h6{
   margin-left: 250px;
   user-select: none;
 }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.casual-spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 4px solid #ccc;
+  border-top-color: #555;
+  animation: spin 1s ease-in-out infinite;
+}

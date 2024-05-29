@@ -23,7 +23,6 @@ const getDocumentId = async (id) => {
     loadingDocuments.value[id] = true;
     selectedDocumentId.value = id;
     loadingDocumentDetails.value = true;
-    console.log(selectedDocumentId.value)
     try {
         const documentDetailsResponse = await fetchDocumentDetails(id);
         documentDetails.value = documentDetailsResponse;
@@ -269,23 +268,7 @@ td {
     height: calc(100vh - 120px);
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
 
-    100% {
-        transform: rotate(360deg);
-    }
-}
-.casual-spinner {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 4px solid #ccc;
-    border-top-color: #555;
-    animation: spin 1s ease-in-out infinite;
-}
 
 .solicitudes__card {
     border-bottom: 1px solid hsl(0, 0%, 94%);
