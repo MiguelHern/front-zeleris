@@ -47,7 +47,7 @@ const getDocumentId = async (id) => {
         console.error('Error al obtener los detalles del documento:', error);
     } finally {
         loadingDocuments.value[id] = false;
-        loadingDocumentDetails.value = true;
+        loadingDocumentDetails.value = false;
     }
 };
 

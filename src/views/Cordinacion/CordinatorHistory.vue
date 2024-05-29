@@ -14,6 +14,11 @@ const noHistory = ref(false);
     <div class="layout">
         <header class="header__cordinacion p-4 mb-0">
             <h1 class="text-center">Historial de permisos</h1>
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-primary" href="/Cordination/RequestPermit">
+                    Pedir permisos
+                </a>
+            </div>
         </header>
         <main class="d-flex flex-column p-3">
             <div class="pending">
