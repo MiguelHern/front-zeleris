@@ -1,22 +1,23 @@
 <script setup>
 import Footer from "@/components/Footer.vue";
-import {onMounted, ref, watchEffect} from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import { useEmployee } from '@/api/adminService.js';
 import { deleteEmployee } from '@/api/adminService.js';
-import {APIS} from "@/scripts/Consumibles.js";
+import { APIS } from "@/scripts/Consumibles.js";
 
 const { employees } = useEmployee();
 const loading = ref(true);
-const name = ref("")
-const lastName = ref("")
-const quantityPermissions = ref(0)
-const rol = ref()
-const matricula = ref(0)
-const dependencyId = ref(0)
-const email = ref("")
-const password = ref("")
+const name = ref("");
+const lastName = ref("");
+const quantityPermissions = ref(0);
+const rol = ref();
+const matricula = ref(0);
+const dependencyId = ref(0);
+const email = ref("");
+const password = ref("");
 const showModalNew = ref(false);
 const showModal = ref(false);
+const sortOrder = ref({ column: '', direction: '' });
 
 const toggleModalNew = () => {
     showModalNew.value = !showModalNew.value;
@@ -28,9 +29,7 @@ watchEffect(() => {
     }
 });
 
-onMounted(() =>{
-
-})
+onMounted(() => {});
 
 const crearDocente = async () => {
     var response = await APIS.CrearDocente(name.value, lastName.value, rol.value, quantityPermissions.value, matricula.value, dependencyId.value, email.value, password.value);
@@ -40,15 +39,39 @@ const crearDocente = async () => {
     } else {
         console.error('Error al crear el docente:', response.message);
     }
-}
+};
 
+const pivotar = (column) => {
+    if (sortOrder.value.column === column) {
+        sortOrder.value.direction = sortOrder.value.direction === 'asc' ? 'desc' : 'asc';
+    } else {
+        sortOrder.value.column = column;
+        sortOrder.value.direction = 'asc';
+    }
+    sortEmployees();
+};
+
+const sortEmployees = () => {
+    employees.value.sort((a, b) => {
+        let aValue = a[sortOrder.value.column];
+        let bValue = b[sortOrder.value.column];
+        
+        if (aValue < bValue) {
+            return sortOrder.value.direction === 'asc' ? -1 : 1;
+        } else if (aValue > bValue) {
+            return sortOrder.value.direction === 'asc' ? 1 : -1;
+        } else {
+            return 0;
+        }
+    });
+};
 </script>
 
 <template>
     <div v-if="showModal" class="modal">
         <div class="modal-content modal-contentt">
             <p class="fs-5">Usuario creado</p>
-            <a class=" p-1 btn bg-primary text-body" href="/Admin/History">Aceptar</a>
+            <a class="p-1 btn bg-primary text-body" href="/Admin/History">Aceptar</a>
         </div>
     </div>
   <div>
@@ -74,69 +97,74 @@ const crearDocente = async () => {
 
     <!-- Div de abajo -->
     <div class="bottom-container">
-      <table>
-        <thead>
-          <tr>
-            <th>
-              <div class="column-header">
-                <span>Nombre</span>
-                <button @click="pivotar('nombre')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Número de empleado</span>
-                <button @click="pivotar('Número de empleado')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Correo</span>
-                <button @click="pivotar('correo')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Carrera</span>
-                <button @click="pivotar('carrera')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Cargo</span>
-                <button @click="pivotar('cargo')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-            <th>
-              <div class="column-header">
-                <span>Acciones</span>
-                <button @click="pivotar('acciones')"><i class="bi bi-caret-down-fill"></i></button>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-        <tr v-for="employee in employees" :key="employee.id">
-            <td><span>{{employee.name}}</span><span>{{employee.lastName}}</span></td>
-            <td>{{employee.matricula}}</td>
-            <td>{{employee.email}}</td>
-            <td>{{employee.dependency}}</td>
-            <td>{{employee.rol}}</td>
-            <td>
-                <i class="bi bi-pencil-square"></i>
-                <i class="bi bi-trash3" @click="deleteEmployee(employee.id)"></i>
-                <i class="bi bi-person-gear"></i>
-            </td>
-        </tr>
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th id="sort-button" scope="col" class="col-2" style=" padding-left: 20px; color: white; border-top-left-radius: 14px;">
+                <div @click="pivotar('name')" class="column-header">
+                  <span>Nombre</span>
+                  <button ><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th id="sort-button" scope="col" class="col-1" style="padding-left: 10px;padding-right: 10px; color: white;">
+                <div @click="pivotar('matricula')" class="column-header">
+                  <span>Número de empleado</span>
+                  <button ><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th id="sort-button" scope="col" class="col-2" style="padding-left: 10px; color: white;">
+                <div @click="pivotar('email')" class="column-header">
+                  <span>Correo</span>
+                  <button><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th id="sort-button" scope="col" class="col-2" style="padding-left: 10px; color: white;">
+                <div @click="pivotar('dependency')" class="column-header">
+                  <span>Carrera</span>
+                  <button><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th id="sort-button" scope="col" class="col-1" style="  color: white;" >
+                <div @click="pivotar('rol')" class="column-header">
+                  <span>Cargo</span>
+                  <button><i class="bi bi-caret-down-fill"></i></button>
+                </div>
+              </th>
+              <th scope="col" class="col-1" style="padding-left: 25px;padding-right: 30px; background-color: #8099b3; color: white; border-top-right-radius: 14px;">
+                <div class="column-header">
+                  <span>Acciones</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+        <div class="table-body-container">
+          <table>
+            <tbody>
+              <tr v-for="employee in employees" :key="employee.id">
+                  <td scope="col" class="col-2" style="padding-right: 10px; padding-left: 15px"><span>{{employee.name}}</span><span>{{employee.lastName}}</span></td>
+                  <td scope="col" class="col-1" style="padding-right: 10px; padding-left: 15px">{{employee.matricula}}</td>
+                  <td scope="col" class="col-1" style="padding-right: 10px; padding-left: 15px">{{employee.email}}</td>
+                  <td scope="col" class="col-2" style="padding-right: 10px; padding-left: 15px">{{employee.dependency}}</td>
+                  <td scope="col" class="col-1" style="padding-right: 7px; padding-left: 15px">{{employee.rol}}</td>
+                  <td scope="col" class="col-1" style="padding-right: 10px; padding-left: 15px;">
+                      <i class="bi bi-pencil-square"></i>
+                      <i class="bi bi-trash3" @click="deleteEmployee(employee.id)"></i>
+                      <i class="bi bi-person-gear"></i>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
         <div v-if="showModalNew" class="modal">
             <div class="modal-content">
                 <div class="close__modal">
                     <span class="close" @click="toggleModalNew">&#x2716;</span>
                 </div>
                 <h3 class="text-center">Agregar docente</h3>
-                <form @submit.prevent="handleSubmit">
+                <form @submit.prevent="crearDocente">
                     <div class="mb-3">
                         <label for="name" class="form-label">Nombre:</label>
                         <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required>
@@ -173,26 +201,67 @@ const crearDocente = async () => {
                         <label for="password" class="form-label">Contraseña:</label>
                         <input v-model="password" id="password" type="password" class="form-control" placeholder="Contraseña" required>
                     </div>
-                    <button @click="crearDocente()" type="submit" class="btn btn-primary">Enviar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
                 </form>
             </div>
         </div>
     </div>
     <Footer></Footer>
   </div>
-
-
 </template>
 
-<style scoped>
 
+<style scoped>
+.table-container {
+  position: relative;
+  max-height: 470px; /* Puedes ajustar esta altura según sea necesario */
+  overflow: hidden;
+  width: 90%;
+
+}
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-body-container {
+  max-height: 380px; /* Ajustar según la altura de thead */
+  overflow-y: auto;
+}
+.table-body-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-body-container table td {
+  padding-left: 25px;
+  padding-right: 25px;
+  border: 1px solid #ddd;
+}
+.column-header {
+  display: flex;
+  align-items: center;  
+}
+#sort-button {
+  transition: background-color 0.3s ease-in;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 5px;
+}
+#sort-button {
+  background-color: #8099b3;  
+  color: white;
+}
+#sort-button:hover {
+  background-color: #556e8d;
+  color: white;
+}
 .top-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   /* Espacio entre los divs */
-  margin-top: 8px;
+  margin-top: 20px;
 }
 
 .top-container div {
