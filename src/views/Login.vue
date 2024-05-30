@@ -54,7 +54,7 @@ export default {
                 if (error.response && error.response.data && error.response.data.message) {
                     this.error = error.response.data.message;
                 } else {
-                    this.error = 'Email incorrecto'; // Mensaje genérico en caso de error desconocido
+                    this.error = 'Ambos datos son incorrectos'; // Mensaje genérico en caso de error desconocido
                 }
             } finally {
                 this.loading = false; // Ocultar la ventana de carga

@@ -117,7 +117,7 @@ watchEffect(() => {
                     <li class="text-center botonNavegacion menu__option" @click="irDependencies"
                         :class="{ active: botonActivo === 'PoliciesTeacher' }">
                         <i class="menu__icon bi bi-collection"></i>
-                        <span class="menu__overlay">Dependencies</span>
+                        <span class="menu__overlay">Dependencias</span>
                     </li>
                 </ul>
                 <a @click.prevent="cerrarSesion" class="botonSingOff">
