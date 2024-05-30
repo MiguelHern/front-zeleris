@@ -260,7 +260,7 @@ watch(quantityPermissions, (newVal) => {
             <div class="close__modal">
                 <span class="close" @click="toggleModalEdit">&#x2716;</span>
             </div>
-            <h3 class="text-center">Modificar política</h3>
+            <h3 class="text-center">Modificar empleado</h3>
             <form @submit.prevent="editEmployee">
                 <textarea v-model="description" class="form-control modal__edit-text"></textarea>
                 <div class="buttons__edit">

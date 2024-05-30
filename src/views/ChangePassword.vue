@@ -7,17 +7,17 @@
             <img class="img__zeleris" src="/src/assets/img/Zeleris.jpg" alt="">
         </div>
         <div class="content d-flex flex-column align-items-center justify-content-center">
-            <div class="layout">
+            <div class="layout card">
                 <div class="layout__header">
                     <h1 class="layout__title">Cambiar contraseña</h1>
                 </div>
                 <form @submit.prevent="handleSubmit" class="login__form">
                     <div class="form__group">
-                        <input v-model="newPassword" type="password" class="form__input" required placeholder="Contraseña">
+                        <input v-model="newPassword" type="password" class="form__input card" required placeholder="Contraseña">
                         <label for="contraseña" class="form__label">Contraseña</label>
                     </div>
                     <div class="form__group form__group2">
-                        <input v-model="confirmPassword" type="password" class="form__input" required placeholder="Confirmar Contraseña">
+                        <input v-model="confirmPassword" type="password" class="form__input card" required placeholder="Confirmar Contraseña">
                         <label for="confirmPassword" class="form__label">Confirmar Contraseña</label>
                     </div>
                     <ul class="password-criteria">
@@ -140,8 +140,8 @@ const handleSubmit = () => {
   padding: 3rem;
 
   position: relative;
-  border-radius: 1rem;
-  box-shadow: var(--bs-box-shadow);
+  border-radius: 0.6rem;
+  box-shadow: var(--bs-box-shadow-sm);
 }
 .layout__title{
   font-weight: 700;
@@ -158,16 +158,13 @@ const handleSubmit = () => {
 }
 .form__input
 {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  border: none;
-  border-bottom: 1px solid var(--grayy);
-  position: relative;
-  width: 100%;
-  display: block;
-  font-size: 1rem;
-  padding: 1rem 3rem 1rem 1.5rem;
-  border-radius: 6px;
-  outline: none;
+    position: relative;
+    width: 100%;
+    display: block;
+    font-size: 1rem;
+    padding: 1rem 3rem 1rem 1.5rem;
+    border-radius: 6px;
+    outline: none;
 
 }
 .form__label{

@@ -116,7 +116,7 @@ document.addEventListener('keydown', (event) => {
 
     position: relative;
     border-radius: 6px;
-    box-shadow: var(--bs-box-shadow);
+    box-shadow: var(--bs-box-shadow-sm);
 }
 
 .layout__title {
@@ -138,8 +138,6 @@ document.addEventListener('keydown', (event) => {
     padding: 1rem 3rem 1rem 1.5rem;
     border-radius: 0.5rem;
     outline: none;
-
-
 }
 
 .form__label {

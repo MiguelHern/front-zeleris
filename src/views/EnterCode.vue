@@ -88,7 +88,7 @@ const handleSubmit = async () => {
             <img src="/src/assets/img/UACLogo.jpg" class="logouacfp" style="max-width: 75px; max-height: 75px;">
         </div>
         <div class="content d-flex flex-column align-items-center justify-content-center">
-            <div class="container">
+            <div class="container card">
                 <div class="layout__header">
                     <div v-if="showFailMessage">
                         <p class="alert alert-danger text-center w-100">No hay coincidencias</p>
@@ -133,7 +133,7 @@ const handleSubmit = async () => {
 
   position: relative;
   border-radius: 6px;
-  box-shadow: var(--bs-box-shadow);
+  box-shadow: var(--bs-box-shadow-sm);
 }
 .header__text{
   margin-bottom: 2rem;
