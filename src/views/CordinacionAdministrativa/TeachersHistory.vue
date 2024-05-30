@@ -274,7 +274,7 @@ watch(quantityPermissions, (newVal) => {
 
     <div v-if="showModalNew" class="modal">
         <div class="modal-content">
-            <div v-if="errorMessage" class="alert alert-danger mt-3" role="alert">
+            <div v-if="errorMessage" class="alert alert-danger mt-3 text-center" role="alert">
                 {{ errorMessage }}
             </div>
             <div class="close__modal">

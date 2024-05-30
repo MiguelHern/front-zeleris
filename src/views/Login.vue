@@ -22,15 +22,16 @@ export default {
 
             try {
                 const respuesta = await auth.login(this.email, this.password);
-                console.log('Respuesta del servidor:', respuesta.data.token);
-                console.log('Respuesta del servidor:', respuesta.data);
-                localStorage.token = respuesta.data.token;
-                localStorage.rol = respuesta.data.rol;
-                localStorage.username = respuesta.data.usearname;
-                localStorage.setItem('name_Coordination', respuesta.data.name_Coordination);
-                localStorage.expiredTime = respuesta.data.expiredTime;
 
                 if (respuesta.success) {
+                    console.log('Respuesta del servidor:', respuesta.data.token);
+                    console.log('Respuesta del servidor:', respuesta.data);
+                    localStorage.token = respuesta.data.token;
+                    localStorage.rol = respuesta.data.rol;
+                    localStorage.username = respuesta.data.usearname;
+                    localStorage.setItem('name_Coordination', respuesta.data.name_Coordination);
+                    localStorage.expiredTime = respuesta.data.expiredTime;
+
                     if (localStorage.rol === 'Docente') {
                         this.$router.replace('/TeachersHome');
                     } else if (localStorage.rol === 'Coordinador') {
@@ -42,11 +43,19 @@ export default {
                     } else {
                         this.$router.replace('/');
                     }
+                } else {
+                    // Si la respuesta tiene success = false, mostrar el mensaje de error del backend
+                    this.error = respuesta.message;
                 }
 
             } catch (error) {
                 console.error('Error en la solicitud:', error);
-                this.error = 'Usuario o contraseña incorrectos';
+                // En caso de error en la solicitud, verificar si hay un mensaje específico del backend
+                if (error.response && error.response.data && error.response.data.message) {
+                    this.error = error.response.data.message;
+                } else {
+                    this.error = 'Ambos datos son incorrectos'; // Mensaje genérico en caso de error desconocido
+                }
             } finally {
                 this.loading = false; // Ocultar la ventana de carga
             }
@@ -54,6 +63,7 @@ export default {
     }
 }
 </script>
+
 
 <template>
     <div class="background">
