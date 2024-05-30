@@ -62,7 +62,7 @@ const createDownloadLink = (base64String) => {
 
         const link = document.createElement('a');
         link.href = url;
-        link.download = "DocumentoDescargado.docx";
+        link.download = "PermisoEconómico.docx";
         link.style.display = 'none'; // Asegurarse de que el link no sea visible en el DOM
         document.body.appendChild(link);
         link.click();
@@ -94,7 +94,7 @@ const createDownloadLink = (base64String) => {
         <tbody>
         <tr v-for="permission in permissions" :key="permission.id" class="align-content-center">
             <td class="text-lg-center align-content-center fw-bold text-body-secondary">
-                <i role="button" class="bi bi-file-earmark-check-fill" @click="downloadFile(permission.documntId)"></i>
+                <i role="button" class="icono bi bi-file-earmark-arrow-down-fill" @click="downloadFile(permission.documntId)"></i>
             </td>
             <td class="align-content-center hoverTabla" style="max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 {{ permission.reason }}
@@ -121,6 +121,12 @@ const createDownloadLink = (base64String) => {
 
 .approved {
     color: green;
+}
+.icono{
+    transition: all 150ms ease-in-out;
+}
+.icono:hover{
+    color: var(--secondary-color);
 }
 
 </style>
