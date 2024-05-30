@@ -203,7 +203,7 @@ watch(quantityPermissions, (newVal) => {
                                 <th class="col-2">Nombre</th>
                                 <th class="col-2">Email</th>
                                 <th class="col-3">Dependencia</th>
-                                <th class="col-3">Rol</th>
+                                <th class="col-1">Rol</th>
                                 <th scope="col" class="col-1">Editar</th>
                                 <th scope="col" class="col-1">Eliminar</th>
                             </tr>
