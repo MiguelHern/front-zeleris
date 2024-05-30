@@ -11,13 +11,13 @@ const formatDate = (dateString) => {
 <template>
     <div v-show="!load && noPendingDocuments" class="text-center display-1">
 
-        <i class="bi bi-file-earmark-excel-fill "></i>
-        <h1>No hay documentos pendientes</h1>
+        <i class="bi bi-file-earmark-excel-fill icono-tamaño"></i>
+        <h4>No hay documentos pendientes</h4>
     </div>
     <table class="table shadow-sm" v-show="!load && !noPendingDocuments">
         <thead>
         <tr>
-            <th scope="col" class="col-auto"></th>
+            <th scope="col" class="col-auto">Descargar</th>
             <th scope="col" class="col-5">Motivo</th>
             <th scope="col" class="col-2 text-center">Días solicitados</th>
             <th scope="col" class="col-2 text-center">Fechas solicitadas</th>
@@ -65,5 +65,11 @@ const formatDate = (dateString) => {
 
 
 <style scoped>
-
+.icono-tamaño {
+    font-size: 50px; 
+}
+.scrollable-content {
+  max-height: 200px; /* Ajusta la altura máxima según tus necesidades */
+  overflow-y: auto;
+}
 </style>
