@@ -130,7 +130,7 @@ import {onMounted, ref} from 'vue';
 import axios from 'axios';
 import {useEmployee} from "@/api/teacherService.js";
 import router from "@/router/index.js";
-
+import Swal from 'sweetalert2';
 const {employee} = useEmployee();
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
@@ -143,7 +143,7 @@ const reason = ref('');
 const selectedReason = ref('');
 const isCheckboxChecked = ref(false);
 const errorMessage = ref('');
-const showModal = ref(false);
+//const showModal = ref(false);
 const showPasswordModal = ref(false);
 const password = ref('');
 const passwordError = ref('');
@@ -257,7 +257,18 @@ const enviarSolicitud = async () => {
         });
         console.log(response.data);
         if (response.data.success) {
-            showModal.value = true;
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Solicitud enviada", // Texto de la alerta
+                showConfirmButton: true,
+                confirmButtonText: 'Cerrar', // Texto del botón
+                customClass: {
+                    popup: 'swal2-popup',
+                    confirmButton: 'swal2-confirm'
+                }
+            });
+            //showModal.value = true;
         } else {
             throw new Error(response.data.message);
         }
@@ -290,6 +301,31 @@ const irDirecciones = () => {
 
 
 <style scoped>
+.swal2-popup .swal2-title, .swal2-popup .swal2-content {
+  font-size: 19px !important;
+  color: black;
+}
+.swal2-popup{
+    width: 320px !important; /* Ancho de la alerta */
+  height: 230px !important; /* Alto de la alerta */
+  align-items: center!important;
+  align-content: center !important;
+  padding-bottom: 30px  !important;
+}
+.swal2-confirm {
+  background-color: #fae3a0 !important;
+  color: black !important;
+  border: none !important;
+  box-shadow: none !important; /* Eliminar la sombra del botón */
+  font-size: 15px !important;
+  transition: .3s ease-in !important;
+}
+.swal2-confirm:hover {
+  background-color: #FCBF12 !important;
+  border: none !important;
+  color: black !important;
+}
+
 
 .layout {
     padding: 1rem;
