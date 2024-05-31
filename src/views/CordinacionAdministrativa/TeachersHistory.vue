@@ -124,16 +124,44 @@ const editEmployee = async () => {
 };
 
 const deleteEmployee = async (id) => {
-    if (confirm('¿Estás seguro de que deseas eliminar este empleado?')) {
-        const response = await APISEMPLOYEES.deleteEmployee(id);
-        if (response.success) {
-            console.log('Política eliminada con éxito:', response.data);
-            await fetchEmployees();
-        } else {
-            console.error('Error al eliminar la política:', response.data);
-            error.value = response.data;
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+        title: "¿Estás seguro de eliminarlo?",
+        text: "",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "No, cancelar",
+        reverseButtons: true
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            const response = await APISEMPLOYEES.deleteEmployee(id);
+            if (response.success) {
+                swalWithBootstrapButtons.fire(
+                    "Eliminado!",
+                    "El empleado ha sido eliminado.",
+                    "success"
+                );
+                await fetchEmployees();
+            } else {
+                console.error('Error al eliminar el empleado:', response.data);
+                error.value = response.data;
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire(
+                "Cancelado",
+                "El empleado está a salvo",
+                "error"
+            );
         }
-    }
+    });
 };
 
 onMounted(async () => {
@@ -378,24 +406,42 @@ watch(quantityPermissions, (newVal) => {
   color: black;
 }
 .swal2-popup{
-    width: 320px !important; /* Ancho de la alerta */
-  height: 230px !important; /* Alto de la alerta */
+    width: 340px !important; /* Ancho de la alerta */
+  height: 240px !important; /* Alto de la alerta */
   align-items: center!important;
   align-content: center !important;
   padding-bottom: 30px  !important;
 }
 .swal2-confirm {
   background-color: #fae3a0 !important;
+  border-radius: 6px;
   color: black !important;
   border: none !important;
   box-shadow: none !important; /* Eliminar la sombra del botón */
   font-size: 15px !important;
   transition: .3s ease-in !important;
+  margin-bottom: 10px;
 }
 .swal2-confirm:hover {
   background-color: #FCBF12 !important;
   border: none !important;
   color: black !important;
+}
+.swal2-cancel{
+    background-color: #758CA3;
+    border-radius: 6px;
+    color:white;
+    border: none !important;
+  box-shadow: none !important; /* Eliminar la sombra del botón */
+  font-size: 15px !important;
+  transition: .3s ease-in !important;
+  margin-bottom: 10px;
+  margin-right: 15px;
+}
+.swal2-cancel:hover {
+background-color: #1B365D !important;
+  border: none !important;
+  color:white !important;
 }
 .scrollable-content {
   max-height: 410px; /* Ajusta la altura máxima según tus necesidades */
