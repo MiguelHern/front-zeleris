@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import { APIS, APISEMPLOYEES, useEmployee } from '@/api/adminService.js';
+import {ref, computed, onMounted, watch} from 'vue';
+import {APIS, APISEMPLOYEES, useEmployee} from '@/api/adminService.js';
 import DependencyService from '@/scripts/Dependency.js';
 import Swal from 'sweetalert2'; // Importa SweetAlert2
 
@@ -11,7 +11,7 @@ const errorMessage = ref(null);
 const loading = ref(false);
 
 // Estado de paginación y datos
-const { employees, totalItems, totalPages, fetchEmployees, page } = useEmployee();
+const {employees, totalItems, totalPages, fetchEmployees, page} = useEmployee();
 const currentPage = computed(() => page.value);
 const itemsPerPage = 10;
 
@@ -210,6 +210,7 @@ watch(quantityPermissions, (newVal) => {
                     />
                     <button class="btn btn__new" @click="toggleModalNew">Agregar empleado</button>
                 </div>
+                <!--
                 <div>
                     <div class="mb-3">
                         <label for="rol" class="form-label">Rol:</label>
@@ -231,35 +232,36 @@ watch(quantityPermissions, (newVal) => {
                     <input type="date">
                     <input type="date">
                 </div>
+                -->
                 <section class="main__policies w-100 mt-4">
                     <table class="table shadow-sm">
                         <thead>
-                            <tr>
-                                <th class="col-1">Matrícula</th>
-                                <th class="col-2">Nombre</th>
-                                <th class="col-2">Email</th>
-                                <th class="col-3">Dependencia</th>
-                                <th class="col-1">Rol</th>
-                                <th scope="col" class="col-1">Editar</th>
-                                <th scope="col" class="col-1">Eliminar</th>
-                            </tr>
+                        <tr>
+                            <th class="col-1">Matrícula</th>
+                            <th class="col-2">Nombre</th>
+                            <th class="col-2">Email</th>
+                            <th class="col-3">Dependencia</th>
+                            <th class="col-1">Rol</th>
+                            <th scope="col" class="col-1">Editar</th>
+                            <th scope="col" class="col-1">Eliminar</th>
+                        </tr>
                         </thead>
                         <i v-if="loading" class="c-inline-spinner"></i>
                         <tbody>
-                            <tr v-for="employee in employees" :key="employee.id">
-                                <td>{{ employee.matricula }}</td>
-                                <td><span>{{ employee.name }}</span><span> {{ employee.lastName }}</span></td>
-                                <td>{{ employee.email }}</td>
-                                <td>{{ employee.dependency }}</td>
-                                <td>{{ employee.rol }}</td>
-                                <td class="align-content-center" role="button"
-                                    @click="toggleModalEdit(employee.id, employee.description)">
-                                    <i class="bi bi-pencil-square"></i>
-                                </td>
-                                <td class="align-content-center" role="button" @click="deleteEmployee(employee.id)">
-                                    <i class="bi bi-trash3-fill"></i>
-                                </td>
-                            </tr>
+                        <tr v-for="employee in employees" :key="employee.id">
+                            <td>{{ employee.matricula }}</td>
+                            <td><span>{{ employee.name }}</span><span> {{ employee.lastName }}</span></td>
+                            <td>{{ employee.email }}</td>
+                            <td>{{ employee.dependency }}</td>
+                            <td>{{ employee.rol }}</td>
+                            <td class="align-content-center" role="button"
+                                @click="toggleModalEdit(employee.id, employee.description)">
+                                <i class="bi bi-pencil-square"></i>
+                            </td>
+                            <td class="align-content-center" role="button" @click="deleteEmployee(employee.id)">
+                                <i class="bi bi-trash3-fill"></i>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </section>
@@ -267,11 +269,14 @@ watch(quantityPermissions, (newVal) => {
                     <ul class="pagination">
                         <li class="page-item">
                             <button class="page-link" style="color: var(--principal-color)!important;"
-                                    @click="previousPage" :disabled="currentPage === 1">Anterior</button>
+                                    @click="previousPage" :disabled="currentPage === 1">Anterior
+                            </button>
                         </li>
                         <li class="page-item">
-                            <div class="page-link" style="color: var(--principal-color)!important;">{{ currentPage
-                                }}</div>
+                            <div class="page-link" style="color: var(--principal-color)!important;">{{
+                                    currentPage
+                                }}
+                            </div>
                         </li>
                         <li class="page-item">
                             <div class="page-link" style="color: var(--principal-color)!important;">de</div>
@@ -282,7 +287,8 @@ watch(quantityPermissions, (newVal) => {
                         </li>
                         <li class="page-item">
                             <button class="page-link" style="color: var(--principal-color)!important;"
-                                    @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button>
+                                    @click="nextPage" :disabled="currentPage === totalPages">Siguiente
+                            </button>
                         </li>
                     </ul>
                 </nav>
@@ -301,7 +307,7 @@ watch(quantityPermissions, (newVal) => {
                 <textarea v-model="description" class="form-control modal__edit-text"></textarea>
                 <div class="buttons__edit">
                     <button type="button" @click="toggleModalEdit" class="btn__cancel btn">Cancelar</button>
-                    <input type="submit" class="btn btn__submit" value="Guardar" />
+                    <input type="submit" class="btn btn__submit" value="Guardar"/>
                 </div>
             </form>
         </div>
@@ -317,114 +323,120 @@ watch(quantityPermissions, (newVal) => {
             </div>
             <h3 class="text-center">Agregar docente</h3>
             <div class="scrollable-content">
-            <form @submit.prevent="newEmployee">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nombre:</label>
-                    <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required
-                        pattern="[A-Za-z ]+" title="Solo letras y espacios, sin números ni símbolos"
-                        @input="checkForSymbols">
-                </div>
-                <div class="mb-3">
-                    <label for="lastName" class="form-label">Apellido:</label>
-                    <input v-model="lastName" id="lastName" type="text" class="form-control" placeholder="Apellido"
-                        required pattern="[A-Za-z ]+" title="Solo letras y espacios, sin números ni símbolos"
-                        @input="checkForSymbols">
-                </div>
-                <div class="mb-3">
-                    <label for="rol" class="form-label">Rol:</label>
-                    <select v-model="rol" id="rol" class="form-control">
-                        <option disabled value="">Seleccione un rol</option>
-                        <option value="Director">Director</option>
-                        <option value="Docente">Docente</option>
-                        <option value="Coordinador">Coordinador de carrera</option>
-                        <option value="Admin">Coordinador administrativo</option>
-                        <option value="Administrativo">Administrativo</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="quantityPermissions" class="form-label">Cantidad de Permisos:</label>
-                    <select v-model.number="quantityPermissions" id="quantityPermissions" class="form-control">
-                        <option disabled value="">Seleccione cantidad de días</option>
-                        <option value=1>1</option>
-                        <option value=2>2</option>
-                        <option value=3>3</option>
-                        <option value=4>4</option>
-                        <option value=5>5</option>
-                        <option value=6>6</option>
-                        <option value=7>7</option>
-                        <option value=8>8</option>
-                        <option value=9>9</option>
-                        <option value=10>10</option>
-                        required
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="matricula" class="form-label">Número de empleado:</label>
-                    <input v-model="matricula" id="matricula" type="number" class="form-control" placeholder="Matrícula"
-                        required>
-                </div>
-                <div class="mb-3">
-                    <label for="dependencyId" class="form-label">ID de Dependencia:</label>
-                    <select v-model="dependencyId" id="dependencyId" class="form-control" required>
-                        <option disabled value="">Seleccione una dependencia</option>
-                        <option v-for="dependency in dependencies" :key="dependency.id" :value="dependency.id">
-                            {{ dependency.name }}
-                        </option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Correo Electrónico:</label>
-                    <input v-model="email" id="email" type="email" class="form-control" placeholder="Correo Electrónico"
-                        required>
-                    <small v-if="email.value && !validarEmail()" class="text-danger">El correo electrónico no es
-                        válido.</small>
-                </div>
-                <div class="d-grid gap-2 col-6 mx-auto">
-                    <button :disabled="!formularioValido" type="submit" class="btn btn-primary">
+                <form @submit.prevent="newEmployee">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre:</label>
+                        <input v-model="name" id="name" type="text" class="form-control" placeholder="Nombre" required
+                               pattern="[A-Za-z ]+" title="Solo letras y espacios, sin números ni símbolos"
+                               @input="checkForSymbols">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Apellido:</label>
+                        <input v-model="lastName" id="lastName" type="text" class="form-control" placeholder="Apellido"
+                               required pattern="[A-Za-z ]+" title="Solo letras y espacios, sin números ni símbolos"
+                               @input="checkForSymbols">
+                    </div>
+                    <div class="mb-3">
+                        <label for="rol" class="form-label">Rol:</label>
+                        <select v-model="rol" id="rol" class="form-control">
+                            <option disabled value="">Seleccione un rol</option>
+                            <option value="Director">Director</option>
+                            <option value="Docente">Docente</option>
+                            <option value="Coordinador">Coordinador de carrera</option>
+                            <option value="Admin">Coordinador administrativo</option>
+                            <option value="Administrativo">Administrativo</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantityPermissions" class="form-label">Cantidad de Permisos:</label>
+                        <select v-model.number="quantityPermissions" id="quantityPermissions" class="form-control">
+                            <option disabled value="">Seleccione cantidad de días</option>
+                            <option value=1>1</option>
+                            <option value=2>2</option>
+                            <option value=3>3</option>
+                            <option value=4>4</option>
+                            <option value=5>5</option>
+                            <option value=6>6</option>
+                            <option value=7>7</option>
+                            <option value=8>8</option>
+                            <option value=9>9</option>
+                            <option value=10>10</option>
+                            required
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="matricula" class="form-label">Número de empleado:</label>
+                        <input v-model="matricula" id="matricula" type="number" class="form-control"
+                               placeholder="Matrícula"
+                               required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dependencyId" class="form-label">ID de Dependencia:</label>
+                        <select v-model="dependencyId" id="dependencyId" class="form-control" required>
+                            <option disabled value="">Seleccione una dependencia</option>
+                            <option v-for="dependency in dependencies" :key="dependency.id" :value="dependency.id">
+                                {{ dependency.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico:</label>
+                        <input v-model="email" id="email" type="email" class="form-control"
+                               placeholder="Correo Electrónico"
+                               required>
+                        <small v-if="email.value && !validarEmail()" class="text-danger">El correo electrónico no es
+                            válido.</small>
+                    </div>
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <button :disabled="!formularioValido" type="submit" class="btn btn-primary">
                         <span v-if="loading" class="spinner-border spinner-border-sm" role="status"
-                            aria-hidden="true"></span>
-                        <span v-if="!loading">Enviar</span>
-                    </button>
-                </div>
-            </form>
+                              aria-hidden="true"></span>
+                            <span v-if="!loading">Enviar</span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </template>
 
 
-
-
 <style>
- .swal2-popup .swal2-title, .swal2-popup .swal2-content {
-  font-size: 19px !important;
-  color: black;
+.swal2-popup .swal2-title, .swal2-popup .swal2-content {
+    font-size: 19px !important;
+    color: black;
 }
-.swal2-popup{
+
+.swal2-popup {
     width: 320px !important; /* Ancho de la alerta */
-  height: 230px !important; /* Alto de la alerta */
-  align-items: center!important;
-  align-content: center !important;
-  padding-bottom: 30px  !important;
+    height: 230px !important; /* Alto de la alerta */
+    align-items: center !important;
+    align-content: center !important;
+    padding-bottom: 30px !important;
 }
+
 .swal2-confirm {
-  background-color: #fae3a0 !important;
-  color: black !important;
-  border: none !important;
-  box-shadow: none !important; /* Eliminar la sombra del botón */
-  font-size: 15px !important;
-  transition: .3s ease-in !important;
+    background-color: #fae3a0 !important;
+    color: black !important;
+    border: none !important;
+    box-shadow: none !important; /* Eliminar la sombra del botón */
+    font-size: 15px !important;
+    transition: .3s ease-in !important;
 }
+
 .swal2-confirm:hover {
-  background-color: #FCBF12 !important;
-  border: none !important;
-  color: black !important;
+    background-color: #FCBF12 !important;
+    border: none !important;
+    color: black !important;
 }
+
 .scrollable-content {
-  max-height: 410px; /* Ajusta la altura máxima según tus necesidades */
-  overflow-y: auto ;
+    max-height: 410px; /* Ajusta la altura máxima según tus necesidades */
+    overflow-y: auto;
+    scrollbar-width: thin;
 }
-.main__policies{
+
+.main__policies {
     height: 475px;
 }
 

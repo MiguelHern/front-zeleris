@@ -206,7 +206,6 @@ input[id="frontFInput"] {
 }
 
 .carta {
-    position: relative;
     width: 60%;
     padding: 20px;
     margin-top: -50px;
