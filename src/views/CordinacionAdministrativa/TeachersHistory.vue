@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import {APIS, APISEMPLOYEES, useEmployee} from '@/api/adminService.js';
+import { APIS, APISEMPLOYEES, useEmployee } from '@/api/adminService.js';
 import DependencyService from '@/scripts/Dependency.js';
+import Swal from 'sweetalert2'; // Importa SweetAlert2
 
 // Estados para los modales y validaciones
 const showModalEdit = ref(false);
@@ -155,6 +156,17 @@ const newEmployee = async () => {
         );
         if (response && response.success) {
             toggleModalNew();
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Empleado creado con éxito",
+                showConfirmButton: true,
+                confirmButtonText: 'Cerrar', // Texto del botón
+                customClass: {
+                    popup: 'swal2-popup',
+                    confirmButton: 'swal2-confirm'
+                }
+            });
             await fetchEmployees();
         } else {
             errorMessage.value = response ? response.message : 'Error al crear el docente';
@@ -281,6 +293,7 @@ watch(quantityPermissions, (newVal) => {
                 <span class="close" @click="toggleModalNew">&#x2716;</span>
             </div>
             <h3 class="text-center">Agregar docente</h3>
+            <div class="scrollable-content">
             <form @submit.prevent="newEmployee">
                 <div class="mb-3">
                     <label for="name" class="form-label">Nombre:</label>
@@ -351,6 +364,7 @@ watch(quantityPermissions, (newVal) => {
                     </button>
                 </div>
             </form>
+            </div>
         </div>
     </div>
 </template>
@@ -359,6 +373,34 @@ watch(quantityPermissions, (newVal) => {
 
 
 <style>
+ .swal2-popup .swal2-title, .swal2-popup .swal2-content {
+  font-size: 19px !important;
+  color: black;
+}
+.swal2-popup{
+    width: 320px !important; /* Ancho de la alerta */
+  height: 230px !important; /* Alto de la alerta */
+  align-items: center!important;
+  align-content: center !important;
+  padding-bottom: 30px  !important;
+}
+.swal2-confirm {
+  background-color: #fae3a0 !important;
+  color: black !important;
+  border: none !important;
+  box-shadow: none !important; /* Eliminar la sombra del botón */
+  font-size: 15px !important;
+  transition: .3s ease-in !important;
+}
+.swal2-confirm:hover {
+  background-color: #FCBF12 !important;
+  border: none !important;
+  color: black !important;
+}
+.scrollable-content {
+  max-height: 410px; /* Ajusta la altura máxima según tus necesidades */
+  overflow-y: auto ;
+}
 .main__policies{
     height: 475px;
 }
