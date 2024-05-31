@@ -1,7 +1,7 @@
 <script setup>
 import Header from "@/views/Layout/header.vue";
 import router from "@/router/index.js";
-import {onMounted, ref, watchEffect} from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 
 const botonActivo = ref(null);
 const loading = ref(false); // Variable para controlar la ventana de carga
@@ -32,28 +32,18 @@ const obtenerBotonActivo = () => {
     botonActivo.value = botonSaved;
 };
 
-//Cerrar sesión
 const cerrarSesion = async () => {
     loading.value = true;
     try {
-        // Aquí podrías agregar cualquier lógica adicional de cierre de sesión, como una llamada a un API
         await new Promise(resolve => setTimeout(resolve, 1000)); // Simulación de espera de 1 segundo
-
-        // Limpiar localStorage o cualquier otro estado de autenticación
         localStorage.removeItem('token');
-
         if (!localStorage.getItem('token')) {
             console.log('Token eliminado correctamente.');
         } else {
             console.error('Error al eliminar el token.');
         }
-
-        // Redirigir al login y usar replace para evitar volver a la página anterior
         router.replace('/');
-
-        // Reemplazar el estado del historial para evitar retroceder
         history.replaceState(null, '', '/');
-
     } catch (error) {
         console.error('Error al cerrar sesión:', error);
     } finally {
@@ -69,15 +59,16 @@ watchEffect(() => {
             verBotonActivo("TeachersHome");
             break;
         case "Teacher":
-            verBotonActivo("PoliciesTeacher");
-            break;
-        case "History":
-            verBotonActivo("History");
+            if (rutaActual.includes("Policies")) {
+                verBotonActivo("PoliciesTeacher");
+            } else if (rutaActual.includes("History")) {
+                verBotonActivo("History");
+            }
             break;
     }
 });
-
 </script>
+
 
 <template>
     <div class="container-fluid">
@@ -121,7 +112,6 @@ watchEffect(() => {
                         <router-view/>
                     </div>
                 </div>
-
                 <div class="main-footer">
                     <div class="footer_">
                         <div class="footer-content">
@@ -147,11 +137,12 @@ watchEffect(() => {
     </div>
 </template>
 
+
 <style scoped>
 .contenedor__router {
     height: calc(100vh - 100px);
 }
-.router__card{
+.router__card {
     background-color: #F5F5F5;
     height: 100%;
 }
@@ -166,10 +157,16 @@ watchEffect(() => {
     width: 70px;
 }
 
-.botonNavegacion.active {
+.botonNavegacion.active .menu__icon {
+    cursor: default;
+    color: var(--principal-color);
+}
+.botonNavegacion.active{
     cursor: default;
 }
-
+.botonNavegacion.active .menu__overlay{
+    display: none;
+}
 
 .botonNavegacion.active:hover svg path {
     fill: #758CA3;

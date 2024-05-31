@@ -1,62 +1,54 @@
 <script setup>
 import Header from "@/views/Layout/header.vue";
 import router from "@/router/index.js";
-import {onMounted, ref, watchEffect} from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import Footer from "@/components/Footer.vue";
 
-const botonActivo = ref(null)
+const botonActivo = ref(null);
 const loading = ref(false); // Variable para controlar la ventana de carga
 
 onMounted(() => {
     obtenerBotonActivo();
-})
+});
+
 const irHomeCordinacion = () => {
-    router.push('/PrincipalHome')
-}
+    router.push('/PrincipalHome');
+};
 const irPoliticas = () => {
-    router.push('/Principal/Policies')
-}
+    router.push('/Principal/Policies');
+};
 const irHistorial = () => {
-    router.push('/Principal/History')
-}
+    router.push('/Principal/History');
+};
 const irDependencies = () => {
-    router.push('/Principal/Dependencies')
-}
+    router.push('/Principal/Dependencies');
+};
 const irProfile = () => {
-    router.push('/Principal/Profile')
-}
+    router.push('/Principal/Profile');
+};
 
 const verBotonActivo = (button) => {
     botonActivo.value = button;
-    localStorage.setItem('botonActivo', button)
-}
+    localStorage.setItem('botonActivo', button);
+};
 
 const obtenerBotonActivo = () => {
-    const botonSaved = localStorage.getItem('botonActivo')
-    botonActivo.value = botonSaved
-}
+    const botonSaved = localStorage.getItem('botonActivo');
+    botonActivo.value = botonSaved;
+};
 
 const cerrarSesion = async () => {
     loading.value = true;
     try {
-        // Aquí podrías agregar cualquier lógica adicional de cierre de sesión, como una llamada a un API
         await new Promise(resolve => setTimeout(resolve, 1000)); // Simulación de espera de 1 segundo
-
-        // Limpiar localStorage o cualquier otro estado de autenticación
         localStorage.removeItem('token');
-
         if (!localStorage.getItem('token')) {
             console.log('Token eliminado correctamente.');
         } else {
             console.error('Error al eliminar el token.');
         }
-
-        // Redirigir al login y usar replace para evitar volver a la página anterior
         router.replace('/');
-
-        // Reemplazar el estado del historial para evitar retroceder
         history.replaceState(null, '', '/');
-
     } catch (error) {
         console.error('Error al cerrar sesión:', error);
     } finally {
@@ -66,24 +58,26 @@ const cerrarSesion = async () => {
 
 watchEffect(() => {
     const rutaActual = router.currentRoute.value.path;
-    const primerPath = rutaActual.split('/')[1]; // Corrección aquí
-    switch (primerPath) { // Cambio de rutaActual a primerPath
-        case "TeachersHome":
-            verBotonActivo("TeachersHome");
+    const primerPath = rutaActual.split('/')[1];
+    switch (primerPath) {
+        case "PrincipalHome":
+            verBotonActivo("PrincipalHome");
             break;
-        case "PoliciesTeacher":
-            verBotonActivo("PoliciesTeacher");
-            break;
-        case "History":
-            verBotonActivo("History");
-            break;
-        case "Dependencies":
-            verBotonActivo("Dependencies");
+        case "Principal":
+            if (rutaActual.includes("Policies")) {
+                verBotonActivo("PoliciesTeacher");
+            } else if (rutaActual.includes("History")) {
+                verBotonActivo("History");
+            } else if (rutaActual.includes("Dependencies")) {
+                verBotonActivo("Dependencies");
+            } else if (rutaActual.includes("Profile")) {
+                verBotonActivo("Profile");
+            }
             break;
     }
 });
-
 </script>
+
 
 <template>
     <div class="container-fluid">
@@ -92,7 +86,7 @@ watchEffect(() => {
             <div class="spinner"></div>
         </div>
         <div class="row vh-100 flex-nowrap">
-            <nav class="col-1 d-flex flex-column justify-content-between layout__aside" style="padding: 80px 0 0 0 ;">
+            <nav class="col-1 d-flex flex-column justify-content-between layout__aside" style="padding: 80px 0 0 0;">
                 <ul class="menu__list">
                     <li class="text-center botonNavegacion menu__option" @click="irProfile"
                         :class="{ active: botonActivo === 'Profile' }">
@@ -100,13 +94,13 @@ watchEffect(() => {
                         <span class="menu__overlay">Perfil</span>
                     </li>
                     <li class="text-center botonNavegacion menu__option" @click="irHomeCordinacion"
-                        :class="{ active: botonActivo === 'TeachersHome' }">
+                        :class="{ active: botonActivo === 'PrincipalHome' }">
                         <i class="menu__icon bi bi-house"></i>
                         <span class="menu__overlay">Inicio</span>
                     </li>
                     <li class="text-center botonNavegacion menu__option" @click="irHistorial"
                         :class="{ active: botonActivo === 'History' }">
-                        <i class=" menu__icon bi bi-people"></i>
+                        <i class="menu__icon bi bi-people"></i>
                         <span class="menu__overlay">Empleados</span>
                     </li>
                     <li class="text-center botonNavegacion menu__option" @click="irPoliticas"
@@ -115,7 +109,7 @@ watchEffect(() => {
                         <span class="menu__overlay">Políticas</span>
                     </li>
                     <li class="text-center botonNavegacion menu__option" @click="irDependencies"
-                        :class="{ active: botonActivo === 'PoliciesTeacher' }">
+                        :class="{ active: botonActivo === 'Dependencies' }">
                         <i class="menu__icon bi bi-collection"></i>
                         <span class="menu__overlay">Dependencies</span>
                     </li>
@@ -157,6 +151,7 @@ watchEffect(() => {
     </div>
 </template>
 
+
 <style scoped>
 .col-1 {
     width: 70px;
@@ -169,7 +164,12 @@ watchEffect(() => {
 
 .botonNavegacion.active {
     cursor: default;
+}
+.botonNavegacion.active .menu__icon{
     color: var(--principal-color);
+}
+.botonNavegacion.active .menu__overlay{
+    display: none;
 }
 
 .botonNavegacion.active:hover svg path {

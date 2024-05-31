@@ -7,12 +7,8 @@ export default {
             email: '',
             password: '',
             error: '',
-            loading: false // Variable para controlar la ventana de carga
+            loading: false
         };
-    },
-
-    mounted() {
-        console.log(import.meta.env.VITE_APP_API_URL);
     },
 
     methods: {
@@ -24,8 +20,6 @@ export default {
                 const respuesta = await auth.login(this.email, this.password);
 
                 if (respuesta.success) {
-                    console.log('Respuesta del servidor:', respuesta.data.token);
-                    console.log('Respuesta del servidor:', respuesta.data);
                     localStorage.token = respuesta.data.token;
                     localStorage.rol = respuesta.data.rol;
                     localStorage.username = respuesta.data.usearname;

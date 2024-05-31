@@ -96,10 +96,14 @@ const searchEmployee = async (nombre) => {
     if (resultado.success) {
         console.log('Datos del empleado:', resultado.data);
         employees.value = resultado.data.data;
+        totalItems.value = resultado.data.totalItems; // Actualiza el número total de elementos
+        totalPages.value = Math.ceil(totalItems.value / itemsPerPage); // Actualiza el número total de páginas
+        page.value = 1; // Vuelve a la primera página después de una búsqueda
     } else {
         console.error('Error al buscar el empleado:', resultado.data);
     }
 };
+
 
 const buscarEmpleado = () => {
     if (searchQuery.value.trim() === '') {
@@ -108,7 +112,6 @@ const buscarEmpleado = () => {
         searchEmployee(searchQuery.value);
     }
 };
-
 
 const editEmployee = async () => {
     const response = await APIS.editPolice(selectedPolicyId.value, description.value);
@@ -195,6 +198,27 @@ watch(quantityPermissions, (newVal) => {
                     />
                     <button class="btn btn__new" @click="toggleModalNew">Agregar empleado</button>
                 </div>
+                <div>
+                    <div class="mb-3">
+                        <label for="rol" class="form-label">Rol:</label>
+                        <select v-model="rol" id="rol" class="form-control">
+                            <option disabled value="">Seleccione un rol</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rol" class="form-label">Rol:</label>
+                        <select v-model="rol" id="rol" class="form-control">
+                            <option disabled value="">Seleccione un rol</option>
+                            <option value="Director">Director</option>
+                            <option value="Docente">Docente</option>
+                            <option value="Coordinador">Coordinador de carrera</option>
+                            <option value="Admin">Coordinador administrativo</option>
+                            <option value="Administrativo">Administrativo</option>
+                        </select>
+                    </div>
+                    <input type="date">
+                    <input type="date">
+                </div>
                 <section class="main__policies w-100 mt-4">
                     <table class="table shadow-sm">
                         <thead>
@@ -270,7 +294,6 @@ watch(quantityPermissions, (newVal) => {
             </form>
         </div>
     </div>
-
 
     <div v-if="showModalNew" class="modal">
         <div class="modal-content">

@@ -1,40 +1,67 @@
 <script setup>
 import Header from "@/views/Layout/header.vue";
 import router from "@/router/index.js";
-import {onMounted, ref, watchEffect} from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import Footer from "@/components/Footer.vue";
 
-const botonActivo = ref(null)
+const botonActivo = ref(null);
 const loading = ref(false); // Variable para controlar la ventana de carga
 
 onMounted(() => {
     obtenerBotonActivo();
-})
+    establecerBotonActivoPorRuta();
+});
+
 const irHomeCordinacion = () => {
-    router.push('/AdminHome')
-}
+    router.push('/AdminHome');
+};
 const irPoliticas = () => {
-    router.push('/Admin/Policies')
-}
+    router.push('/Admin/Policies');
+};
 const irHistorial = () => {
-    router.push('/Admin/History')
-}
+    router.push('/Admin/History');
+};
 const irDependencies = () => {
-    router.push('/Admin/Dependencies')
-}
+    router.push('/Admin/Dependencies');
+};
 const irProfile = () => {
-    router.push('/Admin/Profile')
-}
+    router.push('/Admin/Profile');
+};
 
 const verBotonActivo = (button) => {
     botonActivo.value = button;
-    localStorage.setItem('botonActivo', button)
-}
+    localStorage.setItem('botonActivo', button);
+};
 
 const obtenerBotonActivo = () => {
-    const botonSaved = localStorage.getItem('botonActivo')
-    botonActivo.value = botonSaved
-}
+    const botonSaved = localStorage.getItem('botonActivo');
+    if (botonSaved) {
+        botonActivo.value = botonSaved;
+    } else {
+        const rutaActual = router.currentRoute.value.path;
+        const tercerPath = rutaActual.split('/')[2] || rutaActual.split('/')[1]; // Considerar ambos niveles de path
+        switch (tercerPath) {
+            case "Home":
+                verBotonActivo("TeachersHome");
+                break;
+            case "Policies":
+                verBotonActivo("PoliciesTeacher");
+                break;
+            case "History":
+                verBotonActivo("History");
+                break;
+            case "Dependencies":
+                verBotonActivo("Dependencies");
+                break;
+            case "Profile":
+                verBotonActivo("Profile");
+                break;
+            default:
+                verBotonActivo(null);
+                break;
+        }
+    }
+};
 
 const cerrarSesion = async () => {
     loading.value = true;
@@ -64,14 +91,14 @@ const cerrarSesion = async () => {
     }
 };
 
-watchEffect(() => {
+const establecerBotonActivoPorRuta = () => {
     const rutaActual = router.currentRoute.value.path;
-    const primerPath = rutaActual.split('/')[1]; // Corrección aquí
-    switch (primerPath) { // Cambio de rutaActual a primerPath
-        case "TeachersHome":
+    const tercerPath = rutaActual.split('/')[2] || rutaActual.split('/')[1]; // Considerar ambos niveles de path
+    switch (tercerPath) {
+        case "AdminHome":
             verBotonActivo("TeachersHome");
             break;
-        case "PoliciesTeacher":
+        case "Policies":
             verBotonActivo("PoliciesTeacher");
             break;
         case "History":
@@ -80,10 +107,26 @@ watchEffect(() => {
         case "Dependencies":
             verBotonActivo("Dependencies");
             break;
+        case "Profile":
+            verBotonActivo("Profile");
+            break;
+        default:
+            verBotonActivo(null);
+            break;
     }
-});
+};
 
+watchEffect(() => {
+    establecerBotonActivoPorRuta();
+    router.afterEach(() => {
+        establecerBotonActivoPorRuta();
+    });
+});
 </script>
+
+
+
+
 
 <template>
     <div class="container-fluid">
@@ -115,7 +158,7 @@ watchEffect(() => {
                         <span class="menu__overlay">Políticas</span>
                     </li>
                     <li class="text-center botonNavegacion menu__option" @click="irDependencies"
-                        :class="{ active: botonActivo === 'PoliciesTeacher' }">
+                        :class="{ active: botonActivo === 'Dependencies' }">
                         <i class="menu__icon bi bi-collection"></i>
                         <span class="menu__overlay">Dependencias</span>
                     </li>
@@ -157,19 +200,24 @@ watchEffect(() => {
     </div>
 </template>
 
+
+
+
+
 <style scoped>
 .col-1 {
     width: 70px;
 }
 
-.botonNavegacion:hover svg path {
-    fill: #0d6efd;
-    transition: .2s;
-}
-
-.botonNavegacion.active {
-    cursor: default;
+.botonNavegacion.active .menu__icon {
     color: var(--principal-color);
+    cursor: default;
+}
+.botonNavegacion.active{
+    cursor: default;
+}
+.botonNavegacion.active .menu__overlay {
+    display: none;
 }
 
 .botonNavegacion.active:hover svg path {

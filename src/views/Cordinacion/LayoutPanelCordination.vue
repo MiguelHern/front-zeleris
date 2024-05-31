@@ -9,51 +9,91 @@ const loading = ref(false); // Variable para controlar la ventana de carga
 
 onMounted(() => {
     obtenerBotonActivo();
+    establecerBotonActivoPorRuta();
 })
+
 const irHomeCordinacion = () => {
-    router.push('/CordinationHome')
+    router.push('/CordinationHome');
 }
+
 const irPoliticas = () => {
-    router.push('/Cordination/Polices')
+    router.push('/Cordination/Polices');
 }
+
 const irProfile = () => {
-    router.push('/Cordination/Profile')
+    router.push('/Cordination/Profile');
 }
+
 const irHistorial = () => {
-    router.push('/Cordination/HistorialPermisos')
+    router.push('/Cordination/HistorialPermisos');
 }
 
 const verBotonActivo = (button) => {
     botonActivo.value = button;
-    localStorage.setItem('botonActivo', button)
+    localStorage.setItem('botonActivo', button);
 }
 
 const obtenerBotonActivo = () => {
-    const botonSaved = localStorage.getItem('botonActivo')
-    botonActivo.value = botonSaved
+    const botonSaved = localStorage.getItem('botonActivo');
+    if (botonSaved) {
+        botonActivo.value = botonSaved;
+    } else {
+        const rutaActual = router.currentRoute.value.path;
+        const tercerPath = rutaActual.split('/')[2] || rutaActual.split('/')[1];
+        switch (tercerPath) {
+            case "CordinationHome":
+                verBotonActivo("TeachersHome");
+                break;
+            case "Polices":
+                verBotonActivo("PoliciesTeacher");
+                break;
+            case "HistorialPermisos":
+                verBotonActivo("History");
+                break;
+            case "Profile":
+                verBotonActivo("Profile");
+                break;
+            default:
+                verBotonActivo(null);
+                break;
+        }
+    }
+}
+
+const establecerBotonActivoPorRuta = () => {
+    const rutaActual = router.currentRoute.value.path;
+    const tercerPath = rutaActual.split('/')[2] || rutaActual.split('/')[1];
+    switch (tercerPath) {
+        case "CordinationHome":
+            verBotonActivo("TeachersHome");
+            break;
+        case "Polices":
+            verBotonActivo("PoliciesTeacher");
+            break;
+        case "HistorialPermisos":
+            verBotonActivo("History");
+            break;
+        case "Profile":
+            verBotonActivo("Profile");
+            break;
+        default:
+            verBotonActivo(null);
+            break;
+    }
 }
 
 const cerrarSesion = async () => {
     loading.value = true;
     try {
-        // Aquí podrías agregar cualquier lógica adicional de cierre de sesión, como una llamada a un API
         await new Promise(resolve => setTimeout(resolve, 1000)); // Simulación de espera de 1 segundo
-
-        // Limpiar localStorage o cualquier otro estado de autenticación
         localStorage.removeItem('token');
-
         if (!localStorage.getItem('token')) {
             console.log('Token eliminado correctamente.');
         } else {
             console.error('Error al eliminar el token.');
         }
-
-        // Redirigir al login y usar replace para evitar volver a la página anterior
         router.replace('/');
-
-        // Reemplazar el estado del historial para evitar retroceder
         history.replaceState(null, '', '/');
-
     } catch (error) {
         console.error('Error al cerrar sesión:', error);
     } finally {
@@ -62,22 +102,10 @@ const cerrarSesion = async () => {
 };
 
 watchEffect(() => {
-    const rutaActual = router.currentRoute.value.path;
-    const primerPath = rutaActual.split('/')[1]; // Corrección aquí
-    switch (primerPath) { // Cambio de rutaActual a primerPath
-        case "TeachersHome":
-            verBotonActivo("TeachersHome");
-            break;
-        case "PoliciesTeacher":
-            verBotonActivo("PoliciesTeacher");
-            break;
-        case "History":
-            verBotonActivo("History");
-            break;
-        case "Profile":
-            verBotonActivo("Profile");
-            break;
-    }
+    establecerBotonActivoPorRuta();
+    router.afterEach(() => {
+        establecerBotonActivoPorRuta();
+    });
 });
 
 </script>
@@ -97,7 +125,7 @@ watchEffect(() => {
                         <span class="menu__overlay">Perfil</span>
                     </li>
                     <li class="text-center botonNavegacion menu__option" @click="irHistorial"
-                        :class="{ active: botonActivo === 'PoliciesTeacher' }">
+                        :class="{ active: botonActivo === 'History' }">
                         <i class="menu__icon bi bi-clock-history"></i>
                         <span class="menu__overlay">Historial</span>
                     </li>
@@ -159,11 +187,16 @@ watchEffect(() => {
     transition: .2s;
 }
 
-.botonNavegacion.active {
+.botonNavegacion.active .menu__icon{
     cursor: default;
     color: var(--principal-color);
 }
-
+.botonNavegacion.active{
+    cursor: default;
+}
+.botonNavegacion.active .menu__overlay{
+    display: none;
+}
 .botonNavegacion.active:hover svg path {
     fill: #758CA3;
 }
