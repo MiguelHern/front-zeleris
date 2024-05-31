@@ -63,7 +63,7 @@ const createDownloadLink = (base64String) => {
         const link = document.createElement('a');
         link.href = url;
         link.download = "PermisoEconómico.docx";
-        link.style.display = 'none'; // Asegurarse de que el link no sea visible en el DOM
+        link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -78,8 +78,10 @@ const createDownloadLink = (base64String) => {
 
 <template>
     <div v-show="!loading && noHistory" class="text-center display-1">
-        <i class="bi bi-file-earmark-excel-fill "></i>
-        <h1>Historial de permisos vacío</h1>
+        <div>
+            <i class="bi bi-file-earmark-excel-fill icono-tamaño"></i>
+            <h4>Historial de permisos vacío</h4>
+        </div>
     </div>
     <table class="table shadow-sm" v-show="!loading && !noHistory">
         <thead>
@@ -100,18 +102,19 @@ const createDownloadLink = (base64String) => {
                 {{ permission.reason }}
             </td>
             <td class="text-center align-content-center">{{ formatDate(permission.createdDate) }}</td>
-            <td class="text-center align-content-center">
-                <ul>
-                    <li v-for="dateRequest in permission.datesRequests" :key="dateRequest.id">
-                        {{ dateRequest.requestDate }}
-                    </li>
-                </ul>
+            
+            <td class="text-center">
+                <div v-for="date in permission.dates" :key="date.id">
+                    {{ new Date(date.dates).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) }}
+                </div>
             </td>
-            <td :class="{'pending': permission.status === 'Pendiente', 'approved': permission.status === 'aprobado'}" class="text-center align-content-center">{{ permission.status }}</td>
+
+            <td class="text-center align-content-center"> {{ permission.status }}</td>
         </tr>
         </tbody>
     </table>
 </template>
+
 
 
 <style scoped>
@@ -127,6 +130,9 @@ const createDownloadLink = (base64String) => {
 }
 .icono:hover{
     color: var(--secondary-color);
+}
+.icono-tamaño {
+    font-size: 50px; 
 }
 
 </style>

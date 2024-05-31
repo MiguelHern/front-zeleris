@@ -13,12 +13,12 @@ const noHistory = ref(false);
 <template>
   <div class="layout">
     <header class="header__cordinacion p-4 mb-0">
-      <h1 class="text-center">Historial de permisos</h1>
+      <h2 class="text-center">Historial de permisos</h2>
     </header>
-      <main class="d-flex flex-column p-3">
+      <main class="d-flex flex-column p-3  scrollable-content">
           <div class="pending">
               <header class="history__header">
-                  <h1 class="fs-3">Permisos pendientes</h1>
+                  <h1 class="fs-3" style="margin-bottom: 10px;">Permisos pendientes</h1>
               </header>
               <div class="layout__table">
                   <pending-permissions></pending-permissions>
@@ -26,7 +26,7 @@ const noHistory = ref(false);
           </div>
           <div class="history">
               <header class="history__header">
-                  <h1 class="fs-3">Historial</h1>
+                  <h1 class="fs-3" style="margin-bottom: 10px; margin-top: 10px;">Historial</h1>
               </header>
               <div class="layout__table">
                   <table-history></table-history>
@@ -39,5 +39,8 @@ const noHistory = ref(false);
 </template>
 
 <style scoped>
-
+.scrollable-content {
+  max-height: 400px; /* Ajusta la altura máxima según tus necesidades */
+  overflow-y: auto;
+}
 </style>
