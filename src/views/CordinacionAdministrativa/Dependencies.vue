@@ -1,8 +1,9 @@
 <script setup>
-import {computed, onMounted, ref} from 'vue';
-import {APIS, APISDEPENDENCE, useDependencies, useEmployee} from "@/api/adminService.js";
+import { computed, onMounted, ref } from 'vue';
+import { APIS, APISDEPENDENCE, useDependencies, useEmployee } from "@/api/adminService.js";
+import Swal from 'sweetalert2';
 
-const {employees} = useEmployee();
+const { employees } = useEmployee();
 const selectedEmployeeId = ref(null);
 
 const selectedEmployeeName = computed(() => {
@@ -38,8 +39,8 @@ const toggleModalNew = () => {
 const dependencies = ref({});
 
 const loadDependencies = async () => {
-    loading.value = true
-    const {data, success, error: fetchError} = await useDependencies();
+    loading.value = true;
+    const { data, success, error: fetchError } = await useDependencies();
     if (success) {
         dependencies.value = data.data;
         loading.value = false;
@@ -53,32 +54,59 @@ const newDependence = async () => {
     const response = await APISDEPENDENCE.newDependence(name.value, phone.value, selectedDependenceId.value);
     console.log(response);
     showModalNew.value = false;
+    Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Dependencia creada con éxito",
+        showConfirmButton: true,
+        confirmButtonText: 'Cerrar',
+        customClass: {
+            popup: 'swal2-popup',
+            confirmButton: 'swal2-confirm'
+        }
+    });
     await loadDependencies();
 };
-/*
-const editDependence = async () => {
-    const response = await APISDEPENDENCE.editDependence(name.value, phone.value, selectedDependenceId.value);
-    if (response.success) {
-        showModalEdit.value = false;
-        console.log('Política editada con éxito:', response.data);
-        await loadDependencies();
-    } else {
-        console.error('Error al editar la política:', response.data);
-        error.value = response.data;
-    }
-};
-*/
+
 const deleteDependence = async (id) => {
-    if (confirm('¿Estás seguro de que deseas eliminar esta política?')) {
-        const response = await APISDEPENDENCE.deleteDependence(id);
-        if (response.success) {
-            console.log('Política eliminada con éxito:', response.data);
-            await loadDependencies();
-        } else {
-            console.error('Error al eliminar la política:', response.data);
-            error.value = response.data;
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+        title: "¿Estás seguro de eliminarlo?",
+        text: "",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "No, cancelar",
+        reverseButtons: true
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            const response = await APISDEPENDENCE.deleteDependence(id);
+            if (response.success) {
+                swalWithBootstrapButtons.fire(
+                    "Eliminado!",
+                    "La dependencia ha sido eliminada.",
+                    "success"
+                );
+                await loadDependencies();
+            } else {
+                console.error('Error al eliminar la dependencia:', response.data);
+                error.value = response.data;
+            }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire(
+                "Cancelado",
+                "La dependencia está a salvo",
+                "error"
+            );
         }
-    }
+    });
 };
 
 onMounted(async () => {
@@ -195,6 +223,48 @@ onMounted(async () => {
 
 
 <style scoped>
+.swal2-popup .swal2-title, .swal2-popup .swal2-content {
+  font-size: 19px !important;
+  color: black;
+}
+.swal2-popup{
+    width: 340px !important; /* Ancho de la alerta */
+  height: 240px !important; /* Alto de la alerta */
+  align-items: center!important;
+  align-content: center !important;
+  padding-bottom: 30px  !important;
+}
+.swal2-confirm {
+  background-color: #fae3a0 !important;
+  border-radius: 6px;
+  color: black !important;
+  border: none !important;
+  box-shadow: none !important; /* Eliminar la sombra del botón */
+  font-size: 15px !important;
+  transition: .3s ease-in !important;
+  margin-bottom: 10px;
+}
+.swal2-confirm:hover {
+  background-color: #FCBF12 !important;
+  border: none !important;
+  color: black !important;
+}
+.swal2-cancel{
+    background-color: #758CA3;
+    border-radius: 6px;
+    color:white;
+    border: none !important;
+  box-shadow: none !important; /* Eliminar la sombra del botón */
+  font-size: 15px !important;
+  transition: .3s ease-in !important;
+  margin-bottom: 10px;
+  margin-right: 15px;
+}
+.swal2-cancel:hover {
+background-color: #1B365D !important;
+  border: none !important;
+  color:white !important;
+}
 .btn__new {
     background-color: var(--grayy);
     color: var(--white-color);

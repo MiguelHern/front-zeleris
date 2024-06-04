@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { APIS } from "@/api/adminService.js";
 import { allPolices } from "@/api/allService.js";
+import Swal from 'sweetalert2'; // Importa SweetAlert2
 
 const showModalEdit = ref(false);
 const showModalNew = ref(false);
@@ -25,6 +26,17 @@ const newPolice = async () => {
     const response = await APIS.newPolice(description.value, createdDate);
     console.log(response);
     showModalNew.value = false;
+    Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Política creada",
+                showConfirmButton: true,
+                confirmButtonText: 'Cerrar', // Texto del botón
+                customClass: {
+                    popup: 'swal2-popup',
+                    confirmButton: 'swal2-confirm'
+                }
+            });
     await loadPolicies();
 };
 
@@ -151,6 +163,49 @@ onMounted(async () => {
 
 
 <style scoped>
+.swal2-popup .swal2-title, .swal2-popup .swal2-content {
+  font-size: 19px !important;
+  color: black;
+}
+.swal2-popup{
+    width: 340px !important; /* Ancho de la alerta */
+  height: 240px !important; /* Alto de la alerta */
+  align-items: center!important;
+  align-content: center !important;
+  padding-bottom: 30px  !important;
+}
+.swal2-confirm {
+  background-color: #fae3a0 !important;
+  border-radius: 6px;
+  color: black !important;
+  border: none !important;
+  box-shadow: none !important; /* Eliminar la sombra del botón */
+  font-size: 15px !important;
+  transition: .3s ease-in !important;
+  margin-bottom: 10px;
+}
+.swal2-confirm:hover {
+  background-color: #FCBF12 !important;
+  border: none !important;
+  color: black !important;
+}
+.swal2-cancel{
+    background-color: #758CA3;
+    border-radius: 6px;
+    color:white;
+    border: none !important;
+  box-shadow: none !important; /* Eliminar la sombra del botón */
+  font-size: 15px !important;
+  transition: .3s ease-in !important;
+  margin-bottom: 10px;
+  margin-right: 15px;
+}
+.swal2-cancel:hover {
+background-color: #1B365D !important;
+  border: none !important;
+  color:white !important;
+}
+
 .btn__new{
     background-color: var(--grayy);
     color: var(--white-color);
