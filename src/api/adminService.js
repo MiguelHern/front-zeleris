@@ -400,4 +400,25 @@ export const APISEMPLOYEES = {
             return {success: false, data: error};
         }
     },
+    employeeHistory: async (employeeId) => {
+        try {
+            const token = localStorage.token;
+            const response = await axios.get(`${API_BASE_URL}/Documents/history/${employeeId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.data || !response.data.success) {
+                console.error('Error al buscar el empleado:', response.data);
+                return {success: false, data: response.data};
+            }
+            console.log('Empleado encontrado con éxito:', response.data);
+            return {success: true, data: response.data};
+        } catch (error) {
+            console.error('Error al buscar el empleado:', error);
+            return {success: false, data: error};
+        }
+    },
+
 }

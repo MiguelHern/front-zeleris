@@ -2,7 +2,8 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { APIS, APISEMPLOYEES, useEmployee } from '@/api/adminService.js';
 import DependencyService from '@/scripts/Dependency.js';
-import Swal from 'sweetalert2'; // Importa SweetAlert2
+import Swal from 'sweetalert2';
+import router from "@/router/index.js"; // Importa SweetAlert2
 
 // Estados para los modales y validaciones
 const showModalEdit = ref(false);
@@ -101,6 +102,9 @@ const searchEmployee = async (nombre) => {
         console.error('Error al buscar el empleado:', resultado.data);
     }
 };
+const irHistorial = (id) => {
+    router.push(`/Admin/historyUsuario/${id}`)
+}
 
 const buscarEmpleado = () => {
     if (searchQuery.value.trim() === '') {
@@ -109,7 +113,6 @@ const buscarEmpleado = () => {
         searchEmployee(searchQuery.value);
     }
 };
-
 
 const editEmployee = async () => {
     const response = await APIS.editPolice(selectedPolicyId.value, description.value);
@@ -165,10 +168,13 @@ const deleteEmployee = async (id) => {
 };
 
 onMounted(async () => {
+    loading.value = true;
     await fetchEmployees();
+    loading.value = false;
     const response = await dependencyService.getDependencies();
     dependencies.value = response.data;
 });
+
 
 const newEmployee = async () => {
     loading.value = true;
@@ -248,11 +254,13 @@ watch(quantityPermissions, (newVal) => {
                                 <th scope="col" class="col-1">Eliminar</th>
                             </tr>
                         </thead>
-                        <i v-if="loading" class="c-inline-spinner"></i>
+                        <i v-show="loading" class="c-inline-spinner"></i>
                         <tbody>
                             <tr v-for="employee in employees" :key="employee.id">
                                 <td>{{ employee.matricula }}</td>
-                                <td><span>{{ employee.name }}</span><span> {{ employee.lastName }}</span></td>
+                                <td role="button" @click="irHistorial(employee.id)">
+                                    <span>{{ employee.name }}</span><span> {{ employee.lastName }}</span>
+                                </td>
                                 <td>{{ employee.email }}</td>
                                 <td>{{ employee.dependency }}</td>
                                 <td>{{ employee.rol }}</td>

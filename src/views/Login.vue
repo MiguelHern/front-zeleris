@@ -84,12 +84,12 @@ export default {
                 </div>
                 <form @submit.prevent="iniciarSesion" class="login__form">
                     <div class="form__group">
-                        <input v-model="email" type="email" class="form__input card" name="email" required
+                        <input v-model="email" type="email" class="form__input card form-control" name="email" required
                             placeholder="Email">
                         <label for="email" class="form__label">Email</label>
                     </div>
                     <div class="form__group">
-                        <input v-model="password" type="password" class="form__input card" name="contraseña" required
+                        <input v-model="password" type="password" class="form__input card form-control" name="contraseña" required
                             placeholder="Contraseña">
                         <label for="contraseña" class="form__label">Contraseña</label>
                     </div>

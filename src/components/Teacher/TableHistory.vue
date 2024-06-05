@@ -15,14 +15,12 @@ const formatDate = (dateString) => {
 
 onMounted(async () => {
     const { data, success } = await fetchDocumentHistory();
-
     if (success) {
         permissions.value = data.data;
         if (data && data.success === false && data.message === "No leave history found for the specified employee.") {
             console.log("No hay historial de documentos pendientes en este momento.");
             noHistory.value = true;
         }
-
         console.log("dato")
         console.log(permissions.value)
     } else {
@@ -43,12 +41,22 @@ const downloadFile = async (file) => {
             var res = createDownloadLink(data.data.file)
 
         })
-
     console.log(response)
-
-    //var liga = URL.createObjectURL(file)
 }
+const downloadFileWithoutSign = async (file) => {
 
+    var response = await fetch(API_BASE_URL + "/Documents/nosign/" + file, {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.token
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            var res = createDownloadLink(data.data.file)
+
+        })
+    console.log(response)
+}
 const createDownloadLink = (base64String) => {
     try {
         const binaryString = window.atob(base64String);
@@ -86,7 +94,8 @@ const createDownloadLink = (base64String) => {
     <table class="table shadow-sm" v-show="!loading && !noHistory">
         <thead>
         <tr>
-            <th scope="col" class="col-auto">Descargar</th>
+            <th scope="col" class="col-1">Firmado</th>
+            <th scope="col" class="col-1">Sin Firma</th>
             <th scope="col" class="col-5">Motivo</th>
             <th scope="col" class="col-2 text-center">Día solicitado</th>
             <th scope="col" class="col-2 text-center">Fechas</th>
@@ -98,6 +107,11 @@ const createDownloadLink = (base64String) => {
             <td class="text-lg-center align-content-center fw-bold text-body-secondary">
                 <i role="button" class="icono bi bi-file-earmark-arrow-down-fill" @click="downloadFile(permission.documntId)"></i>
             </td>
+
+            <td class="text-lg-center align-content-center fw-bold text-body-secondary">
+                <i role="button" class="icono bi bi-file-earmark-arrow-down-fill" @click="downloadFileWithoutSign(permission.documntId)"></i>
+            </td>
+
             <td class="align-content-center hoverTabla" style="max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 {{ permission.reason }}
             </td>

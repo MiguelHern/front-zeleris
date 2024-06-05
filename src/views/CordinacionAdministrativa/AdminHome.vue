@@ -4,6 +4,7 @@ import {pendingPermissionAdmin} from '@/api/adminService.js';
 
 const pending = ref({});
 const loading = ref(true);
+const loading2 = ref(false)
 const error = ref(null);
 const loadingDocumentDetails = ref(false);
 const loadPending = async () => {
@@ -68,11 +69,11 @@ const handleCheckboxChange = () => {
 };
 
 const signPermit = async () => {
+    loading2.value = true;
     if (!imageBase64 && isCheckboxChecked.value === false) {
         errorMessage.value = true;
         return;
     }
-
     try {
         if (isCheckboxChecked.value) {
             imageBase64 = null;
@@ -80,17 +81,36 @@ const signPermit = async () => {
         const response = await APISPERMIT.signPermit(imageBase64, selectedDocumentId.value);
         errorMessage.value = false;
         console.log('Documento firmado con éxito:', response);
-        alert('Documento firmado');
+        loading2.value = false;
+
+        // Mostrar alerta de éxito
+        await Swal.fire({
+            icon: 'success',
+            title: '¡Firma exitosa!',
+            text: 'El documento se ha firmado correctamente.',
+            showConfirmButton: false,
+            timer: 2500 // Cerrar automáticamente después de 2 segundos
+        });
+
     } catch (error) {
         console.error('Error al firmar el permiso:', error);
+        await Swal.fire({
+            icon: 'error',
+            title: 'Error al firmar',
+            text: 'Hubo un error al firmar el documento. Por favor, inténtalo de nuevo más tarde.',
+        });
+    } finally {
+        loading2.value = false;
     }
 };
+
 
 onMounted(async () => {
     await loadPending();
 });
 import {fetchPendingPermissions, fetchDocumentDetails} from '@/api/cordinationService.js';
 import {APISPERMIT} from "@/api/adminService.js";
+import Swal from "sweetalert2";
 
 const loadingDocuments = ref({});
 const pendingPermissions = ref({data: []});
@@ -119,6 +139,9 @@ onMounted(async () => {
 
 <template>
     <div class="w-100">
+        <div v-if="loading2" class="loading-overlay">
+            <div class="spinner"></div>
+        </div>
         <div class="d-flex h-100 w-100 p-2 gap-2">
             <section class="bandeja col-3 card p-3">
                 <header class="bandeja__title mb-2">
@@ -295,5 +318,36 @@ td {
 
 .btn__new:hover {
     background-color: var(--grayy);
+}
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #ffffff;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

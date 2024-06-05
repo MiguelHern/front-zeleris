@@ -40,7 +40,7 @@ const noHistory = ref(false);
 
 <style scoped>
 .scrollable-content {
-  max-height: 400px; /* Ajusta la altura máxima según tus necesidades */
+  max-height: 700px; /* Ajusta la altura máxima según tus necesidades */
   overflow-y: auto;
 }
 </style>
