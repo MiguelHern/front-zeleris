@@ -252,6 +252,7 @@ watch(quantityPermissions, (newVal) => {
                                 <th class="col-1">Rol</th>
                                 <th scope="col" class="col-1">Editar</th>
                                 <th scope="col" class="col-1">Eliminar</th>
+                                <th scope="col" class="col-1">Rol</th>
                             </tr>
                         </thead>
                         <i v-show="loading" class="c-inline-spinner"></i>
@@ -267,6 +268,9 @@ watch(quantityPermissions, (newVal) => {
                                 <td class="align-content-center" role="button"
                                     @click="toggleModalEdit(employee.id, employee.description)">
                                     <i class="bi bi-pencil-square"></i>
+                                </td>
+                                <td class="align-content-center" role="button" @click="deleteEmployee(employee.id)">
+                                    <i class="bi bi-trash3-fill"></i>
                                 </td>
                                 <td class="align-content-center" role="button" @click="deleteEmployee(employee.id)">
                                     <i class="bi bi-trash3-fill"></i>
