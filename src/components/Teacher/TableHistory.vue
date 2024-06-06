@@ -31,6 +31,7 @@ onMounted(async () => {
 });
 
 const downloadDocument = async () => {
+    loading.value = true;
     try {
         const response = await axios.get(`${API_BASE_URL}/Documents/format`, {
             headers: {
@@ -71,6 +72,8 @@ const downloadDocument = async () => {
         }
     } catch (error) {
         console.error('Error al descargar el documento:', error);
+    }finally {
+        loading.value = false;
     }
 };
 
@@ -78,7 +81,7 @@ const downloadDocument = async () => {
 
 
 const downloadFile = async (file) => {
-
+    loading.value = true
     var response = await fetch(API_BASE_URL + "/Documents/file/" + file, {
         headers: {
             Authorization: 'Bearer ' + localStorage.token
@@ -90,9 +93,11 @@ const downloadFile = async (file) => {
 
         })
     console.log(response)
+    loading.value = false
 }
 
 const createDownloadLink = (base64String) => {
+    loading.value = true;
     try {
         const binaryString = window.atob(base64String);
         const len = binaryString.length;
@@ -114,6 +119,8 @@ const createDownloadLink = (base64String) => {
     } catch (error) {
         console.error('Error al crear el enlace de descarga:', error);
         return null;
+    }finally {
+        loading.value = false;
     }
 };
 
@@ -126,7 +133,10 @@ const createDownloadLink = (base64String) => {
             <h4>Historial de permisos vacío</h4>
         </div>
     </div>
-    <table class="table shadow-sm" v-show="!loading && !noHistory">
+    <div v-if="loading" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+    <table class="table shadow-sm">
         <thead>
         <tr>
             <th scope="col" class="col-1">Firmado</th>
@@ -187,5 +197,35 @@ const createDownloadLink = (base64String) => {
 .icono-tamaño {
     font-size: 50px; 
 }
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #ffffff;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
 </style>
