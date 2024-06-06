@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { fetchDocumentHistory } from '@/api/teacherService.js';
+import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 const loading = ref(true);
 const noHistory = ref(false);
@@ -29,6 +30,53 @@ onMounted(async () => {
     loading.value = false;
 });
 
+const downloadDocument = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/Documents/format`, {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.token
+            }
+        });
+
+        if (!response || !response.data) {
+            throw new Error('Respuesta inválida del servidor');
+        }
+
+        // Verificar si la respuesta indica éxito y contiene datos
+        if (response.data.success && response.data.data) {
+            const base64String = response.data.data;
+
+            if (typeof base64String !== 'string' || base64String.length === 0) {
+                throw new Error('El string base64 es inválido o está vacío');
+            }
+
+            const byteCharacters = atob(base64String);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+
+            // Crear un enlace y simular un clic para descargar el archivo
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'document.docx';
+            link.click();
+            window.URL.revokeObjectURL(link.href);
+
+            console.log('Documento descargado exitosamente');
+        } else {
+            throw new Error('El servidor no pudo encontrar el documento');
+        }
+    } catch (error) {
+        console.error('Error al descargar el documento:', error);
+    }
+};
+
+
+
+
 const downloadFile = async (file) => {
 
     var response = await fetch(API_BASE_URL + "/Documents/file/" + file, {
@@ -43,20 +91,7 @@ const downloadFile = async (file) => {
         })
     console.log(response)
 }
-const downloadFileWithoutSign = async (file) => {
 
-    var response = await fetch(API_BASE_URL + "/Documents/nosign/" + file, {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.token
-        },
-    })
-        .then(response => response.json())
-        .then(data => {
-            var res = createDownloadLink(data.data.file)
-
-        })
-    console.log(response)
-}
 const createDownloadLink = (base64String) => {
     try {
         const binaryString = window.atob(base64String);
@@ -109,14 +144,18 @@ const createDownloadLink = (base64String) => {
             </td>
 
             <td class="text-lg-center align-content-center fw-bold text-body-secondary">
-                <i role="button" class="icono bi bi-file-earmark-arrow-down-fill" @click="downloadFileWithoutSign(permission.documntId)"></i>
+                <i
+                    role="button"
+                    class="icono bi bi-file-earmark-arrow-down-fill"
+                    @click="downloadDocument"
+                >
+                </i>
             </td>
-
             <td class="align-content-center hoverTabla" style="max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 {{ permission.reason }}
             </td>
             <td class="text-center align-content-center">{{ formatDate(permission.createdDate) }}</td>
-            
+
             <td class="text-center">
                 <div v-for="date in permission.dates" :key="date.id">
                     {{ new Date(date.dates).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }) }}
